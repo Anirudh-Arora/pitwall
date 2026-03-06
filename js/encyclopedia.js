@@ -19,10 +19,10 @@ function CircuitsPage() {
   if (selected) return React.createElement(CircuitDetail, { circuit: selected, onBack: () => setSelected(null) });
 
   return React.createElement('div', null,
-    React.createElement('div', { className: 'section-header' },
+    React.createElement('div', { className: 'sec-hdr' },
       React.createElement('div', null,
-        React.createElement('div', { className: 'section-title' }, 'CIRCUITS'),
-        React.createElement('div', { className: 'section-subtitle' }, `${CIRCUITS.length} Grand Prix venues`)
+        React.createElement('div', { className: 'sec-title' }, 'CIRCUITS'),
+        React.createElement('div', { className: 'sec-sub' }, `${CIRCUITS.length} Grand Prix venues`)
       )
     ),
     React.createElement('div', { className: 'search-wrap', style: { marginBottom: '20px', maxWidth: '360px' } },
@@ -32,24 +32,36 @@ function CircuitsPage() {
         value: search, onChange: e => setSearch(e.target.value)
       })
     ),
-    React.createElement('div', { className: 'grid-cards' },
+    React.createElement('div', { className: 'gcards' },
       filtered.map(c => React.createElement(CircuitCard, { key: c.id, circuit: c, onClick: () => setSelected(c) }))
     )
   );
 }
 
+function CircuitSVG({ circuitId }) {
+  const path = (typeof CIRCUIT_SVG_PATHS !== 'undefined' && CIRCUIT_SVG_PATHS[circuitId]) || null;
+  if (!path) return React.createElement('div', { style: { fontSize: '11px', color: 'var(--t3)', textAlign: 'center' } }, '— map —');
+  return React.createElement('svg', { viewBox: '0 0 200 140', style: { width: '100%', maxHeight: '100%' } },
+    React.createElement('path', { d: path, className: 'trk-bg' }),
+    React.createElement('path', { d: path, className: 'trk-fg' })
+  );
+}
+
 function CircuitCard({ circuit: c, onClick }) {
   return React.createElement('div', { className: 'circuit-card', onClick },
-    React.createElement('div', { className: 'circuit-card-header' },
-      React.createElement('div', { className: 'circuit-card-country' }, `${c.country} · ${c.city}`),
-      React.createElement('div', { className: 'circuit-card-name' }, c.name),
+    React.createElement('div', { className: 'cc-map' },
+      React.createElement(CircuitSVG, { circuitId: c.id })
+    ),
+    React.createElement('div', { className: 'cc-head' },
+      React.createElement('div', { className: 'cc-country' }, `${c.country} · ${c.city}`),
+      React.createElement('div', { className: 'cc-name' }, c.name),
       React.createElement('div', { style: { marginTop: '8px', display: 'flex', gap: '6px', flexWrap: 'wrap' } },
-        React.createElement('span', { className: 'badge badge-dim' }, `${c.corners} corners`),
-        React.createElement('span', { className: 'badge badge-dim' }, `${c.drsZones} DRS zones`),
-        React.createElement('span', { className: 'badge badge-dim' }, `Since ${c.firstGP}`)
+        React.createElement('span', { className: 'badge b-dim' }, `${c.corners} corners`),
+        React.createElement('span', { className: 'badge b-dim' }, `${c.drsZones} DRS zones`),
+        React.createElement('span', { className: 'badge b-dim' }, `Since ${c.firstGP}`)
       )
     ),
-    React.createElement('div', { className: 'circuit-card-body' },
+    React.createElement('div', { className: 'cc-body' },
       [
         ['Length', `${c.length} km`],
         ['Laps', c.laps],
@@ -57,9 +69,9 @@ function CircuitCard({ circuit: c, onClick }) {
         ['Record Holder', c.lapRecord.driver],
         ['Record Year', c.lapRecord.year],
       ].map(([label, val]) =>
-        React.createElement('div', { key: label, className: 'circuit-card-stat' },
+        React.createElement('div', { key: label, className: 'cc-row' },
           React.createElement('span', null, label),
-          React.createElement('span', { className: 'circuit-card-stat-val' }, val)
+          React.createElement('span', { className: 'cc-val' }, val)
         )
       )
     )
@@ -98,16 +110,16 @@ function CircuitDetail({ circuit: c, onBack }) {
     }, '← Back to Circuits'),
 
     // Hero
-    React.createElement('div', { className: 'hero-card', style: { marginBottom: '16px', '--hero-color': '#1a0a00' } },
+    React.createElement('div', { className: 'hero-card', style: { marginBottom: '16px' } },
       React.createElement('div', { className: 'hero-card-bg' }),
       React.createElement('div', { className: 'hero-card-content' },
         React.createElement('div', { className: 'hero-card-label' }, `${c.country} · ${c.city} · First GP ${c.firstGP}`),
         React.createElement('div', { className: 'hero-card-name' }, c.name),
         React.createElement('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px' } },
-          React.createElement('span', { className: 'badge badge-red' }, `${c.length} km`),
-          React.createElement('span', { className: 'badge badge-dim' }, `${c.laps} laps`),
-          React.createElement('span', { className: 'badge badge-dim' }, `${c.corners} corners`),
-          React.createElement('span', { className: 'badge badge-amber' }, `${c.drsZones} DRS / Aero zones`)
+          React.createElement('span', { className: 'badge b-red' }, `${c.length} km`),
+          React.createElement('span', { className: 'badge b-dim' }, `${c.laps} laps`),
+          React.createElement('span', { className: 'badge b-dim' }, `${c.corners} corners`),
+          React.createElement('span', { className: 'badge b-amber' }, `${c.drsZones} DRS / Aero zones`)
         )
       )
     ),
@@ -115,11 +127,11 @@ function CircuitDetail({ circuit: c, onBack }) {
     // Tabs
     React.createElement('div', { className: 'tabs' },
       [['overview','Overview'],['trivia','Trivia & Records'],['strategy','Winning Strategies'],['characteristics','Race Characteristics']].map(([k,l]) =>
-        React.createElement('button', { key: k, className: `tab-btn ${tab===k?'active':''}`, onClick: () => setTab(k) }, l)
+        React.createElement('button', { key: k, className: `tab ${tab===k?'on':''}`, onClick: () => setTab(k) }, l)
       )
     ),
 
-    tab === 'overview' && React.createElement('div', { className: 'two-col', style: { alignItems: 'start' } },
+    tab === 'overview' && React.createElement('div', { className: 'g2', style: { alignItems: 'start' } },
       React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
         React.createElement('div', { className: 'card' },
           React.createElement('div', { className: 'card-title', style: { marginBottom: '12px' } }, 'About'),
@@ -146,9 +158,9 @@ function CircuitDetail({ circuit: c, onBack }) {
               ['DRS ZONES', c.drsZones, ''],
               ['FIRST GP', c.firstGP, ''],
             ].map(([label, val, cls]) =>
-              React.createElement('div', { key: label, className: 'stat-cell' },
+              React.createElement('div', { key: label, className: 'scel' },
                 React.createElement('div', { className: `stat-value ${cls}` }, val),
-                React.createElement('div', { className: 'stat-label' }, label)
+                React.createElement('div', { className: 'sl' }, label)
               )
             )
           )
@@ -176,21 +188,21 @@ function CircuitDetail({ circuit: c, onBack }) {
         'Historical race winners and their race details at this circuit. Use this to understand tyre strategy trends and what approach wins here.'
       ),
       loadingStrategy
-        ? React.createElement('div', { className: 'loading-state' },
-            React.createElement('div', { className: 'spinner' }),
+        ? React.createElement('div', { className: 'loading' },
+            React.createElement('div', { className: 'spin' }),
             'Loading race history…'
           )
         : strategyData && strategyData.length
           ? React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
               strategyData.map((race, i) => {
                 const winner = race.Results?.[0];
-                return React.createElement('div', { key: i, className: 'strategy-card' },
+                return React.createElement('div', { key: i, className: 'strat-card' },
                   React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' } },
-                    React.createElement('div', { className: 'strategy-year-label' }, `${race.season} · Round ${race.round}`),
-                    React.createElement('span', { className: 'badge badge-dim' }, race.raceName)
+                    React.createElement('div', { className: 'strat-year' }, `${race.season} · Round ${race.round}`),
+                    React.createElement('span', { className: 'badge b-dim' }, race.raceName)
                   ),
                   winner && React.createElement('div', null,
-                    React.createElement('div', { className: 'strategy-winner' },
+                    React.createElement('div', { className: 'strat-winner' },
                       `🥇 ${winner.Driver?.givenName} ${winner.Driver?.familyName}`
                     ),
                     React.createElement('div', { style: { fontFamily: 'var(--font-display)', fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '1px' } },
@@ -200,10 +212,10 @@ function CircuitDetail({ circuit: c, onBack }) {
                 );
               })
             )
-          : React.createElement('div', { className: 'empty-state' }, 'No strategy data available')
+          : React.createElement('div', { className: 'empty' }, 'No strategy data available')
     ),
 
-    tab === 'characteristics' && React.createElement('div', { className: 'two-col-equal', style: { alignItems: 'start' } },
+    tab === 'characteristics' && React.createElement('div', { className: 'g2eq', style: { alignItems: 'start' } },
       React.createElement('div', { className: 'card' },
         React.createElement('div', { className: 'card-title', style: { marginBottom: '14px' } }, 'Track Characteristics'),
         [
@@ -212,7 +224,7 @@ function CircuitDetail({ circuit: c, onBack }) {
           ['Downforce Level', char.downforce],
           ['Engine Power Sensitive', char.power_sensitive ? 'Yes' : 'No'],
         ].map(([label, val]) =>
-          React.createElement('div', { key: label, className: 'data-row' },
+          React.createElement('div', { key: label, className: 'drow' },
             React.createElement('span', { style: { fontSize: '13px', color: 'var(--text-secondary)' } }, label),
             React.createElement('span', { style: { fontFamily: 'var(--font-display)', fontSize: '12px', fontWeight: 700, letterSpacing: '1px' } }, val)
           )
@@ -263,10 +275,10 @@ function DriversPage() {
   );
 
   return React.createElement('div', null,
-    React.createElement('div', { className: 'section-header' },
+    React.createElement('div', { className: 'sec-hdr' },
       React.createElement('div', null,
-        React.createElement('div', { className: 'section-title' }, 'DRIVERS'),
-        React.createElement('div', { className: 'section-subtitle' }, '2026 Grid')
+        React.createElement('div', { className: 'sec-title' }, 'DRIVERS'),
+        React.createElement('div', { className: 'sec-sub' }, '2026 Grid')
       )
     ),
     React.createElement('div', { style: { display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' } },
@@ -278,7 +290,7 @@ function DriversPage() {
         })
       )
     ),
-    React.createElement('div', { className: 'grid-cards' },
+    React.createElement('div', { className: 'gcards' },
       filtered.map(d => React.createElement(DriverCard, { key: d.num, driver: d, onClick: () => setSelected(d) }))
     )
   );
@@ -344,20 +356,20 @@ function DriverDetail({ driver: d, onBack }) {
         React.createElement('div', { className: 'hero-card-label' }, `${d.nat} · ${d.team} · #${d.num}`),
         React.createElement('div', { className: 'hero-card-name', style: { color } }, `${d.first} ${d.last}`),
         React.createElement('div', { style: { display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' } },
-          React.createElement('span', { className: 'badge badge-dim' }, `Born ${fmtDate(d.dob)}`),
-          React.createElement('span', { className: 'badge badge-dim' }, `Age ${age}`),
-          React.createElement('span', { className: 'badge badge-dim' }, d.code)
+          React.createElement('span', { className: 'badge b-dim' }, `Born ${fmtDate(d.dob)}`),
+          React.createElement('span', { className: 'badge b-dim' }, `Age ${age}`),
+          React.createElement('span', { className: 'badge b-dim' }, d.code)
         )
       )
     ),
 
     React.createElement('div', { className: 'tabs' },
       [['profile','Profile'],['stats','Career Stats'],['results','Recent Results']].map(([k,l]) =>
-        React.createElement('button', { key: k, className: `tab-btn ${tab===k?'active':''}`, onClick: () => setTab(k) }, l)
+        React.createElement('button', { key: k, className: `tab ${tab===k?'on':''}`, onClick: () => setTab(k) }, l)
       )
     ),
 
-    tab === 'profile' && React.createElement('div', { className: 'two-col', style: { alignItems: 'start' } },
+    tab === 'profile' && React.createElement('div', { className: 'g2', style: { alignItems: 'start' } },
       React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
         wikiData
           ? React.createElement('div', { className: 'card' },
@@ -371,8 +383,8 @@ function DriverDetail({ driver: d, onBack }) {
               }, 'READ MORE ON WIKIPEDIA →')
             )
           : React.createElement('div', { className: 'card' },
-              React.createElement('div', { className: 'loading-state' },
-                React.createElement('div', { className: 'spinner' }), 'Loading biography…'
+              React.createElement('div', { className: 'loading' },
+                React.createElement('div', { className: 'spin' }), 'Loading biography…'
               )
             )
       ),
@@ -387,7 +399,7 @@ function DriverDetail({ driver: d, onBack }) {
           ['Short Code', d.code],
           ['Team', d.team],
         ].map(([label, val]) =>
-          React.createElement('div', { key: label, className: 'data-row' },
+          React.createElement('div', { key: label, className: 'drow' },
             React.createElement('span', { style: { fontSize: '12px', color: 'var(--text-muted)' } }, label),
             React.createElement('span', { style: { fontFamily: 'var(--font-display)', fontSize: '13px', fontWeight: 700 } }, val)
           )
@@ -404,15 +416,15 @@ function DriverDetail({ driver: d, onBack }) {
               ['PODIUMS', ergastData.podiums, ''],
               ['POLES', ergastData.poles, ''],
             ].map(([label, val, cls]) =>
-              React.createElement('div', { key: label, className: 'stat-cell' },
+              React.createElement('div', { key: label, className: 'scel' },
                 React.createElement('div', { className: `stat-value lg ${cls}` }, val),
-                React.createElement('div', { className: 'stat-label' }, label)
+                React.createElement('div', { className: 'sl' }, label)
               )
             )
           )
         )
-      : React.createElement('div', { className: 'loading-state' },
-          React.createElement('div', { className: 'spinner' }), 'Loading career data…'
+      : React.createElement('div', { className: 'loading' },
+          React.createElement('div', { className: 'spin' }), 'Loading career data…'
         )
     ),
 
@@ -442,8 +454,8 @@ function DriverDetail({ driver: d, onBack }) {
             )
           )
         )
-      : React.createElement('div', { className: 'loading-state' },
-          React.createElement('div', { className: 'spinner' }), 'Loading results…'
+      : React.createElement('div', { className: 'loading' },
+          React.createElement('div', { className: 'spin' }), 'Loading results…'
         )
     )
   );
@@ -457,13 +469,13 @@ function ConstructorsPage() {
   if (selected) return React.createElement(ConstructorDetail, { constructor: selected, onBack: () => setSelected(null) });
 
   return React.createElement('div', null,
-    React.createElement('div', { className: 'section-header' },
+    React.createElement('div', { className: 'sec-hdr' },
       React.createElement('div', null,
-        React.createElement('div', { className: 'section-title' }, 'CONSTRUCTORS'),
-        React.createElement('div', { className: 'section-subtitle' }, 'Current & historic F1 teams')
+        React.createElement('div', { className: 'sec-title' }, 'CONSTRUCTORS'),
+        React.createElement('div', { className: 'sec-sub' }, 'Current & historic F1 teams')
       )
     ),
-    React.createElement('div', { className: 'grid-cards' },
+    React.createElement('div', { className: 'gcards' },
       CONSTRUCTORS.map(c => React.createElement(ConstructorCard, { key: c.id, constructor: c, onClick: () => setSelected(c) }))
     )
   );
@@ -519,20 +531,20 @@ function ConstructorDetail({ constructor: c, onBack }) {
         React.createElement('div', { className: 'hero-card-label' }, `${c.base} · Est. ${c.firstYear}`),
         React.createElement('div', { className: 'hero-card-name', style: { color: c.color } }, c.name),
         React.createElement('div', { style: { display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' } },
-          React.createElement('span', { className: 'badge badge-gold' }, `${c.titles} WCC Titles`),
-          React.createElement('span', { className: 'badge badge-dim' }, c.chassis),
-          React.createElement('span', { className: 'badge badge-dim' }, c.power)
+          React.createElement('span', { className: 'badge b-gold' }, `${c.titles} WCC Titles`),
+          React.createElement('span', { className: 'badge b-dim' }, c.chassis),
+          React.createElement('span', { className: 'badge b-dim' }, c.power)
         )
       )
     ),
 
     React.createElement('div', { className: 'tabs' },
       [['overview','Overview'],['stats','Statistics'],['drivers','2026 Drivers']].map(([k,l]) =>
-        React.createElement('button', { key: k, className: `tab-btn ${tab===k?'active':''}`, onClick: () => setTab(k) }, l)
+        React.createElement('button', { key: k, className: `tab ${tab===k?'on':''}`, onClick: () => setTab(k) }, l)
       )
     ),
 
-    tab === 'overview' && React.createElement('div', { className: 'two-col', style: { alignItems: 'start' } },
+    tab === 'overview' && React.createElement('div', { className: 'g2', style: { alignItems: 'start' } },
       React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
         wikiData
           ? React.createElement('div', { className: 'card' },
@@ -545,7 +557,7 @@ function ConstructorDetail({ constructor: c, onBack }) {
                 style: { fontSize: '11px', color: 'var(--green)', letterSpacing: '1px', fontFamily: 'var(--font-display)', display: 'inline-block', marginTop: '8px' }
               }, 'READ MORE ON WIKIPEDIA →')
             )
-          : React.createElement('div', { className: 'loading-state' }, React.createElement('div', { className: 'spinner' }), 'Loading…')
+          : React.createElement('div', { className: 'loading' }, React.createElement('div', { className: 'spin' }), 'Loading…')
       ),
       React.createElement('div', { className: 'card' },
         React.createElement('div', { className: 'card-title', style: { marginBottom: '12px' } }, 'Team Info'),
@@ -557,7 +569,7 @@ function ConstructorDetail({ constructor: c, onBack }) {
           ['Power Unit', c.power],
           ['WCC Titles', c.titles],
         ].map(([label, val]) =>
-          React.createElement('div', { key: label, className: 'data-row' },
+          React.createElement('div', { key: label, className: 'drow' },
             React.createElement('span', { style: { fontSize: '12px', color: 'var(--text-muted)' } }, label),
             React.createElement('span', { style: { fontFamily: 'var(--font-display)', fontSize: '13px', fontWeight: 700 } }, val)
           )
@@ -574,17 +586,17 @@ function ConstructorDetail({ constructor: c, onBack }) {
               ['POLES', ergastData.poles, ''],
               ['WCC TITLES', c.titles, ''],
             ].map(([label, val, cls]) =>
-              React.createElement('div', { key: label, className: 'stat-cell' },
+              React.createElement('div', { key: label, className: 'scel' },
                 React.createElement('div', { className: `stat-value lg ${cls}` }, val),
-                React.createElement('div', { className: 'stat-label' }, label)
+                React.createElement('div', { className: 'sl' }, label)
               )
             )
           )
         )
-      : React.createElement('div', { className: 'loading-state' }, React.createElement('div', { className: 'spinner' }), 'Loading…')
+      : React.createElement('div', { className: 'loading' }, React.createElement('div', { className: 'spin' }), 'Loading…')
     ),
 
-    tab === 'drivers' && React.createElement('div', { className: 'grid-cards-sm' },
+    tab === 'drivers' && React.createElement('div', { className: 'gcards-sm' },
       CURRENT_DRIVERS.filter(d => d.team === c.name || d.team.includes(c.name.split(' ')[0])).map(d =>
         React.createElement('div', { key: d.num, className: 'card card-sm' },
           React.createElement('div', { style: { fontFamily: 'var(--font-mono)', fontSize: '24px', fontWeight: 700, color: c.color, marginBottom: '6px' } }, `#${d.num}`),
@@ -620,15 +632,15 @@ function HistoryPage() {
     });
 
   return React.createElement('div', null,
-    React.createElement('div', { className: 'section-header' },
+    React.createElement('div', { className: 'sec-hdr' },
       React.createElement('div', null,
-        React.createElement('div', { className: 'section-title' }, 'HISTORY'),
-        React.createElement('div', { className: 'section-subtitle' }, 'Formula 1 since 1950')
+        React.createElement('div', { className: 'sec-title' }, 'HISTORY'),
+        React.createElement('div', { className: 'sec-sub' }, 'Formula 1 since 1950')
       )
     ),
     React.createElement('div', { className: 'tabs' },
       [['champions','Champions'],['milestones','Milestones'],['records','All-Time Records']].map(([k,l]) =>
-        React.createElement('button', { key: k, className: `tab-btn ${tab===k?'active':''}`, onClick: () => setTab(k) }, l)
+        React.createElement('button', { key: k, className: `tab ${tab===k?'on':''}`, onClick: () => setTab(k) }, l)
       )
     ),
 
@@ -678,17 +690,17 @@ function HistoryPage() {
               React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: '6px' } },
                 React.createElement('span', null, c.nationality),
                 React.createElement('span', { style: { fontFamily: 'var(--font-display)', fontSize: '14px', fontWeight: 800 } }, c.driver),
-                c.note && React.createElement('span', { className: 'badge badge-amber', style: { fontSize: '8px' } }, c.note)
+                c.note && React.createElement('span', { className: 'badge b-amber', style: { fontSize: '8px' } }, c.note)
               )
             ),
             React.createElement('div', { style: { fontFamily: 'var(--font-display)', fontSize: '13px', color: 'var(--text-secondary)' } },
               wcc ? `${wcc.nationality} ${wcc.team}` : '—'
             ),
             React.createElement('div', { style: { display: 'flex', gap: '3px', flexWrap: 'wrap' } },
-              c.driver === 'Michael Schumacher' && React.createElement('span', { className: 'badge badge-gold', style: { fontSize: '8px' } }, '7×'),
-              c.driver === 'Lewis Hamilton' && React.createElement('span', { className: 'badge badge-gold', style: { fontSize: '8px' } }, '7×'),
-              c.driver === 'Ayrton Senna' && React.createElement('span', { className: 'badge badge-purple', style: { fontSize: '8px' } }, 'Legend'),
-              c.driver === 'Juan Manuel Fangio' && React.createElement('span', { className: 'badge badge-gold', style: { fontSize: '8px' } }, '5×')
+              c.driver === 'Michael Schumacher' && React.createElement('span', { className: 'badge b-gold', style: { fontSize: '8px' } }, '7×'),
+              c.driver === 'Lewis Hamilton' && React.createElement('span', { className: 'badge b-gold', style: { fontSize: '8px' } }, '7×'),
+              c.driver === 'Ayrton Senna' && React.createElement('span', { className: 'badge b-purple', style: { fontSize: '8px' } }, 'Legend'),
+              c.driver === 'Juan Manuel Fangio' && React.createElement('span', { className: 'badge b-gold', style: { fontSize: '8px' } }, '5×')
             )
           );
         })
@@ -708,7 +720,7 @@ function HistoryPage() {
           React.createElement('div', { style: { flex: 1, paddingLeft: '20px', paddingBottom: '24px', paddingTop: '10px' } },
             React.createElement('div', { style: { fontFamily: 'var(--font-display)', fontSize: '14px', fontWeight: 800, marginBottom: '5px' } }, m.event),
             React.createElement('div', { style: { fontSize: '13px', lineHeight: '1.65', color: 'var(--text-secondary)' } }, m.desc),
-            m.year >= 2026 && React.createElement('span', { className: 'badge badge-red', style: { marginTop: '6px' } }, '2026 REGULATION')
+            m.year >= 2026 && React.createElement('span', { className: 'badge b-red', style: { marginTop: '6px' } }, '2026 REGULATION')
           )
         )
       )

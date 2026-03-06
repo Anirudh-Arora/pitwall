@@ -1,6 +1,17 @@
 const { useState, useEffect, useCallback, useMemo, useRef } = React;
-const _R = window.Recharts || {};
-const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _R;
+// Recharts lazy resolver — call at render time, not module parse time
+function useRecharts() {
+  const [ready, setReady] = React.useState(!!window.Recharts);
+  React.useEffect(() => {
+    if (window.Recharts) { setReady(true); return; }
+    const t = setInterval(() => { if (window.Recharts) { setReady(true); clearInterval(t); } }, 200);
+    return () => clearInterval(t);
+  }, []);
+  return ready ? window.Recharts : null;
+}
+// Keep destructured refs for non-chart code (fallback to empty)
+const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+        AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = window.Recharts || {};
 
 // ─── CONSTANTS ────────────────────────────────────────────────
 const BASE = 'https://api.openf1.org/v1';
@@ -436,8 +447,10 @@ function PositionHistory({ positions, drivers }) {
     return { chartData: snapshots, driverNums: topDrivers };
   }, [positions]);
 
-  if (!chartData.length) return <div className="empty-state">Position history builds as race progresses</div>;
-  if (!ResponsiveContainer) return <div className="empty-state">Chart loading...</div>;
+  if (!chartData.length) return <div className="empty">Position history builds as race progresses</div>;
+  const _RC = useRecharts();
+  if (!_RC) return <div className="empty" style={{padding:'20px'}}>⏳ Loading charts…</div>;
+  const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _RC;
 
   return (
     <div style={{ height: 280 }}>
@@ -503,8 +516,10 @@ function GapEvolution({ intervals, positions, drivers }) {
     return { chartData: snapshots, top8 };
   }, [intervals, positions]);
 
-  if (!chartData.length) return <div className="empty-state">Gap data builds as race progresses</div>;
-  if (!ResponsiveContainer) return <div className="empty-state">Chart loading...</div>;
+  if (!chartData.length) return <div className="empty">Gap data builds as race progresses</div>;
+  const _RC = useRecharts();
+  if (!_RC) return <div className="empty" style={{padding:'20px'}}>⏳ Loading charts…</div>;
+  const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _RC;
 
   return (
     <div style={{ height: 260 }}>
@@ -633,9 +648,9 @@ function HeadToHead({ allDriverLaps, drivers, weekendSessionsLaps }) {
       </div>
 
       {!selA || !selB ? (
-        <div className="empty-state">Select two drivers to compare</div>
+        <div className="empty">Select two drivers to compare</div>
       ) : !comparison ? (
-        <div className="empty-state">No data available for selected drivers</div>
+        <div className="empty">No data available for selected drivers</div>
       ) : (
         <div>
           {/* Names row */}
@@ -722,8 +737,10 @@ function PaceProgression({ weekendSessionsLaps, drivers }) {
     return { sessions, chartData, driverNums: top10 };
   }, [weekendSessionsLaps]);
 
-  if (!chartData.length) return <div className="empty-state">Loading session data...</div>;
-  if (!ResponsiveContainer) return <div className="empty-state">Chart loading...</div>;
+  if (!chartData.length) return <div className="empty">Loading session data...</div>;
+  const _RC = useRecharts();
+  if (!_RC) return <div className="empty" style={{padding:'20px'}}>⏳ Loading charts…</div>;
+  const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _RC;
 
   return (
     <div style={{height:280}}>
@@ -810,7 +827,7 @@ function OvertakePanel({ positions, intervals, carData, drivers, stints }) {
     return pairs.sort((a,b)=>b.score-a.score).slice(0,6);
   }, [positions, intervals, carData, drivers, stints]);
 
-  if (!overtakePairs.length) return <div className="empty-state">Awaiting live race data...</div>;
+  if (!overtakePairs.length) return <div className="empty">Awaiting live race data...</div>;
 
   return (
     <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
@@ -866,7 +883,7 @@ function WeatherWidget({ meeting, owmKey }) {
       <div style={{fontSize:'11px',color:'var(--text-secondary)',fontFamily:'var(--font-body)'}}>Free at openweathermap.org/api</div>
     </div>
   );
-  if (loading) return <div className="loading-state" style={{padding:'20px'}}><div className="spinner"/>Loading forecast...</div>;
+  if (loading) return <div className="loading" style={{padding:'20px'}}><div className="spin"/>Loading forecast...</div>;
   if (error || !forecast?.list) return <div style={{fontSize:'11px',color:'var(--text-secondary)',fontFamily:'var(--font-head)',letterSpacing:'1px',textAlign:'center',padding:'10px'}}>{error||'No forecast data'}</div>;
 
   const periods = forecast.list.slice(0,6);
@@ -984,7 +1001,7 @@ function PerformanceRatings({ weekendSessionsLaps, qualiLaps, drivers }) {
     return result.filter(r=>r.overallScore != null).sort((a,b)=>b.overallScore-a.overallScore);
   }, [weekendSessionsLaps, qualiLaps, drivers, driverMap]);
 
-  if (!ratings.length) return <div className="empty-state">Loading performance data...</div>;
+  if (!ratings.length) return <div className="empty">Loading performance data...</div>;
 
   const RatingBar = ({ value, color }) => (
     <div className="rating-bar" style={{width:'80px'}}>
@@ -1082,7 +1099,7 @@ function RaceControl({ messages }) {
     if (t.includes('penalty')||t.includes('investigation')||t.includes('noted')) return {cls:'rc-penalty',icon:'🟣'};
     return {cls:'',icon:'⚪'};
   }
-  if (!messages?.length) return <div className="empty-state">No race control messages yet</div>;
+  if (!messages?.length) return <div className="empty">No race control messages yet</div>;
   return (
     <div className="rc-feed">
       {messages.slice(0,20).map((m,i) => {
@@ -1107,7 +1124,7 @@ function PitTracker({ pits, drivers, stints, currentLap }) {
   const pitsByDriver = useMemo(() => { const m={}; pits?.forEach(p=>{if(!m[p.driver_number])m[p.driver_number]=[];m[p.driver_number].push(p);}); return m; }, [pits]);
   const latestStint = useMemo(() => { const m={}; stints?.forEach(s=>{if(!m[s.driver_number]||s.stint_number>m[s.driver_number].stint_number)m[s.driver_number]=s;}); return m; }, [stints]);
   const nums = Object.keys(pitsByDriver).length ? Object.keys(pitsByDriver) : (drivers?.map(d=>d.driver_number).slice(0,22)||[]);
-  if (!nums.length) return <div className="empty-state">No pit data yet</div>;
+  if (!nums.length) return <div className="empty">No pit data yet</div>;
   return (
     <div className="pit-grid">
       {nums.map(num => {
@@ -1168,7 +1185,7 @@ function TimingTower({ positions, intervals, drivers, stints, pits }) {
             <span style={{fontFamily:'var(--font-head)',fontSize:'11px',color:delta>0?'var(--accent-green)':delta<0?'var(--accent-red)':'transparent',fontWeight:700}}>{delta>0?`▲${delta}`:delta<0?`▼${Math.abs(delta)}`:''}</span>
           </div>
         );
-      }) : <div className="empty-state">Awaiting live position data...</div>}
+      }) : <div className="empty">Awaiting live position data...</div>}
     </div>
   );
 }
@@ -1232,8 +1249,10 @@ function LapTimeChart({ allDriverLaps, drivers }) {
     return { yMin: s[0]-pad, yMax: s[s.length-1]+pad };
   }, [chartData, activeNums]);
 
-  if (!allNums.length) return <div className="empty-state">No lap data available</div>;
-  if (!ResponsiveContainer) return <div className="empty-state">Chart loading...</div>;
+  if (!allNums.length) return <div className="empty">No lap data available</div>;
+  const _RC = useRecharts();
+  if (!_RC) return <div className="empty" style={{padding:'20px'}}>⏳ Loading charts…</div>;
+  const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _RC;
 
   const inputStyle = {
     width:'54px', padding:'3px 6px', background:'var(--bg-secondary)', border:'1px solid var(--border)',
@@ -1346,7 +1365,7 @@ function LapTimeChart({ allDriverLaps, drivers }) {
           </ResponsiveContainer>
         </div>
       ) : (
-        <div className="empty-state">No laps in selected window</div>
+        <div className="empty">No laps in selected window</div>
       )}
 
       {!showAll && selected.size > 0 && (
@@ -1376,7 +1395,7 @@ function SectorAnalysis({ allDriverLaps, drivers }) {
       return tA - tB;
     });
   }, [allDriverLaps, driverMap]);
-  if (!rows.length) return <div className="empty-state">No sector data</div>;
+  if (!rows.length) return <div className="empty">No sector data</div>;
   const minS1=Math.min(...rows.map(d=>d.s1||99).filter(x=>x<99));
   const minS2=Math.min(...rows.map(d=>d.s2||99).filter(x=>x<99));
   const minS3=Math.min(...rows.map(d=>d.s3||99).filter(x=>x<99));
@@ -1410,7 +1429,7 @@ function SectorAnalysis({ allDriverLaps, drivers }) {
 // ─── TYRE STRATEGY ─────────────────────────────────────────────
 function TyreStrategy({ stints, drivers }) {
   const driverMap = useMemo(() => { const m={}; drivers?.forEach(d=>{m[d.driver_number]=d;}); return m; }, [drivers]);
-  if (!stints?.length) return <div className="empty-state">No stint data</div>;
+  if (!stints?.length) return <div className="empty">No stint data</div>;
   const byDriver={};
   stints.forEach(s=>{if(!byDriver[s.driver_number])byDriver[s.driver_number]=[];byDriver[s.driver_number].push(s);});
   const maxLap=Math.max(...stints.map(s=>(s.lap_start||0)+(s.lap_end||0)-s.lap_start||0), 70);
@@ -1452,7 +1471,7 @@ function QualiResults({ qualiLaps, drivers }) {
     const pole=sorted[0]?.[1]||0;
     return sorted.map(([num,t],i) => ({ pos:i+1, num, t, gap:t-pole }));
   }, [qualiLaps]);
-  if (!grid.length) return <div className="empty-state">No qualifying data</div>;
+  if (!grid.length) return <div className="empty">No qualifying data</div>;
   return (
     <div>
       <div className="quali-row" style={{borderBottom:'1px solid var(--border-bright)',fontFamily:'var(--font-head)',fontSize:'9px',letterSpacing:'2px',color:'var(--text-dim)',textTransform:'uppercase'}}>
@@ -1478,8 +1497,8 @@ function QualiResults({ qualiLaps, drivers }) {
 
 // ─── RACE RESULTS ──────────────────────────────────────────────
 function RaceResults({ results, loading }) {
-  if (loading) return <div className="loading-state"><div className="spinner"/>Loading results...</div>;
-  if (!results?.length) return <div className="empty-state">Race results not available yet</div>;
+  if (loading) return <div className="loading"><div className="spin"/>Loading results...</div>;
+  if (!results?.length) return <div className="empty">Race results not available yet</div>;
   return (
     <div>
       {results.slice(0,20).map((r,i) => {
@@ -1506,7 +1525,7 @@ function CarTelemetry({ carData, drivers, positions, sessionYear }) {
     positions.forEach(p=>{if(!lat[p.driver_number]||p.date>lat[p.driver_number].date)lat[p.driver_number]=p;});
     return Object.values(lat).sort((a,b)=>a.position-b.position).map(p=>p.driver_number);
   }, [positions, carData]);
-  if (!Object.keys(carData).length) return <div className="empty-state">Awaiting telemetry...</div>;
+  if (!Object.keys(carData).length) return <div className="empty">Awaiting telemetry...</div>;
   const aa = isActiveAeroEra(sessionYear || new Date().getFullYear());
   function aeroLabel(v) {
     if (v>=10) return { label: aa ? 'STRAIGHT' : 'OPEN',  color:'var(--accent-green)' };
@@ -1569,7 +1588,7 @@ function CarTelemetry({ carData, drivers, positions, sessionYear }) {
 // ─── TEAM RADIO ────────────────────────────────────────────────
 function TeamRadio({ messages, drivers }) {
   const driverMap = useMemo(() => { const m={}; drivers?.forEach(d=>{m[d.driver_number]=d;}); return m; }, [drivers]);
-  if (!messages?.length) return <div className="empty-state">No team radio messages yet</div>;
+  if (!messages?.length) return <div className="empty">No team radio messages yet</div>;
   return (
     <div style={{display:'flex',flexDirection:'column',gap:'5px',maxHeight:'280px',overflowY:'auto'}}>
       {messages.slice(0,12).map((msg,i) => {
@@ -1619,7 +1638,7 @@ function PredictionPanel({ predictions, loading, error, onGenerate, groqKeySet, 
   if (!predictions?.length) return (
     <div style={{textAlign:'center',padding:'20px'}}>
       {weekendDataLoading
-        ? <div className="loading-state" style={{justifyContent:'center'}}><div className="spinner"/>Loading session data...</div>
+        ? <div className="loading" style={{justifyContent:'center'}}><div className="spin"/>Loading session data...</div>
         : <button className="btn btn-primary" onClick={onGenerate} disabled={!weekendDataReady}>{weekendDataReady?'Generate Race Predictions':'Waiting for session data...'}</button>}
     </div>
   );
@@ -1683,7 +1702,7 @@ function LiveAnalystPanel({ predictions, liveProbs, positions, driverMap, onUpda
   if (!predictions?.length) return (
     <div className="card">
       <div className="card-title">AI Race Analyst</div>
-      <div className="empty-state" style={{padding:'16px 0'}}>Generate predictions in Pre-Race mode first.</div>
+      <div className="empty" style={{padding:'16px 0'}}>Generate predictions in Pre-Race mode first.</div>
     </div>
   );
   return (

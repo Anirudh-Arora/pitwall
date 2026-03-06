@@ -15,22 +15,26 @@ function TopNav({ section, setSection, isLive, nextRace }) {
   ];
 
   return React.createElement('nav', { className: 'topnav' },
-    React.createElement('div', { className: 'nav-logo' },
-      React.createElement('div', { className: 'nav-logo-mark' }, 'PW'),
+    React.createElement('div', {
+      className: 'nav-logo',
+      onClick: () => setSection('home'),
+      title: 'Go to Home',
+    },
+      React.createElement('div', { className: 'nav-mark' }, 'PW'),
       React.createElement('div', null,
-        React.createElement('div', { className: 'nav-logo-text' }, 'PITWALL'),
-        React.createElement('div', { className: 'nav-logo-sub' }, 'F1 COMPANION')
+        React.createElement('div', { className: 'nav-wordmark' }, 'PITWALL'),
+        React.createElement('div', { className: 'nav-sub' }, 'F1 COMPANION')
       )
     ),
     React.createElement('div', { className: 'nav-links' },
       links.map(l =>
         React.createElement('button', {
           key: l.id,
-          className: `nav-link ${section === l.id ? 'active' : ''}`,
+          className: `nav-link ${section === l.id ? 'active' : ''}`, 'data-s': l.id,
           'data-section': l.id,
           onClick: () => setSection(l.id),
         },
-          React.createElement('span', { className: 'nav-dot' }),
+          React.createElement('span', { className: 'ndot' }),
           React.createElement('span', null, l.label)
         )
       )
@@ -139,10 +143,10 @@ function GlossaryPage() {
   );
 
   return React.createElement('div', null,
-    React.createElement('div', { className: 'section-header' },
+    React.createElement('div', { className: 'sec-hdr' },
       React.createElement('div', null,
-        React.createElement('div', { className: 'section-title' }, 'GLOSSARY'),
-        React.createElement('div', { className: 'section-subtitle' }, 'F1 terminology explained')
+        React.createElement('div', { className: 'sec-title' }, 'GLOSSARY'),
+        React.createElement('div', { className: 'sec-sub' }, 'F1 terminology explained')
       )
     ),
     React.createElement('div', { className: 'search-wrap', style: { marginBottom: '20px', maxWidth: '360px' } },
@@ -192,12 +196,12 @@ function StandingsWidget() {
     });
   }, []);
 
-  if (loading) return React.createElement('div', { className: 'loading-state' }, React.createElement('div', { className: 'spinner' }), 'Loading standings…');
+  if (loading) return React.createElement('div', { className: 'loading' }, React.createElement('div', { className: 'spin' }), 'Loading standings…');
 
   return React.createElement('div', { className: 'card' },
     React.createElement('div', { className: 'card-header' },
       React.createElement('div', { className: 'card-title' }, `${new Date().getFullYear()} Standings`),
-      React.createElement('div', { className: 'mode-toggle' },
+      React.createElement('div', { className: 'mode-tgl' },
         React.createElement('button', { className: `mode-btn ${tab==='drivers'?'active':''}`, onClick: () => setTab('drivers') }, 'WDC'),
         React.createElement('button', { className: `mode-btn ${tab==='teams'?'active':''}`, onClick: () => setTab('teams') }, 'WCC'),
       )
@@ -240,7 +244,7 @@ function StandingsWidget() {
               )
             );
           })
-        : React.createElement('div', { className: 'empty-state' }, 'No standings data yet')
+        : React.createElement('div', { className: 'empty' }, 'No standings data yet')
   );
 }
 
@@ -268,19 +272,19 @@ function NextRaceCountdown({ meetings }) {
   return React.createElement('div', { className: 'card', style: { marginBottom: '16px' } },
     React.createElement('div', { className: 'card-header', style: { marginBottom: '12px' } },
       React.createElement('div', { className: 'card-title' }, 'Next Race'),
-      React.createElement('span', { className: 'badge badge-red' }, 'UPCOMING')
+      React.createElement('span', { className: 'badge b-red' }, 'UPCOMING')
     ),
     React.createElement('div', { style: { fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 800, marginBottom: '4px' } }, next.meeting_name),
     React.createElement('div', { style: { fontFamily: 'var(--font-display)', fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '1px', marginBottom: '16px' } },
       `${next.location} · ${new Date(next.date_start).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })}`
     ),
-    React.createElement('div', { className: 'countdown-wrap' },
+    React.createElement('div', { className: 'cd-wrap' },
       [[days,'DAYS'],[hrs,'HRS'],[mins,'MIN'],[secs,'SEC']].map(([val, label], i) =>
         React.createElement(React.Fragment, { key: label },
-          i > 0 && React.createElement('div', { className: 'countdown-sep' }, ':'),
-          React.createElement('div', { className: 'countdown-unit' },
-            React.createElement('div', { className: 'countdown-num' }, String(val).padStart(2, '0')),
-            React.createElement('div', { className: 'countdown-label' }, label)
+          i > 0 && React.createElement('div', { className: 'cd-sep' }, ':'),
+          React.createElement('div', { className: 'cd-unit' },
+            React.createElement('div', { className: 'cd-num' }, String(val).padStart(2, '0')),
+            React.createElement('div', { className: 'cd-lbl' }, label)
           )
         )
       )
@@ -301,7 +305,7 @@ function ActiveAeroCard() {
   },
     React.createElement('div', { className: 'card-header', style: { marginBottom: '10px' } },
       React.createElement('div', { className: 'card-title' }, '2026 — Active Aero Era'),
-      React.createElement('span', { className: 'badge badge-red' }, 'NEW')
+      React.createElement('span', { className: 'badge b-red' }, 'NEW')
     ),
     React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
       [
@@ -390,9 +394,9 @@ function App() {
     )
   );
 
-  return React.createElement('div', { className: 'page-shell' },
+  return React.createElement('div', { className: 'shell' },
     React.createElement(TopNav, { section, setSection, isLive }),
-    React.createElement('div', { className: 'page-content' },
+    React.createElement('div', { className: 'content' },
       renderSection()
     )
   );

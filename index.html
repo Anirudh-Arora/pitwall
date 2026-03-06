@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PITWALL — F1 Companion</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7.23.5/babel.min.js"></script>
@@ -243,7 +244,7 @@ function WeekendSection() {
       <div style={{marginBottom:'16px'}}>
         <div className="card-title" style={{marginBottom:'10px'}}>Select Race Weekend</div>
         {loadingMeetings
-          ? <div className="loading-state"><div className="spinner"/>Loading calendar…</div>
+          ? <div className="loading-state"><div className="spin"/>Loading calendar…</div>
           : <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
               {meetings.map(m=>(
                 <div key={m.meeting_key} className={`mtg-card ${selectedMeeting?.meeting_key===m.meeting_key?'selected':''}`}
@@ -261,18 +262,18 @@ function WeekendSection() {
           {/* Mode toggle + session tabs */}
           <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'14px',flexWrap:'wrap'}}>
             <div className="mode-toggle">
-              <button className={`mode-btn ${mode==='prerace'?'active':''}`} onClick={()=>setMode('prerace')}>Pre-Race</button>
-              <button className={`mode-btn ${mode==='live'?'active':''}`} onClick={()=>setMode('live')}>Live Race</button>
+              <button className={`mode-btn ${mode==='prerace'?'on':''}`} onClick={()=>setMode('prerace')}>Pre-Race</button>
+              <button className={`mode-btn ${mode==='live'?'on':''}`} onClick={()=>setMode('live')}>Live Race</button>
             </div>
             <div style={{display:'flex',gap:'4px',flexWrap:'wrap'}}>
               {sessions.map(s=>(
-                <div key={s.session_key} className={`session-tab ${selectedSession?.session_key===s.session_key?'active':''}`}
+                <div key={s.session_key} className={`sess-tab ${selectedSession?.session_key===s.session_key?'on':''}`}
                   onClick={()=>setSelectedSession(s)}>
                   {s.session_name}
                 </div>
               ))}
             </div>
-            {weekendDataLoading && <div style={{display:'flex',alignItems:'center',gap:'6px',fontFamily:'var(--font-display)',fontSize:'10px',letterSpacing:'2px',color:'var(--text-muted)'}}><div className="spinner"/>Loading sessions…</div>}
+            {weekendDataLoading && <div style={{display:'flex',alignItems:'center',gap:'6px',fontFamily:'var(--font-display)',fontSize:'10px',letterSpacing:'2px',color:'var(--text-muted)'}}><div className="spin"/>Loading sessions…</div>}
             {weekendDataReady && <div style={{display:'flex',gap:'4px',flexWrap:'wrap'}}>{aiDataSources.map(s=><span key={s} className="badge badge-green">{s}</span>)}</div>}
           </div>
 
@@ -287,13 +288,13 @@ function WeekendSection() {
                     ))}
                   </div>
                   {loadingLaps
-                    ? <div className="loading-state"><div className="spinner"/>Loading lap data…</div>
+                    ? <div className="loading-state"><div className="spin"/>Loading lap data…</div>
                     : preTab==='laptime' ? <LapTimeChart allDriverLaps={allDriverLaps} drivers={drivers}/>
                     : preTab==='sectors' ? <SectorAnalysis allDriverLaps={allDriverLaps} drivers={drivers}/>
                     : preTab==='tyres'   ? <TyreStrategy stints={stints} drivers={drivers} loading={loadingStints}/>
                     : preTab==='h2h'     ? <HeadToHead allDriverLaps={allDriverLaps} weekendSessionsLaps={weekendSessionsLaps} drivers={drivers}/>
-                    : preTab==='progression' ? (weekendDataReady?<PaceProgression weekendSessionsLaps={weekendSessionsLaps} drivers={drivers}/>:<div className="loading-state"><div className="spinner"/>Loading session data…</div>)
-                    : preTab==='ratings' ? (weekendDataReady?<PerformanceRatings weekendSessionsLaps={weekendSessionsLaps} qualiLaps={qualiLaps} drivers={drivers}/>:<div className="loading-state"><div className="spinner"/>Loading session data…</div>)
+                    : preTab==='progression' ? (weekendDataReady?<PaceProgression weekendSessionsLaps={weekendSessionsLaps} drivers={drivers}/>:<div className="loading-state"><div className="spin"/>Loading session data…</div>)
+                    : preTab==='ratings' ? (weekendDataReady?<PerformanceRatings weekendSessionsLaps={weekendSessionsLaps} qualiLaps={qualiLaps} drivers={drivers}/>:<div className="loading-state"><div className="spin"/>Loading session data…</div>)
                     : preTab==='race'    ? <RaceResults results={raceResults} loading={loadingRaceResults}/>
                     : null
                   }
@@ -323,7 +324,7 @@ function WeekendSection() {
                   ) : (
                     <div>
                       <button className="btn btn-primary" style={{width:'100%',marginBottom:'12px'}} onClick={runAI} disabled={aiLoading||!weekendDataReady}>
-                        {aiLoading?<><div className="spinner"/>Analysing…</>:'⚡ GENERATE PREDICTIONS'}
+                        {aiLoading?<><div className="spin"/>Analysing…</>:'⚡ GENERATE PREDICTIONS'}
                       </button>
                       {aiError && <div style={{color:'var(--red)',fontSize:'11px',marginBottom:'8px'}}>{aiError}</div>}
                       {predictions.map((p,i)=>(
@@ -478,11 +479,7 @@ function PitWallApp() {
   );
 
   return React.createElement('div', { className: 'page-shell' },
-    React.createElement(TopNav, {
-      section, setSection,
-      isLive: false,
-      nextRace: `F1 ${new Date().getFullYear()}`
-    }),
+    React.createElement(TopNav, { section, setSection, isLive: false }),
     React.createElement('div', { className: 'page-content' },
       renderSection()
     )

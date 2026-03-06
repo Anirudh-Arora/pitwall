@@ -1,3 +1,57 @@
+// ═══════════════════════════════════════════════════════════════
+// CIRCUIT SVG PATHS
+// Simplified schematic track outlines. ViewBox: "0 0 200 140"
+// Generated from official track maps — approximate shapes
+// ═══════════════════════════════════════════════════════════════
+const CIRCUIT_SVG_PATHS = {
+  bahrain:
+    "M 55 115 L 40 90 L 38 60 Q 36 35 55 28 L 95 22 L 145 25 Q 165 28 168 50 L 162 80 Q 158 100 140 110 L 110 118 Q 80 124 55 115 Z",
+  jeddah:
+    "M 30 75 L 28 40 Q 26 15 50 10 L 100 8 Q 145 8 162 30 L 170 60 Q 172 90 155 108 L 120 120 Q 85 126 55 115 Q 30 105 30 75 Z",
+  melbourne:
+    "M 38 95 L 30 58 Q 26 30 50 18 L 100 12 Q 140 10 158 34 L 166 65 Q 168 95 148 112 L 108 122 Q 70 126 48 112 Q 34 104 38 95 Z",
+  suzuka:
+    "M 40 70 L 38 35 Q 36 12 58 8 L 90 6 Q 112 6 120 22 L 124 45 Q 122 58 108 65 L 122 75 Q 140 88 138 108 L 120 122 Q 90 130 62 124 L 44 112 Q 36 100 40 70 Z",
+  shanghai:
+    "M 165 35 Q 178 58 168 82 L 148 104 Q 118 120 82 116 L 46 106 Q 22 90 24 62 L 30 36 Q 42 12 80 8 L 120 6 Q 152 8 165 35 Z",
+  miami:
+    "M 40 100 L 32 65 Q 28 38 52 24 L 100 16 Q 142 12 160 38 L 168 70 Q 170 98 148 114 L 108 124 Q 68 128 46 114 Q 36 108 40 100 Z",
+  imola:
+    "M 28 80 L 26 48 Q 24 22 50 14 L 92 8 Q 130 6 152 28 L 165 56 Q 168 84 150 104 L 116 120 Q 78 128 50 118 Q 26 106 28 80 Z",
+  monaco:
+    "M 50 108 L 28 72 Q 18 50 30 30 L 58 14 Q 88 4 118 12 L 148 28 Q 168 48 164 76 L 152 100 Q 132 116 102 120 L 68 120 Q 52 116 50 108 Z",
+  barcelona:
+    "M 32 85 L 28 50 Q 26 26 52 16 L 96 8 Q 136 6 156 30 L 168 60 Q 170 88 152 108 L 112 122 Q 70 128 46 114 Q 28 102 32 85 Z",
+  canada:
+    "M 45 100 L 28 62 Q 20 36 40 20 L 78 8 Q 118 2 152 18 L 170 45 Q 176 72 162 96 L 136 116 Q 98 128 62 122 Q 38 114 45 100 Z",
+  silverstone:
+    "M 30 70 Q 26 44 40 26 L 72 10 Q 108 2 140 14 L 164 34 Q 178 54 174 82 L 158 106 L 120 122 L 72 124 Q 34 118 30 88 L 30 70 Z",
+  hungary:
+    "M 40 92 L 34 56 Q 30 30 52 18 L 90 8 Q 128 2 152 22 L 168 52 Q 174 82 158 106 L 124 122 L 80 126 Q 40 120 40 92 Z",
+  spa:
+    "M 22 72 L 20 40 Q 18 14 46 8 L 90 4 Q 136 2 160 24 L 176 54 Q 182 84 164 108 L 128 124 L 76 126 Q 32 120 22 94 L 22 72 Z",
+  zandvoort:
+    "M 40 96 L 34 58 Q 30 32 54 18 L 92 8 Q 132 4 156 26 L 170 58 Q 174 88 156 110 L 118 124 L 72 126 Q 34 118 40 96 Z",
+  monza:
+    "M 24 68 L 22 32 Q 22 10 50 6 L 102 4 Q 148 4 168 28 L 178 58 L 170 88 Q 150 112 104 116 L 52 114 Q 22 104 24 80 L 24 68 Z",
+  baku:
+    "M 18 60 L 16 24 Q 14 4 44 2 L 104 2 Q 158 2 174 26 L 184 56 Q 186 82 170 102 L 138 120 L 84 124 Q 38 118 18 90 L 18 70 L 18 60 Z",
+  singapore:
+    "M 42 105 L 34 66 Q 30 36 56 22 L 96 10 Q 136 4 160 26 L 172 58 Q 176 88 156 110 L 112 124 L 66 124 Q 34 114 42 105 Z",
+  austin:
+    "M 34 82 L 30 48 Q 28 24 54 14 L 96 6 Q 134 2 158 22 L 170 52 Q 174 80 158 104 L 118 120 L 68 124 Q 28 116 34 82 Z",
+  mexico:
+    "M 36 86 L 32 50 Q 30 26 56 16 L 96 8 Q 136 4 160 26 L 172 56 Q 176 84 158 108 L 116 122 L 66 126 Q 28 118 36 86 Z",
+  brazil:
+    "M 30 76 L 26 44 Q 24 20 50 12 L 90 4 Q 132 2 156 22 L 170 52 Q 176 80 160 104 L 120 120 L 72 124 Q 28 116 30 76 Z",
+  lasvegas:
+    "M 20 65 L 18 28 Q 16 6 48 2 L 106 2 L 162 6 Q 182 14 184 40 L 184 70 L 176 100 Q 160 118 116 120 L 52 118 Q 18 108 20 85 L 20 65 Z",
+  qatar:
+    "M 34 88 L 30 52 Q 28 26 54 16 L 94 8 Q 134 4 158 26 L 172 56 Q 176 86 158 110 L 114 124 L 64 126 Q 28 116 34 88 Z",
+  abudhabi:
+    "M 36 90 L 32 52 Q 30 26 56 16 L 96 8 Q 136 4 160 28 L 174 58 Q 178 88 160 112 L 116 124 L 64 126 Q 28 116 36 90 Z",
+};
+
 /* js/utils.js — shared across all pages */
 'use strict';
 
@@ -114,6 +168,35 @@ function cleanLaps(laps, bestTime) {
 // ═══════════════════════════════════════════════════════════════
 // CIRCUITS ENCYCLOPEDIA DATA
 // ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// CIRCUIT SVG PATHS — simplified schematic outlines (viewBox 0 0 200 120)
+// ═══════════════════════════════════════════════════════════════
+const CIRCUIT_SVG = {
+  bahrain:    "M 40 90 L 40 70 Q 40 50 55 45 L 100 35 Q 120 30 130 40 L 150 65 Q 160 80 155 95 L 145 105 Q 130 115 110 110 L 80 105 Q 55 105 40 90 Z",
+  jeddah:     "M 20 60 L 20 30 Q 20 15 35 12 L 80 10 Q 110 8 130 20 L 155 40 Q 170 55 165 75 L 150 90 Q 140 100 125 98 L 90 95 Q 60 92 45 80 Q 30 68 20 60 Z",
+  melbourne:  "M 30 80 L 30 40 Q 30 20 50 18 L 100 15 Q 130 14 145 30 L 160 55 Q 168 75 155 90 L 130 105 Q 105 112 80 108 L 50 100 Q 30 95 30 80 Z",
+  suzuka:     "M 40 55 L 40 25 Q 40 10 55 8 L 85 8 Q 100 8 108 18 L 115 35 Q 118 45 110 52 L 95 60 L 110 68 Q 125 76 130 90 L 125 105 Q 115 115 100 112 L 65 110 Q 45 105 40 88 L 40 55 Z",
+  shanghai:   "M 160 30 Q 170 50 160 70 L 140 90 Q 120 105 95 105 L 60 100 Q 35 90 30 65 L 35 40 Q 45 18 70 14 L 105 12 Q 140 12 160 30 Z",
+  miami:      "M 35 75 L 35 40 Q 35 22 55 18 L 105 15 Q 135 14 150 30 L 162 55 Q 168 75 158 92 L 138 108 Q 110 118 80 113 L 50 106 Q 32 96 35 75 Z",
+  imola:      "M 25 70 Q 25 40 40 28 L 75 15 Q 105 8 130 20 L 158 45 Q 172 65 162 88 L 142 106 Q 112 118 82 112 L 48 102 Q 25 90 25 70 Z",
+  monaco:     "M 50 95 L 30 65 Q 22 48 30 32 L 50 18 Q 70 8 95 12 L 130 22 Q 155 35 162 60 L 158 82 Q 148 98 128 104 L 95 108 Q 65 108 50 95 Z",
+  barcelona:  "M 30 75 L 32 42 Q 34 22 52 16 L 90 10 Q 122 8 142 24 L 158 48 Q 168 68 158 88 L 138 106 Q 108 118 78 113 L 48 103 Q 28 92 30 75 Z",
+  canada:     "M 40 88 L 28 58 Q 22 38 35 24 L 62 12 Q 88 4 115 10 L 148 24 Q 168 38 170 62 L 164 84 Q 152 100 130 106 L 95 110 Q 60 110 40 88 Z",
+  silverstone:"M 30 62 Q 28 42 38 28 L 62 14 Q 88 4 118 8 L 150 18 Q 170 30 172 55 L 168 80 Q 158 100 132 108 L 95 112 Q 58 112 38 96 Q 28 84 30 62 Z",
+  hungary:    "M 38 80 L 35 50 Q 32 30 48 20 L 80 10 Q 108 4 132 16 L 156 36 Q 170 56 164 80 L 148 100 Q 122 114 92 112 L 58 106 Q 35 96 38 80 Z",
+  spa:        "M 20 65 L 22 35 Q 24 16 42 10 L 80 6 Q 115 4 140 18 L 165 40 Q 178 62 170 86 L 152 104 Q 122 116 88 112 L 50 104 Q 20 90 20 65 Z",
+  zandvoort:  "M 38 82 L 35 52 Q 33 32 50 20 L 82 10 Q 110 4 134 18 L 158 40 Q 172 62 166 86 L 148 104 Q 120 116 88 113 L 55 106 Q 36 96 38 82 Z",
+  monza:      "M 25 60 L 25 30 Q 25 12 45 8 L 95 6 Q 140 6 162 25 L 175 55 L 162 85 Q 140 104 95 108 L 45 106 Q 25 100 25 80 L 25 60 Z",
+  baku:       "M 15 50 L 18 20 Q 22 6 40 4 L 100 2 Q 150 2 170 20 L 182 48 Q 185 70 172 88 L 148 105 Q 115 115 80 112 L 38 106 Q 15 92 15 70 L 15 50 Z",
+  singapore:  "M 40 90 L 35 55 Q 32 32 50 20 L 85 8 Q 118 2 145 18 L 165 42 Q 175 65 165 88 L 143 106 Q 112 118 80 114 L 50 106 Q 38 98 40 90 Z",
+  austin:     "M 30 72 L 30 42 Q 30 22 48 14 L 88 8 Q 122 4 148 20 L 168 46 Q 178 68 168 90 L 146 108 Q 112 118 78 114 L 46 106 Q 28 92 30 72 Z",
+  mexico:     "M 35 78 L 33 48 Q 30 26 48 16 L 85 8 Q 118 4 145 18 L 165 44 Q 178 66 168 90 L 145 108 Q 112 118 78 114 L 46 104 Q 33 92 35 78 Z",
+  brazil:     "M 28 68 L 28 38 Q 28 18 46 10 L 88 4 Q 125 2 150 18 L 170 46 Q 180 68 168 90 L 144 108 Q 110 118 76 113 L 42 104 Q 26 88 28 68 Z",
+  lasvegas:   "M 22 55 L 22 25 Q 22 8 40 5 L 100 3 Q 155 3 175 22 L 185 50 L 175 78 Q 155 98 100 103 L 40 101 Q 22 92 22 75 L 22 55 Z",
+  qatar:      "M 32 75 L 30 44 Q 28 24 46 16 L 85 8 Q 120 4 146 20 L 166 48 Q 176 70 164 92 L 140 108 Q 108 118 74 113 L 42 104 Q 30 92 32 75 Z",
+  abudhabi:   "M 35 78 L 32 48 Q 30 26 50 18 L 90 8 Q 125 4 152 20 L 170 48 Q 180 70 168 92 L 144 108 Q 110 118 76 114 L 44 104 Q 33 92 35 78 Z",
+};
 const CIRCUITS = [
   {
     id: 'bahrain', name: 'Bahrain International Circuit', country: 'Bahrain', city: 'Sakhir',
@@ -500,27 +583,37 @@ const CIRCUITS = [
 // DRIVER DATA (current 2025/2026 grid)
 // ═══════════════════════════════════════════════════════════════
 const CURRENT_DRIVERS = [
-  { num: 1,  code:'VER', first:'Max',       last:'Verstappen', nat:'🇳🇱', team:'Red Bull Racing',      dob:'1997-09-30', wikiTitle:'Max_Verstappen' },
-  { num: 4,  code:'NOR', first:'Lando',     last:'Norris',     nat:'🇬🇧', team:'McLaren',              dob:'1999-11-13', wikiTitle:'Lando_Norris' },
-  { num: 16, code:'LEC', first:'Charles',   last:'Leclerc',    nat:'🇲🇨', team:'Ferrari',              dob:'1997-10-16', wikiTitle:'Charles_Leclerc' },
-  { num: 44, code:'HAM', first:'Lewis',     last:'Hamilton',   nat:'🇬🇧', team:'Ferrari',              dob:'1985-01-07', wikiTitle:'Lewis_Hamilton' },
-  { num: 63, code:'RUS', first:'George',    last:'Russell',    nat:'🇬🇧', team:'Mercedes',             dob:'1998-02-15', wikiTitle:'George_Russell_(racing_driver)' },
-  { num: 12, code:'ANT', first:'Kimi',      last:'Antonelli',  nat:'🇮🇹', team:'Mercedes',             dob:'2006-08-25', wikiTitle:'Andrea_Kimi_Antonelli' },
-  { num: 14, code:'ALO', first:'Fernando',  last:'Alonso',     nat:'🇪🇸', team:'Aston Martin',         dob:'1981-07-29', wikiTitle:'Fernando_Alonso' },
-  { num: 18, code:'STR', first:'Lance',     last:'Stroll',     nat:'🇨🇦', team:'Aston Martin',         dob:'1998-10-29', wikiTitle:'Lance_Stroll' },
-  { num: 81, code:'PIA', first:'Oscar',     last:'Piastri',    nat:'🇦🇺', team:'McLaren',              dob:'2001-04-06', wikiTitle:'Oscar_Piastri' },
-  { num: 55, code:'SAI', first:'Carlos',    last:'Sainz',      nat:'🇪🇸', team:'Williams',             dob:'1994-09-01', wikiTitle:'Carlos_Sainz_Jr.' },
-  { num: 10, code:'GAS', first:'Pierre',    last:'Gasly',      nat:'🇫🇷', team:'Alpine',               dob:'1996-02-07', wikiTitle:'Pierre_Gasly' },
-  { num: 31, code:'OCO', first:'Esteban',   last:'Ocon',       nat:'🇫🇷', team:'Haas',                 dob:'1996-09-17', wikiTitle:'Esteban_Ocon' },
-  { num: 27, code:'HUL', first:'Nico',      last:'Hülkenberg', nat:'🇩🇪', team:'Kick Sauber',          dob:'1987-08-19', wikiTitle:'Nico_Hülkenberg' },
-  { num: 5,  code:'BEA', first:'Oliver',    last:'Bearman',    nat:'🇬🇧', team:'Haas',                 dob:'2005-05-08', wikiTitle:'Oliver_Bearman' },
-  { num: 23, code:'ALB', first:'Alexander', last:'Albon',      nat:'🇹🇭', team:'Williams',             dob:'1996-03-23', wikiTitle:'Alexander_Albon' },
-  { num: 22, code:'TSU', first:'Yuki',      last:'Tsunoda',    nat:'🇯🇵', team:'Racing Bulls',         dob:'2000-05-11', wikiTitle:'Yuki_Tsunoda' },
-  { num: 6,  code:'HAD', first:'Isack',     last:'Hadjar',     nat:'🇫🇷', team:'Racing Bulls',         dob:'2004-09-28', wikiTitle:'Isack_Hadjar' },
-  { num: 43, code:'COL', first:'Franco',    last:'Colapinto',  nat:'🇦🇷', team:'Alpine',               dob:'2003-05-27', wikiTitle:'Franco_Colapinto' },
-  { num: 87, code:'BOR', first:'Gabriel',   last:'Bortoleto',  nat:'🇧🇷', team:'Kick Sauber',          dob:'2004-10-14', wikiTitle:'Gabriel_Bortoleto' },
-  { num: 30, code:'LIN', first:'Arvid',     last:'Lindblad',   nat:'🇬🇧', team:'Racing Bulls',         dob:'2006-12-10', wikiTitle:'Arvid_Lindblad' },
-];
+  // McLaren — 2025 WCC champions
+  { num: 4,  code:'NOR', first:'Lando',     last:'Norris',     nat:'🇬🇧', team:'McLaren',           dob:'1999-11-13', wikiTitle:'Lando_Norris' },
+  { num: 81, code:'PIA', first:'Oscar',     last:'Piastri',    nat:'🇦🇺', team:'McLaren',           dob:'2001-04-06', wikiTitle:'Oscar_Piastri' },
+  // Ferrari
+  { num: 16, code:'LEC', first:'Charles',   last:'Leclerc',    nat:'🇲🇨', team:'Ferrari',           dob:'1997-10-16', wikiTitle:'Charles_Leclerc' },
+  { num: 44, code:'HAM', first:'Lewis',     last:'Hamilton',   nat:'🇬🇧', team:'Ferrari',           dob:'1985-01-07', wikiTitle:'Lewis_Hamilton' },
+  // Red Bull — Verstappen keeps #1 (defending champ right); Tsunoda promoted after Lawson swapped round 3
+  { num: 1,  code:'VER', first:'Max',       last:'Verstappen', nat:'🇳🇱', team:'Red Bull Racing',   dob:'1997-09-30', wikiTitle:'Max_Verstappen' },
+  { num: 22, code:'TSU', first:'Yuki',      last:'Tsunoda',    nat:'🇯🇵', team:'Red Bull Racing',   dob:'2000-05-11', wikiTitle:'Yuki_Tsunoda' },
+  // Mercedes
+  { num: 63, code:'RUS', first:'George',    last:'Russell',    nat:'🇬🇧', team:'Mercedes',          dob:'1998-02-15', wikiTitle:'George_Russell_(racing_driver)' },
+  { num: 12, code:'ANT', first:'Kimi',      last:'Antonelli',  nat:'🇮🇹', team:'Mercedes',          dob:'2006-08-25', wikiTitle:'Andrea_Kimi_Antonelli' },
+  // Aston Martin
+  { num: 14, code:'ALO', first:'Fernando',  last:'Alonso',     nat:'🇪🇸', team:'Aston Martin',      dob:'1981-07-29', wikiTitle:'Fernando_Alonso' },
+  { num: 18, code:'STR', first:'Lance',     last:'Stroll',     nat:'🇨🇦', team:'Aston Martin',      dob:'1998-10-29', wikiTitle:'Lance_Stroll' },
+  // Alpine — Colapinto replaced Doohan from round 7
+  { num: 10, code:'GAS', first:'Pierre',    last:'Gasly',      nat:'🇫🇷', team:'Alpine',            dob:'1996-02-07', wikiTitle:'Pierre_Gasly' },
+  { num: 43, code:'COL', first:'Franco',    last:'Colapinto',  nat:'🇦🇷', team:'Alpine',            dob:'2003-05-27', wikiTitle:'Franco_Colapinto' },
+  // Haas
+  { num: 87, code:'BEA', first:'Oliver',    last:'Bearman',    nat:'🇬🇧', team:'Haas',              dob:'2005-05-08', wikiTitle:'Oliver_Bearman' },
+  { num: 31, code:'OCO', first:'Esteban',   last:'Ocon',       nat:'🇫🇷', team:'Haas',              dob:'1996-09-17', wikiTitle:'Esteban_Ocon' },
+  // Racing Bulls — Tsunoda moved to Red Bull, Lawson demoted here from round 3
+  { num: 30, code:'LAW', first:'Liam',      last:'Lawson',     nat:'🇳🇿', team:'Racing Bulls',      dob:'2002-02-11', wikiTitle:'Liam_Lawson_(racing_driver)' },
+  { num: 6,  code:'HAD', first:'Isack',     last:'Hadjar',     nat:'🇫🇷', team:'Racing Bulls',      dob:'2004-09-28', wikiTitle:'Isack_Hadjar' },
+  // Williams
+  { num: 23, code:'ALB', first:'Alexander', last:'Albon',      nat:'🇹🇭', team:'Williams',          dob:'1996-03-23', wikiTitle:'Alexander_Albon' },
+  { num: 55, code:'SAI', first:'Carlos',    last:'Sainz',      nat:'🇪🇸', team:'Williams',          dob:'1994-09-01', wikiTitle:'Carlos_Sainz_Jr.' },
+  // Kick Sauber (becoming Audi 2026)
+  { num: 27, code:'HUL', first:'Nico',      last:'Hulkenberg',  nat:'🇩🇪', team:'Kick Sauber',       dob:'1987-08-19', wikiTitle:'Nico_Hülkenberg' },
+  { num: 5,  code:'BOR', first:'Gabriel',   last:'Bortoleto',  nat:'🇧🇷', team:'Kick Sauber',       dob:'2004-10-14', wikiTitle:'Gabriel_Bortoleto' },
+]
 
 // ═══════════════════════════════════════════════════════════════
 // CONSTRUCTORS (current)
