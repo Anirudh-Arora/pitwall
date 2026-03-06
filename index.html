@@ -1391,40 +1391,184 @@ function TimingTower({ positions, intervals, drivers, stints, pits }) {
 // ─── LAP TIME CHART ────────────────────────────────────────────
 function LapTimeChart({ allDriverLaps, drivers }) {
   const driverMap = useMemo(() => { const m={}; drivers?.forEach(d=>{m[d.driver_number]=d;}); return m; }, [drivers]);
-  const { chartData, top10, yMin, yMax } = useMemo(() => {
-    if (!allDriverLaps || !Object.keys(allDriverLaps).length) return { chartData:[], top10:[], yMin:0, yMax:120 };
-    const top10 = Object.entries(allDriverLaps).map(([num,laps])=>({num,count:laps.length})).sort((a,b)=>b.count-a.count).map(x=>x.num);
-    const byLap={}, allT=[];
-    top10.forEach(num => {
-      allDriverLaps[num].forEach(lap => {
+
+  const allNums = useMemo(() =>
+    Object.entries(allDriverLaps||{}).map(([num,laps])=>({num,count:laps.length})).sort((a,b)=>b.count-a.count).map(x=>x.num)
+  , [allDriverLaps]);
+
+  const [selected, setSelected] = useState(new Set());
+  const [showAll, setShowAll] = useState(true);
+  const [lapFrom, setLapFrom] = useState('');
+  const [lapTo, setLapTo] = useState('');
+
+  useEffect(() => { setSelected(new Set()); setShowAll(true); setLapFrom(''); setLapTo(''); }, [allNums.join(',')]);
+
+  const activeNums = showAll ? allNums : allNums.filter(n => selected.has(n));
+
+  const toggleDriver = (num) => {
+    if (showAll) { setShowAll(false); setSelected(new Set([num])); }
+    else {
+      setSelected(prev => {
+        const next = new Set(prev);
+        if (next.has(num)) { next.delete(num); if (!next.size) setShowAll(true); }
+        else next.add(num);
+        return next;
+      });
+    }
+  };
+
+  // Full chart data (all laps)
+  const { allChartData, maxLap } = useMemo(() => {
+    if (!allDriverLaps || !activeNums.length) return { allChartData:[], maxLap:0 };
+    const byLap = {};
+    activeNums.forEach(num => {
+      (allDriverLaps[num]||[]).forEach(lap => {
         if (!lap.lap_duration) return;
-        if (!byLap[lap.lap_number]) byLap[lap.lap_number]={lap:lap.lap_number};
-        byLap[lap.lap_number][num]=lap.lap_duration;
-        allT.push(lap.lap_duration);
+        if (!byLap[lap.lap_number]) byLap[lap.lap_number] = { lap: lap.lap_number };
+        byLap[lap.lap_number][num] = lap.lap_duration;
       });
     });
-    if (!allT.length) return { chartData:[], top10:[], yMin:0, yMax:120 };
-    const sorted=allT.sort((a,b)=>a-b);
-    const pad = Math.max((sorted[sorted.length-1]-sorted[0])*0.15, 1.5);
-    return { chartData:Object.values(byLap).sort((a,b)=>a.lap-b.lap).slice(0,80), top10, yMin:sorted[0]-pad, yMax:sorted[sorted.length-1]+pad };
-  }, [allDriverLaps]);
-  if (!chartData.length) return <div className="empty-state">No lap data available</div>;
+    const sorted = Object.values(byLap).sort((a,b)=>a.lap-b.lap);
+    return { allChartData: sorted, maxLap: sorted.length ? sorted[sorted.length-1].lap : 0 };
+  }, [allDriverLaps, activeNums]);
+
+  // Apply lap window filter
+  const from = lapFrom !== '' ? parseInt(lapFrom) : 1;
+  const to   = lapTo   !== '' ? parseInt(lapTo)   : maxLap;
+  const chartData = allChartData.filter(d => d.lap >= from && d.lap <= to);
+
+  // Y axis domain from visible data only
+  const { yMin, yMax } = useMemo(() => {
+    const allT = [];
+    chartData.forEach(row => activeNums.forEach(num => { if (row[num]) allT.push(row[num]); }));
+    if (!allT.length) return { yMin: 0, yMax: 120 };
+    const s = [...allT].sort((a,b)=>a-b);
+    const pad = Math.max((s[s.length-1]-s[0])*0.15, 1.0);
+    return { yMin: s[0]-pad, yMax: s[s.length-1]+pad };
+  }, [chartData, activeNums]);
+
+  if (!allNums.length) return <div className="empty-state">No lap data available</div>;
   if (!ResponsiveContainer) return <div className="empty-state">Chart loading...</div>;
+
+  const inputStyle = {
+    width:'54px', padding:'3px 6px', background:'var(--bg-secondary)', border:'1px solid var(--border)',
+    borderRadius:'3px', color:'var(--text-primary)', fontFamily:'var(--font-data)', fontSize:'11px',
+    outline:'none', textAlign:'center',
+  };
+
   return (
-    <div style={{height:300}}>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={chartData} margin={{top:5,right:16,left:0,bottom:20}}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="lap" stroke="var(--text-dim)" tick={{fill:'var(--text-dim)',fontSize:10,fontFamily:'var(--font-data)'}} label={{value:'Lap',position:'insideBottom',offset:-10,fill:'var(--text-dim)',fontSize:10}} />
-          <YAxis stroke="var(--text-dim)" tick={{fill:'var(--text-dim)',fontSize:10,fontFamily:'var(--font-data)'}} tickFormatter={fmt} width={66} domain={[yMin,yMax]} tickCount={6} />
-          <Tooltip contentStyle={{background:'var(--bg-elevated)',border:'1px solid var(--border)',borderRadius:'4px'}}
-            labelStyle={{color:'var(--text-secondary)',fontFamily:'var(--font-head)',fontSize:'11px'}}
-            itemStyle={{fontFamily:'var(--font-data)',fontSize:'10px'}}
-            formatter={(v,name) => [fmt(v), driverMap[name]?.last_name||name]} labelFormatter={l=>`Lap ${l}`} />
-          <Legend formatter={v => driverMap[v]?.last_name||v} wrapperStyle={{fontFamily:'var(--font-data)',fontSize:'10px',paddingTop:'8px'}} />
-          {top10.map(num => <Line key={num} type="monotone" dataKey={num} stroke={getTeamColor(driverMap[num]?.team_name)} dot={false} strokeWidth={1.5} connectNulls={false} />)}
-        </LineChart>
-      </ResponsiveContainer>
+    <div>
+      {/* ── Driver filter pills ── */}
+      <div style={{display:'flex',flexWrap:'wrap',gap:'5px',marginBottom:'10px',alignItems:'center'}}>
+        <button onClick={() => { setShowAll(true); setSelected(new Set()); }}
+          style={{
+            padding:'3px 10px', fontFamily:'var(--font-head)', fontSize:'10px', fontWeight:700,
+            letterSpacing:'1.5px', textTransform:'uppercase', cursor:'pointer', borderRadius:'3px',
+            border: showAll ? '1px solid var(--accent-green)' : '1px solid var(--border)',
+            background: showAll ? 'rgba(0,210,190,.12)' : 'var(--bg-elevated)',
+            color: showAll ? 'var(--accent-green)' : 'var(--text-secondary)', transition:'all .15s',
+          }}>ALL</button>
+        <div style={{width:'1px',height:'18px',background:'var(--border)',margin:'0 2px'}}/>
+        {allNums.map(num => {
+          const d = driverMap[num];
+          const color = getTeamColor(d?.team_name);
+          const isActive = showAll || selected.has(num);
+          return (
+            <button key={num} onClick={() => toggleDriver(num)}
+              style={{
+                padding:'3px 9px', fontFamily:'var(--font-head)', fontSize:'10px', fontWeight:700,
+                letterSpacing:'1px', cursor:'pointer', borderRadius:'3px', transition:'all .15s',
+                border: isActive ? `1px solid ${color}` : '1px solid var(--border)',
+                background: isActive ? `${color}22` : 'var(--bg-elevated)',
+                color: isActive ? color : 'var(--text-dim)',
+              }}>
+              {d?.name_acronym || d?.last_name || `#${num}`}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Lap window controls ── */}
+      <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'12px',flexWrap:'wrap'}}>
+        <span style={{fontFamily:'var(--font-head)',fontSize:'10px',letterSpacing:'2px',color:'var(--text-dim)',textTransform:'uppercase'}}>Lap Window</span>
+        <input style={inputStyle} type="number" min="1" max={maxLap} placeholder="1"
+          value={lapFrom} onChange={e => setLapFrom(e.target.value)} />
+        <span style={{fontFamily:'var(--font-head)',fontSize:'11px',color:'var(--text-dim)'}}>→</span>
+        <input style={inputStyle} type="number" min="1" max={maxLap} placeholder={maxLap||'—'}
+          value={lapTo} onChange={e => setLapTo(e.target.value)} />
+        {(lapFrom !== '' || lapTo !== '') && (
+          <button onClick={() => { setLapFrom(''); setLapTo(''); }}
+            style={{padding:'3px 8px',fontFamily:'var(--font-head)',fontSize:'9px',fontWeight:700,
+              letterSpacing:'1px',cursor:'pointer',borderRadius:'3px',border:'1px solid var(--border)',
+              background:'var(--bg-elevated)',color:'var(--text-secondary)',transition:'all .15s'}}>
+            RESET
+          </button>
+        )}
+        {maxLap > 0 && (
+          <span style={{fontFamily:'var(--font-data)',fontSize:'10px',color:'var(--text-dim)',marginLeft:'4px'}}>
+            {chartData.length} laps shown
+            {(lapFrom !== '' || lapTo !== '') && ` (${from}–${Math.min(to, maxLap)} of ${maxLap})`}
+          </span>
+        )}
+        {/* Quick zoom buttons */}
+        {maxLap >= 20 && (
+          <div style={{display:'flex',gap:'4px',marginLeft:'4px'}}>
+            {[['First 10','1','10'],['Last 10',String(Math.max(1,maxLap-9)),String(maxLap)],['First half','1',String(Math.floor(maxLap/2))],['Second half',String(Math.floor(maxLap/2)+1),String(maxLap)]].map(([label,f,t])=>(
+              <button key={label} onClick={()=>{setLapFrom(f);setLapTo(t);}}
+                style={{padding:'2px 7px',fontFamily:'var(--font-head)',fontSize:'9px',fontWeight:700,
+                  letterSpacing:'1px',cursor:'pointer',borderRadius:'3px',border:'1px solid var(--border)',
+                  background:'var(--bg-elevated)',color:'var(--text-dim)',transition:'all .15s',whiteSpace:'nowrap'}}>
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── Chart ── */}
+      {chartData.length ? (
+        <div style={{height:320}}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData} margin={{top:5,right:16,left:0,bottom:20}}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis dataKey="lap" stroke="var(--text-dim)"
+                tick={{fill:'var(--text-dim)',fontSize:10,fontFamily:'var(--font-data)'}}
+                label={{value:'Lap',position:'insideBottom',offset:-10,fill:'var(--text-dim)',fontSize:10}}
+                domain={[from, Math.min(to, maxLap)]} type="number" />
+              <YAxis stroke="var(--text-dim)"
+                tick={{fill:'var(--text-dim)',fontSize:10,fontFamily:'var(--font-data)'}}
+                tickFormatter={fmt} width={66} domain={[yMin, yMax]} tickCount={6} />
+              <Tooltip
+                contentStyle={{background:'var(--bg-elevated)',border:'1px solid var(--border)',borderRadius:'4px'}}
+                labelStyle={{color:'var(--text-secondary)',fontFamily:'var(--font-head)',fontSize:'11px'}}
+                itemStyle={{fontFamily:'var(--font-data)',fontSize:'10px'}}
+                formatter={(v,name) => [fmt(v), driverMap[name]?.last_name||name]}
+                labelFormatter={l=>`Lap ${l}`}
+                itemSorter={item => item.value} />
+              {activeNums.length <= 6 && (
+                <Legend formatter={v => driverMap[v]?.last_name||v}
+                  wrapperStyle={{fontFamily:'var(--font-data)',fontSize:'10px',paddingTop:'8px'}} />
+              )}
+              {activeNums.map(num => (
+                <Line key={num} type="monotone" dataKey={num}
+                  stroke={getTeamColor(driverMap[num]?.team_name)}
+                  dot={activeNums.length <= 3 && chartData.length <= 30
+                    ? {r:3,fill:getTeamColor(driverMap[num]?.team_name)} : false}
+                  strokeWidth={activeNums.length <= 3 ? 2.5 : activeNums.length <= 6 ? 2 : 1.5}
+                  connectNulls={false} />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      ) : (
+        <div className="empty-state">No laps in selected window</div>
+      )}
+
+      {!showAll && selected.size > 0 && (
+        <div style={{marginTop:'8px',fontFamily:'var(--font-head)',fontSize:'10px',color:'var(--text-dim)',letterSpacing:'1px'}}>
+          {selected.size} driver{selected.size>1?'s':''} selected · click ALL to reset
+        </div>
+      )}
     </div>
   );
 }
