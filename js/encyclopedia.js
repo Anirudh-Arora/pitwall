@@ -49,10 +49,15 @@ function CircuitSVG({ circuitId }) {
     fetch(url)
       .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
       .then(text => {
-        // Fully replace the <svg> opening tag so no hardcoded width/height can escape
+        // Extract the viewBox — this is critical, it defines the coordinate space
+        const vbMatch = text.match(/viewBox="([^"]+)"/i);
+        const viewBox = vbMatch ? vbMatch[1] : '0 0 500 500';
+        // Rebuild the svg tag keeping only viewBox, forcing 100% size
         const styled = text
-          .replace(/<svg[^>]*>/i, '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="display:block;">')
-          .replace(/<\/svg>/i, '<style>path,polyline,line,circle,rect,ellipse{stroke:#00e8a8!important;fill:none!important;stroke-width:1.5px;}text,image{display:none;}</style></svg>');
+          .replace(/<svg[^>]*>/i,
+            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="display:block;">`)
+          .replace(/<\/svg>/i,
+            '<style>path,polyline,line,circle,rect,ellipse{stroke:#00e8a8!important;fill:none!important;}text,image,defs{display:none;}</style></svg>');
         setSvgContent(styled);
       })
       .catch(() => setError(true));
@@ -81,8 +86,8 @@ function CircuitSVG({ circuitId }) {
   }
 
   return React.createElement('div', {
-    style: { width:'100%', height:'100%', display:'flex', alignItems:'center',
-             justifyContent:'center', overflow:'hidden' },
+    style: { width:'100%', height:'100%', overflow:'hidden', display:'flex',
+             alignItems:'center', justifyContent:'center' },
     dangerouslySetInnerHTML: { __html: svgContent }
   });
 }
