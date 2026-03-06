@@ -60,10 +60,19 @@ function fmt(s) {
 }
 
 function fmtGap(s) {
-  if (s == null) return '—';
-  if (typeof s === 'string') return s;
-  if (Math.abs(s) > 90) return `+${Math.floor(Math.abs(s)/60)}L`;
-  return `+${Math.abs(s).toFixed(3)}`;
+  if (s == null || s === '') return '—';
+  if (typeof s === 'string') {
+    // Already formatted (e.g. "+1.234" or "+1 LAP")
+    if (s.startsWith('+') || s.startsWith('-')) return s;
+    const n = parseFloat(s);
+    if (!isNaN(n)) return `+${Math.abs(n).toFixed(3)}`;
+    return s;
+  }
+  if (typeof s === 'number') {
+    if (Math.abs(s) > 90) return `+${Math.floor(Math.abs(s)/60)} LAP`;
+    return `+${Math.abs(s).toFixed(3)}`;
+  }
+  return '—';
 }
 
 function cleanLaps(laps, best) {
@@ -1180,7 +1189,9 @@ function TimingTower({ positions, intervals, drivers, stints, pits }) {
         const prev=prevRef.current[p.driver_number];
         const delta = prev!==undefined ? prev-p.position : 0;
         prevRef.current[p.driver_number]=p.position;
-        const gap = p.position===1?'LEADER':(iv?fmtGap(iv.gap_to_leader):'—');
+        // Use interval gap if live; fall back to position's own gap_to_leader field
+        const rawGap = iv?.gap_to_leader ?? p.gap_to_leader ?? null;
+        const gap = p.position===1 ? 'LEADER' : (rawGap !== null ? fmtGap(rawGap) : '—');
         const tyre = stint?.compound?.charAt(0)||'?';
         return (
           <div key={p.driver_number} className={`tower-row ${delta>0?'pos-gained':delta<0?'pos-lost':''}`} style={{borderLeftColor:color}}>

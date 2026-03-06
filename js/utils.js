@@ -7,80 +7,37 @@
 // CIRCUIT SVG PATHS — unique schematic outlines, viewBox 0 0 200 140
 // Each circuit has its own recognizable silhouette
 // ═══════════════════════════════════════════════════════════════
-const CIRCUIT_SVG_PATHS = {
-  // ViewBox: "0 0 300 200" for all circuits
-  // Paths use L (lineto) for angular, circuit-like appearance
-  // Each circuit is designed to be distinctly recognizable
-
-  // BAHRAIN — kidney shape, two loops, stadium section
-  bahrain: "M 85 35 L 185 30 L 210 35 L 225 55 L 225 85 L 215 105 L 195 118 L 170 125 L 145 128 L 120 127 L 95 122 L 72 112 L 58 95 L 54 72 L 56 52 L 70 38 Z M 215 72 L 240 70 L 248 80 L 248 98 L 235 105 L 215 105",
-
-  // JEDDAH — very long thin oval, tight turns at each end, coastal
-  jeddah: "M 68 18 L 190 14 L 215 18 L 228 35 L 226 68 L 224 105 L 225 140 L 218 162 L 195 172 L 68 172 L 45 162 L 38 140 L 40 105 L 40 65 L 42 35 L 55 20 Z M 192 14 L 218 35 L 224 68",
-
-  // MELBOURNE — anti-clockwise park circuit, roughly rectangular, chicane sequences  
-  melbourne: "M 70 30 L 185 25 L 210 30 L 220 50 L 218 78 L 205 92 L 220 108 L 228 125 L 218 142 L 195 150 L 130 154 L 95 152 L 68 145 L 52 130 L 45 110 L 48 85 L 40 65 L 52 42 Z",
-
-  // SUZUKA — figure-8 with crossover, very distinctive
-  suzuka: "M 68 25 L 108 18 L 138 22 L 155 38 L 160 58 L 152 76 L 136 86 L 118 90 L 138 100 L 158 115 L 162 138 L 150 158 L 128 168 L 98 170 L 72 162 L 56 145 L 54 122 L 62 104 L 75 95 L 92 90 L 108 90 L 118 90 L 100 82 L 85 72 L 72 58 L 65 42 Z",
-
-  // SHANGHAI — snail/spiral Turn 1, then long back straight with hairpin
-  shanghai: "M 220 38 L 242 62 L 240 95 L 225 115 L 198 128 L 155 132 L 110 130 L 75 122 L 55 105 L 52 82 L 62 62 L 82 50 L 108 42 L 148 36 L 185 30 L 208 28 L 222 34 Z M 155 132 L 155 155 L 168 162 L 182 155 L 182 132",
-
-  // MIAMI — flowing oval layout around stadium, S-section
-  miami: "M 68 120 L 48 95 L 42 68 L 52 45 L 72 28 L 105 18 L 148 15 L 185 18 L 212 32 L 228 55 L 232 82 L 225 108 L 210 128 L 188 142 L 155 150 L 118 152 L 88 148 Z",
-
-  // IMOLA — narrow, two distinct loops (Tamburello, Variante Alta, Rivazza)
-  imola: "M 58 32 L 88 20 L 125 15 L 162 20 L 192 38 L 210 62 L 215 90 L 205 115 L 185 132 L 165 140 L 148 138 L 142 148 L 148 158 L 142 165 L 122 165 L 105 155 L 100 142 L 82 138 L 62 128 L 46 105 L 42 78 L 46 52 Z",
-
-  // MONACO — ultra-tight, Loews hairpin, Casino, tunnel
-  monaco: "M 105 22 L 148 18 L 175 25 L 188 45 L 185 68 L 172 82 L 158 88 L 165 100 L 178 115 L 172 132 L 155 142 L 132 148 L 105 148 L 78 142 L 58 128 L 52 108 L 56 88 L 65 72 L 58 55 L 62 38 L 80 25 Z",
-
-  // BARCELONA — long pit straight, technical S-sector, stadium section
-  barcelona: "M 52 95 L 45 68 L 48 45 L 62 28 L 92 18 L 132 14 L 168 17 L 196 28 L 212 48 L 215 72 L 208 95 L 192 112 L 175 122 L 148 128 L 115 130 L 85 128 L 65 118 Z",
-
-  // CANADA — island, two long straights, chicane wall of champions
-  canada: "M 62 112 L 45 85 L 42 58 L 48 35 L 65 20 L 98 12 L 148 10 L 188 15 L 215 30 L 228 52 L 225 80 L 212 105 L 192 122 L 158 132 L 115 135 L 80 130 Z M 105 10 L 105 32 L 90 32",
-
-  // SILVERSTONE — fast, wing-shaped, Maggots-Becketts esses
-  silverstone: "M 38 78 L 35 55 L 45 35 L 72 20 L 108 12 L 148 12 L 180 18 L 205 35 L 218 58 L 215 85 L 202 108 L 182 125 L 152 132 L 115 134 L 82 130 L 58 118 L 42 100 Z",
-
-  // HUNGARORING — tight, snaking, no real straights, very technical
-  hungary: "M 58 102 L 46 75 L 42 50 L 52 32 L 75 20 L 105 14 L 138 14 L 165 22 L 185 42 L 192 68 L 188 95 L 175 115 L 155 128 L 125 135 L 95 135 L 68 128 Z",
-
-  // SPA — very long, Eau Rouge climb, Pouhon, Blanchimont, bus-stop
-  spa: "M 25 82 L 22 55 L 28 32 L 52 15 L 88 8 L 132 6 L 168 10 L 198 22 L 218 42 L 228 68 L 225 98 L 212 122 L 188 138 L 155 145 L 112 145 L 72 138 L 45 120 Z M 52 15 L 68 40 L 72 60 L 62 72 L 52 78",
-
-  // ZANDVOORT — compact, seaside, banked Hugenholtz corner
-  zandvoort: "M 62 102 L 50 78 L 46 52 L 58 30 L 82 18 L 115 12 L 148 14 L 175 28 L 190 52 L 188 80 L 175 105 L 155 122 L 128 130 L 98 130 L 72 122 Z",
-
-  // MONZA — high-speed, oval base, two chicanes cut in on main straight  
-  monza: "M 36 70 L 36 40 L 42 22 L 68 10 L 108 6 L 148 6 L 188 10 L 215 22 L 228 42 L 228 70 L 228 100 L 215 118 L 188 130 L 148 134 L 108 134 L 68 130 L 42 118 L 36 100 Z M 78 6 L 78 28 L 96 28 M 158 6 L 158 26 L 178 26",
-
-  // BAKU — ultra-long back straight, tight medieval castle sector
-  baku: "M 24 68 L 22 38 L 26 18 L 50 8 L 112 6 L 175 6 L 218 10 L 240 24 L 242 48 L 240 72 L 228 95 L 208 115 L 178 128 L 135 134 L 90 132 L 55 125 L 32 108 Z",
-
-  // SINGAPORE — long, bumpy, night race, L-shaped with Marina Bay
-  singapore: "M 58 118 L 42 88 L 38 58 L 48 35 L 72 20 L 108 12 L 148 12 L 180 20 L 205 38 L 218 65 L 215 95 L 200 118 L 178 135 L 148 142 L 112 142 L 80 136 Z",
-
-  // AUSTIN (COTA) — signature uphill T1, S-curves, stadium, back hairpin
-  austin: "M 50 88 L 38 62 L 38 38 L 52 22 L 80 12 L 118 8 L 155 10 L 185 22 L 205 42 L 210 68 L 202 92 L 185 112 L 162 128 L 132 135 L 98 135 L 68 128 Z",
-
-  // MEXICO — long straight, esses, unique Foro Sol stadium section
-  mexico: "M 55 98 L 42 72 L 40 48 L 52 28 L 78 16 L 118 10 L 158 10 L 192 18 L 215 38 L 222 65 L 218 92 L 205 115 L 180 130 L 148 138 L 112 138 L 78 130 Z",
-
-  // BRAZIL (Interlagos) — anti-clockwise, two loops, Senna-S
-  brazil: "M 42 85 L 35 60 L 38 38 L 55 22 L 85 12 L 122 8 L 158 12 L 188 28 L 205 52 L 208 80 L 198 108 L 178 128 L 148 138 L 112 140 L 78 132 L 55 115 Z",
-
-  // LAS VEGAS — three massive straights, roughly rectangular/trapezoidal
-  lasvegas: "M 25 78 L 22 42 L 28 20 L 58 8 L 118 6 L 178 6 L 228 10 L 250 28 L 252 55 L 250 82 L 245 108 L 228 125 L 178 130 L 118 130 L 58 128 L 30 115 Z",
-
-  // QATAR (Lusail) — sweeping, flowing, motorcycle circuit layout
-  qatar: "M 48 100 L 38 72 L 36 48 L 48 28 L 75 15 L 112 8 L 150 8 L 185 15 L 210 32 L 222 58 L 220 88 L 208 115 L 185 132 L 152 142 L 112 142 L 75 135 Z",
-
-  // ABU DHABI (Yas Marina) — hotel tunnel, long straight, stadium section
-  abudhabi: "M 52 100 L 40 75 L 38 52 L 50 32 L 75 18 L 112 10 L 152 10 L 188 18 L 212 38 L 222 65 L 218 92 L 205 115 L 182 132 L 148 140 L 112 140 L 78 132 Z M 212 38 L 228 52 L 235 68 L 228 85 L 215 95 L 205 95",
+// ═══════════════════════════════════════════════════════════════
+// CIRCUIT MAP IMAGES — Wikimedia Commons official circuit diagrams
+// CSS filter applied in CircuitSVG: invert+hue-rotate makes white→green on dark bg
+// ═══════════════════════════════════════════════════════════════
+const CIRCUIT_IMAGES = {
+  bahrain:    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Bahrain_Circuit_2002.svg/400px-Bahrain_Circuit_2002.svg.png',
+  jeddah:     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Jeddah_Street_Circuit_2021.svg/400px-Jeddah_Street_Circuit_2021.svg.png',
+  melbourne:  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Albert_Park_Circuit_%28Australia%29.svg/400px-Albert_Park_Circuit_%28Australia%29.svg.png',
+  suzuka:     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Suzuka_circuit_map.svg/400px-Suzuka_circuit_map.svg.png',
+  shanghai:   'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Shanghai_International_Circuit.svg/400px-Shanghai_International_Circuit.svg.png',
+  miami:      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Miami_International_Autodrome.svg/400px-Miami_International_Autodrome.svg.png',
+  imola:      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Autodromo_Enzo_e_Dino_Ferrari.svg/400px-Autodromo_Enzo_e_Dino_Ferrari.svg.png',
+  monaco:     'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Circuit_de_Monaco.svg/400px-Circuit_de_Monaco.svg.png',
+  barcelona:  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Circuit_de_Catalunya.svg/400px-Circuit_de_Catalunya.svg.png',
+  canada:     'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Circuit_Gilles_Villeneuve.svg/400px-Circuit_Gilles_Villeneuve.svg.png',
+  silverstone:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Silverstone_Circuit_2020.svg/400px-Silverstone_Circuit_2020.svg.png',
+  hungary:    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Hungaroring.svg/400px-Hungaroring.svg.png',
+  spa:        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Spa-Francorchamps_circuit.svg/400px-Spa-Francorchamps_circuit.svg.png',
+  zandvoort:  'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Circuit_Zandvoort.svg/400px-Circuit_Zandvoort.svg.png',
+  monza:      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Autodromo_Nazionale_Monza.svg/400px-Autodromo_Nazionale_Monza.svg.png',
+  baku:       'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Baku_City_Circuit.svg/400px-Baku_City_Circuit.svg.png',
+  singapore:  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Marina_Bay_Street_Circuit.svg/400px-Marina_Bay_Street_Circuit.svg.png',
+  austin:     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Circuit_of_the_Americas.svg/400px-Circuit_of_the_Americas.svg.png',
+  mexico:     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez.svg/400px-Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez.svg.png',
+  brazil:     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Aut%C3%B3dromo_Jos%C3%A9_Carlos_Pace_%28Interlagos%29.svg/400px-Aut%C3%B3dromo_Jos%C3%A9_Carlos_Pace_%28Interlagos%29.svg.png',
+  lasvegas:   'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Las_Vegas_Street_Circuit.svg/400px-Las_Vegas_Street_Circuit.svg.png',
+  qatar:      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Losail_International_Circuit.svg/400px-Losail_International_Circuit.svg.png',
+  abudhabi:   'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Yas_Marina_Circuit.svg/400px-Yas_Marina_Circuit.svg.png',
 };
+
+
 
 
 

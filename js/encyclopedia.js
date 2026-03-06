@@ -39,20 +39,42 @@ function CircuitsPage() {
 }
 
 function CircuitSVG({ circuitId, size }) {
-  // Try new CIRCUIT_SVG_PATHS first, then fall back to old CIRCUIT_SVG
-  const paths = typeof CIRCUIT_SVG_PATHS !== 'undefined' ? CIRCUIT_SVG_PATHS : (typeof CIRCUIT_SVG !== 'undefined' ? CIRCUIT_SVG : {});
-  const path = paths[circuitId] || null;
-  if (!path) return React.createElement('div', { style: { fontSize:'11px', color:'var(--t3)', textAlign:'center', padding:'20px' } }, '— map unavailable —');
+  const [imgOk, setImgOk] = React.useState(true);
+  const imgUrl = (typeof CIRCUIT_IMAGES !== 'undefined') ? CIRCUIT_IMAGES[circuitId] : null;
   const w = size || 140;
-  const h = Math.round(w * 0.7);
-  return React.createElement('svg', {
-    viewBox: '0 0 300 200',
-    style: { width: w+'px', height: h+'px', maxWidth:'100%' },
-    xmlns: 'http://www.w3.org/2000/svg'
+  const h = Math.round(w * 0.75);
+
+  if (!imgUrl || !imgOk) {
+    // Fallback: styled placeholder matching site theme
+    return React.createElement('div', {
+      style: {
+        width: w + 'px', height: h + 'px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flexDirection: 'column', gap: '4px',
+        background: 'linear-gradient(135deg, rgba(0,232,168,.06) 0%, rgba(0,0,0,0) 100%)',
+        border: '1px solid rgba(0,232,168,.15)', borderRadius: '4px',
+      }
+    },
+      React.createElement('div', { style: { fontSize: '22px', opacity: 0.4 } }, '🏁'),
+      React.createElement('div', { style: { fontFamily: 'var(--font-head)', fontSize: '8px', letterSpacing: '2px', color: 'var(--text-dim)', textTransform: 'uppercase' } }, circuitId)
+    );
+  }
+
+  return React.createElement('div', {
+    style: { width: w + 'px', height: h + 'px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }
   },
-    React.createElement('path', { d: path, fill:'none', stroke:'var(--b2)', strokeWidth:7, strokeLinecap:'round', strokeLinejoin:'round' }),
-    React.createElement('path', { d: path, fill:'none', stroke:'var(--green)', strokeWidth:3.5, strokeLinecap:'round', strokeLinejoin:'round',
-      style:{ filter:'drop-shadow(0 0 6px rgba(0,232,168,.5))' }
+    React.createElement('img', {
+      src: imgUrl,
+      alt: circuitId,
+      onLoad: () => setImgOk(true),
+      onError: () => setImgOk(false),
+      style: {
+        maxWidth: '100%', maxHeight: '100%',
+        objectFit: 'contain',
+        // Invert white→black, then hue-rotate to green, matching site accent
+        filter: 'invert(1) sepia(1) saturate(3) hue-rotate(105deg) brightness(0.85)',
+        opacity: 0.9,
+      }
     })
   );
 }
