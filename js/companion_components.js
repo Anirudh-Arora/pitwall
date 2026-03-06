@@ -1207,7 +1207,22 @@ function TimingTower({ positions, intervals, drivers, stints, pits }) {
             <span style={{fontFamily:'var(--font-head)',fontSize:'11px',color:delta>0?'var(--accent-green)':delta<0?'var(--accent-red)':'transparent',fontWeight:700}}>{delta>0?`▲${delta}`:delta<0?`▼${Math.abs(delta)}`:''}</span>
           </div>
         );
-      }) : <div className="empty">Awaiting live position data...</div>}
+      }) : (
+        // Skeleton loading rows — shows while positions load from API
+        Array.from({length:12}, (_,i) => (
+          <div key={i} className="tower-row" style={{borderLeftColor:'rgba(255,255,255,.08)',opacity:0.4}}>
+            <span style={{fontFamily:'var(--font-data)',fontSize:'14px',fontWeight:700,color:'var(--text-dim)'}}>{i+1}</span>
+            <span style={{width:'24px',height:'10px',background:'rgba(255,255,255,.1)',borderRadius:'2px',display:'inline-block'}}></span>
+            <div>
+              <div style={{width:'80px',height:'12px',background:'rgba(255,255,255,.1)',borderRadius:'2px',marginBottom:'3px'}}></div>
+              <div style={{width:'50px',height:'8px',background:'rgba(255,255,255,.06)',borderRadius:'2px'}}></div>
+            </div>
+            <span style={{width:'50px',height:'10px',background:'rgba(255,255,255,.08)',borderRadius:'2px',display:'inline-block'}}></span>
+            <span style={{width:'28px',height:'20px',background:'rgba(255,255,255,.06)',borderRadius:'3px',display:'inline-block'}}></span>
+            <span style={{width:'16px',height:'10px',background:'rgba(255,255,255,.06)',borderRadius:'2px',display:'inline-block'}}></span>
+          </div>
+        ))
+      )}
     </div>
   );
 }
@@ -2050,7 +2065,18 @@ function LivePage() {
 
   useEffect(() => {
     if (!selSessionKey) return;
-    fetchF1('/drivers', { session_key: selSessionKey }).then(d=>setDrivers(d||[])).catch(()=>{});
+    // Pre-seed from local CURRENT_DRIVERS for instant display, then update from API
+    if (typeof CURRENT_DRIVERS !== 'undefined') {
+      setDrivers(CURRENT_DRIVERS.map(d => ({
+        driver_number: d.num,
+        name_acronym: d.code,
+        first_name: d.first,
+        last_name: d.last,
+        full_name: d.first + ' ' + d.last,
+        team_name: d.team,
+      })));
+    }
+    fetchF1('/drivers', { session_key: selSessionKey }).then(d => { if (d?.length) setDrivers(d); }).catch(()=>{});
     fetchF1('/laps',    { session_key: selSessionKey }).then(data => {
       const byD = {};
       (data||[]).forEach(l=>{if(!byD[l.driver_number])byD[l.driver_number]=[];byD[l.driver_number].push(l);});

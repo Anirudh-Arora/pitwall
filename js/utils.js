@@ -7,35 +7,36 @@
 // CIRCUIT SVG PATHS — unique schematic outlines, viewBox 0 0 200 140
 // Each circuit has its own recognizable silhouette
 // ═══════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════
-// CIRCUIT MAP IMAGES — Wikimedia Commons official circuit diagrams
-// CSS filter applied in CircuitSVG: invert+hue-rotate makes white→green on dark bg
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
+// CIRCUIT SVGs — julesr0y/f1-circuits-svg via jsDelivr CDN (CORS-safe, public domain)
+// White-on-transparent SVGs. CSS filter in CircuitSVG converts to green on dark bg.
+// ═══════════════════════════════════════════════════════════════════════
 const CIRCUIT_IMAGES = {
-  bahrain:    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Bahrain_Circuit_2002.svg/400px-Bahrain_Circuit_2002.svg.png',
-  jeddah:     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Jeddah_Street_Circuit_2021.svg/400px-Jeddah_Street_Circuit_2021.svg.png',
-  melbourne:  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Albert_Park_Circuit_%28Australia%29.svg/400px-Albert_Park_Circuit_%28Australia%29.svg.png',
-  suzuka:     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Suzuka_circuit_map.svg/400px-Suzuka_circuit_map.svg.png',
-  shanghai:   'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Shanghai_International_Circuit.svg/400px-Shanghai_International_Circuit.svg.png',
-  miami:      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Miami_International_Autodrome.svg/400px-Miami_International_Autodrome.svg.png',
-  imola:      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Autodromo_Enzo_e_Dino_Ferrari.svg/400px-Autodromo_Enzo_e_Dino_Ferrari.svg.png',
-  monaco:     'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Circuit_de_Monaco.svg/400px-Circuit_de_Monaco.svg.png',
-  barcelona:  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Circuit_de_Catalunya.svg/400px-Circuit_de_Catalunya.svg.png',
-  canada:     'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Circuit_Gilles_Villeneuve.svg/400px-Circuit_Gilles_Villeneuve.svg.png',
-  silverstone:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Silverstone_Circuit_2020.svg/400px-Silverstone_Circuit_2020.svg.png',
-  hungary:    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Hungaroring.svg/400px-Hungaroring.svg.png',
-  spa:        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Spa-Francorchamps_circuit.svg/400px-Spa-Francorchamps_circuit.svg.png',
-  zandvoort:  'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Circuit_Zandvoort.svg/400px-Circuit_Zandvoort.svg.png',
-  monza:      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Autodromo_Nazionale_Monza.svg/400px-Autodromo_Nazionale_Monza.svg.png',
-  baku:       'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Baku_City_Circuit.svg/400px-Baku_City_Circuit.svg.png',
-  singapore:  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Marina_Bay_Street_Circuit.svg/400px-Marina_Bay_Street_Circuit.svg.png',
-  austin:     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Circuit_of_the_Americas.svg/400px-Circuit_of_the_Americas.svg.png',
-  mexico:     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez.svg/400px-Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez.svg.png',
-  brazil:     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Aut%C3%B3dromo_Jos%C3%A9_Carlos_Pace_%28Interlagos%29.svg/400px-Aut%C3%B3dromo_Jos%C3%A9_Carlos_Pace_%28Interlagos%29.svg.png',
-  lasvegas:   'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Las_Vegas_Street_Circuit.svg/400px-Las_Vegas_Street_Circuit.svg.png',
-  qatar:      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Losail_International_Circuit.svg/400px-Losail_International_Circuit.svg.png',
-  abudhabi:   'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Yas_Marina_Circuit.svg/400px-Yas_Marina_Circuit.svg.png',
+  bahrain:    'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/bahrain-international-circuit-1.svg',
+  jeddah:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/jeddah-corniche-circuit-1.svg',
+  melbourne:  'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/albert-park-circuit-2.svg',
+  suzuka:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/suzuka-international-racing-course-1.svg',
+  shanghai:   'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/shanghai-international-circuit-1.svg',
+  miami:      'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/miami-international-autodrome-1.svg',
+  imola:      'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/autodromo-internazionale-enzo-e-dino-ferrari-5.svg',
+  monaco:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-de-monaco-7.svg',
+  barcelona:  'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-de-barcelona-catalunya-5.svg',
+  canada:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-gilles-villeneuve-1.svg',
+  silverstone:'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/silverstone-circuit-6.svg',
+  hungary:    'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/hungaroring-2.svg',
+  spa:        'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-de-spa-francorchamps-6.svg',
+  zandvoort:  'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-zandvoort-4.svg',
+  monza:      'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/autodromo-nazionale-monza-5.svg',
+  baku:       'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/baku-city-circuit-4.svg',
+  singapore:  'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/marina-bay-street-circuit-5.svg',
+  austin:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-of-the-americas-1.svg',
+  mexico:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/autodromo-hermanos-rodriguez-4.svg',
+  brazil:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/autodromo-jose-carlos-pace-3.svg',
+  lasvegas:   'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/las-vegas-street-circuit-1.svg',
+  qatar:      'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/losail-international-circuit-3.svg',
+  abudhabi:   'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/yas-marina-circuit-6.svg',
 };
+
 
 
 

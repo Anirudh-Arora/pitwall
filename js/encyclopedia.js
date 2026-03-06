@@ -39,44 +39,62 @@ function CircuitsPage() {
 }
 
 function CircuitSVG({ circuitId, size }) {
-  const [imgOk, setImgOk] = React.useState(true);
-  const imgUrl = (typeof CIRCUIT_IMAGES !== 'undefined') ? CIRCUIT_IMAGES[circuitId] : null;
+  const [svgContent, setSvgContent] = React.useState(null);
+  const [error, setError] = React.useState(false);
   const w = size || 140;
   const h = Math.round(w * 0.75);
 
-  if (!imgUrl || !imgOk) {
-    // Fallback: styled placeholder matching site theme
+  React.useEffect(() => {
+    const url = (typeof CIRCUIT_IMAGES !== 'undefined') ? CIRCUIT_IMAGES[circuitId] : null;
+    if (!url) { setError(true); return; }
+    setSvgContent(null); setError(false);
+    fetch(url)
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(text => {
+        // Inject CSS to recolor strokes to our accent green
+        const styled = text.replace(
+          /<svg /,
+          `<svg style="width:100%;height:100%;" `
+        ).replace(
+          '</svg>',
+          `<style>path,polyline,line,circle,rect,ellipse{stroke:#00e8a8!important;fill:none!important;}text{display:none;}</style></svg>`
+        );
+        setSvgContent(styled);
+      })
+      .catch(() => setError(true));
+  }, [circuitId]);
+
+  if (error) {
     return React.createElement('div', {
       style: {
-        width: w + 'px', height: h + 'px',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        flexDirection: 'column', gap: '4px',
-        background: 'linear-gradient(135deg, rgba(0,232,168,.06) 0%, rgba(0,0,0,0) 100%)',
-        border: '1px solid rgba(0,232,168,.15)', borderRadius: '4px',
+        width: w+'px', height: h+'px',
+        display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'4px',
+        border:'1px solid rgba(0,232,168,.18)', borderRadius:'4px',
+        background:'linear-gradient(135deg,rgba(0,232,168,.05) 0%,transparent 100%)'
       }
     },
-      React.createElement('div', { style: { fontSize: '22px', opacity: 0.4 } }, '🏁'),
-      React.createElement('div', { style: { fontFamily: 'var(--font-head)', fontSize: '8px', letterSpacing: '2px', color: 'var(--text-dim)', textTransform: 'uppercase' } }, circuitId)
+      React.createElement('div', { style:{fontSize:'20px',opacity:.35} }, '🏁'),
+      React.createElement('div', { style:{fontFamily:'var(--font-head)',fontSize:'7px',letterSpacing:'2px',color:'var(--text-dim)',textTransform:'uppercase'} }, circuitId)
     );
   }
 
-  return React.createElement('div', {
-    style: { width: w + 'px', height: h + 'px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }
-  },
-    React.createElement('img', {
-      src: imgUrl,
-      alt: circuitId,
-      onLoad: () => setImgOk(true),
-      onError: () => setImgOk(false),
+  if (!svgContent) {
+    // Loading skeleton
+    return React.createElement('div', {
       style: {
-        maxWidth: '100%', maxHeight: '100%',
-        objectFit: 'contain',
-        // Invert white→black, then hue-rotate to green, matching site accent
-        filter: 'invert(1) sepia(1) saturate(3) hue-rotate(105deg) brightness(0.85)',
-        opacity: 0.9,
+        width: w+'px', height: h+'px',
+        display:'flex', alignItems:'center', justifyContent:'center',
+        opacity: 0.3
       }
-    })
-  );
+    }, React.createElement('div', {
+      style: { width:'60%', height:'60%', border:'1px solid var(--accent-green)', borderRadius:'50%', animation:'spin 2s linear infinite' }
+    }));
+  }
+
+  return React.createElement('div', {
+    style: { width: w+'px', height: h+'px', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' },
+    dangerouslySetInnerHTML: { __html: svgContent }
+  });
 }
 
 function CircuitCard({ circuit: c, onClick }) {
