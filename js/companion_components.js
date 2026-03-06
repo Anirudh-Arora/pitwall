@@ -1797,5 +1797,310 @@ function LiveAnalystPanel({ predictions, liveProbs, positions, driverMap, onUpda
 }
 
 // ═══════════════════════════════════════════════════════════════
-// MAIN APP
+// WEEKEND PAGE
 // ═══════════════════════════════════════════════════════════════
+function WeekendPage() {
+  const [meetings, setMeetings] = useState([]);
+  const [selMeetingKey, setSelMeetingKey] = useState(null);
+  const [sessions, setSessions] = useState([]);
+  const [selSessionKey, setSelSessionKey] = useState(null);
+  const [drivers, setDrivers] = useState([]);
+  const [allDriverLaps, setAllDriverLaps] = useState({});
+  const [qualiLaps, setQualiLaps] = useState([]);
+  const [weekendStints, setWeekendStints] = useState([]);
+  const [raceResults, setRaceResults] = useState([]);
+  const [resultsLoading, setResultsLoading] = useState(false);
+  const [loadingLaps, setLoadingLaps] = useState(false);
+  const [activeTab, setActiveTab] = useState('laptimes');
+  const [groqKey, setGroqKey] = useState('');
+  const [groqKeySet, setGroqKeySet] = useState(false);
+  const [predictions, setPredictions] = useState([]);
+  const [predLoading, setPredLoading] = useState(false);
+  const [predError, setPredError] = useState(null);
+
+  useEffect(() => {
+    const year = new Date().getFullYear();
+    fetchF1('/meetings', { year })
+      .then(data => {
+        const sorted = [...(data || [])].sort((a, b) => new Date(b.date_start) - new Date(a.date_start));
+        setMeetings(sorted);
+        if (sorted.length) setSelMeetingKey(sorted[0].meeting_key);
+      }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!selMeetingKey) return;
+    setSessions([]); setSelSessionKey(null); setDrivers([]);
+    setAllDriverLaps({}); setQualiLaps([]); setWeekendStints([]); setRaceResults([]);
+    fetchF1('/sessions', { meeting_key: selMeetingKey })
+      .then(data => {
+        const sess = data || [];
+        setSessions(sess);
+        const race = sess.find(s => s.session_type === 'Race') || sess[sess.length - 1];
+        if (race) setSelSessionKey(race.session_key);
+      }).catch(() => {});
+  }, [selMeetingKey]);
+
+  useEffect(() => {
+    if (!selSessionKey) return;
+    setLoadingLaps(true); setAllDriverLaps({}); setDrivers([]);
+    Promise.all([
+      fetchF1('/drivers', { session_key: selSessionKey }).catch(() => []),
+      fetchF1('/laps',    { session_key: selSessionKey }).catch(() => []),
+      fetchF1('/stints',  { session_key: selSessionKey }).catch(() => []),
+    ]).then(([drvs, laps, stints]) => {
+      setDrivers(drvs || []);
+      const byD = {};
+      (laps || []).forEach(l => { if (!byD[l.driver_number]) byD[l.driver_number] = []; byD[l.driver_number].push(l); });
+      setAllDriverLaps(byD);
+      setWeekendStints(stints || []);
+      setLoadingLaps(false);
+    });
+    const sess = sessions.find(s => s.session_key === selSessionKey);
+    if (sess?.session_type === 'Race') {
+      setResultsLoading(true);
+      fetchF1('/position', { session_key: selSessionKey })
+        .then(data => {
+          const latest = {};
+          (data || []).forEach(p => { if (!latest[p.driver_number] || p.date > latest[p.driver_number].date) latest[p.driver_number] = p; });
+          setRaceResults(Object.values(latest).sort((a, b) => a.position - b.position));
+          setResultsLoading(false);
+        }).catch(() => setResultsLoading(false));
+    }
+    const qSess = sessions.find(s => s.session_name?.includes('Qualifying') || s.session_type === 'Qualifying');
+    if (qSess && qSess.session_key !== selSessionKey) {
+      fetchF1('/laps', { session_key: qSess.session_key })
+        .then(data => setQualiLaps(data || [])).catch(() => {});
+    }
+  }, [selSessionKey, sessions]);
+
+  const meeting = meetings.find(m => m.meeting_key === selMeetingKey);
+  const session = sessions.find(s => s.session_key === selSessionKey);
+
+  const snap = useMemo(() => {
+    if (!Object.keys(allDriverLaps).length) return null;
+    return buildWeekendSnapshot(
+      [{ sessionName: session?.session_name || 'Session', lapsByDriver: allDriverLaps }],
+      qualiLaps, weekendStints, drivers
+    );
+  }, [allDriverLaps, qualiLaps, weekendStints, drivers, session]);
+
+  const TABS = [
+    { id:'laptimes', label:'Lap Times' }, { id:'sectors', label:'Sectors' },
+    { id:'tyres',    label:'Tyres' },     { id:'h2h',     label:'Head-to-Head' },
+    { id:'pace',     label:'Pace' },      { id:'ratings', label:'Ratings' },
+    { id:'quali',    label:'Qualifying' },{ id:'results', label:'Race Results' },
+    { id:'ai',       label:'🤖 AI Analyst' },
+  ];
+
+  return (
+    <div>
+      <div className="sec-hdr" style={{marginBottom:'16px'}}>
+        <div>
+          <div className="sec-title">WEEKEND ANALYSIS</div>
+          <div className="sec-sub">Lap data · sector times · tyre strategy · AI analyst</div>
+        </div>
+      </div>
+      <div className="card" style={{marginBottom:'12px',padding:'12px 16px'}}>
+        <div style={{display:'flex',gap:'10px',alignItems:'center',flexWrap:'wrap'}}>
+          <select style={{padding:'6px 10px',background:'var(--bg-secondary)',border:'1px solid var(--border)',borderRadius:'4px',color:'var(--text-primary)',fontFamily:'var(--font-head)',fontSize:'12px',cursor:'pointer'}}
+            value={selMeetingKey||''} onChange={e=>setSelMeetingKey(Number(e.target.value))}>
+            {meetings.map(m=><option key={m.meeting_key} value={m.meeting_key}>{m.meeting_name} — {m.year}</option>)}
+          </select>
+          {sessions.length>0 && (
+            <select style={{padding:'6px 10px',background:'var(--bg-secondary)',border:'1px solid var(--border)',borderRadius:'4px',color:'var(--text-primary)',fontFamily:'var(--font-head)',fontSize:'12px',cursor:'pointer'}}
+              value={selSessionKey||''} onChange={e=>setSelSessionKey(Number(e.target.value))}>
+              {sessions.map(s=><option key={s.session_key} value={s.session_key}>{s.session_name}</option>)}
+            </select>
+          )}
+          {loadingLaps && <span style={{fontFamily:'var(--font-head)',fontSize:'11px',color:'var(--text-dim)',letterSpacing:'1px'}}>⏳ Loading data…</span>}
+          {meeting && <span style={{fontFamily:'var(--font-head)',fontSize:'11px',color:'var(--text-muted)',letterSpacing:'1px',marginLeft:'auto'}}>{meeting.location}</span>}
+        </div>
+      </div>
+      <div style={{display:'flex',gap:'4px',flexWrap:'wrap',marginBottom:'16px'}}>
+        {TABS.map(t=>(
+          <button key={t.id} onClick={()=>setActiveTab(t.id)}
+            style={{padding:'6px 14px',fontFamily:'var(--font-head)',fontSize:'10px',fontWeight:700,letterSpacing:'1.5px',textTransform:'uppercase',cursor:'pointer',borderRadius:'4px',transition:'all .15s',
+              border:activeTab===t.id?'1px solid var(--accent-green)':'1px solid var(--border)',
+              background:activeTab===t.id?'rgba(0,210,190,.12)':'var(--bg-elevated)',
+              color:activeTab===t.id?'var(--accent-green)':'var(--text-secondary)'}}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+      <div className="card">
+        {activeTab==='laptimes' && <LapTimeChart allDriverLaps={allDriverLaps} drivers={drivers} />}
+        {activeTab==='sectors'  && <SectorAnalysis allDriverLaps={allDriverLaps} drivers={drivers} />}
+        {activeTab==='tyres'    && <TyreStrategy stints={weekendStints} drivers={drivers} />}
+        {activeTab==='h2h'      && <HeadToHead allDriverLaps={allDriverLaps} drivers={drivers} weekendSessionsLaps={[{sessionName:session?.session_name||'Session',lapsByDriver:allDriverLaps}]} />}
+        {activeTab==='pace'     && <PaceProgression weekendSessionsLaps={[{sessionName:session?.session_name||'Session',lapsByDriver:allDriverLaps}]} drivers={drivers} />}
+        {activeTab==='ratings'  && <PerformanceRatings weekendSessionsLaps={[{sessionName:session?.session_name||'Session',lapsByDriver:allDriverLaps}]} qualiLaps={qualiLaps} drivers={drivers} />}
+        {activeTab==='quali'    && <QualiResults qualiLaps={qualiLaps.length?qualiLaps:Object.values(allDriverLaps).flat()} drivers={drivers} />}
+        {activeTab==='results'  && <RaceResults results={raceResults.map(r=>({...r,driver:drivers.find(d=>d.driver_number===r.driver_number)}))} loading={resultsLoading} />}
+        {activeTab==='ai'       && (
+          <PredictionPanel
+            predictions={predictions} loading={predLoading} error={predError}
+            groqKeySet={groqKeySet} groqKey={groqKey} setGroqKey={setGroqKey}
+            weekendDataReady={!!snap} weekendDataLoading={loadingLaps}
+            onGenerate={async () => {
+              if (!groqKey || !snap) return;
+              setGroqKeySet(true); setPredLoading(true); setPredError(null);
+              try { setPredictions(await callGroqPreRace(groqKey, snap, meeting?.meeting_name||'this race')); }
+              catch(e) { setPredError(e.message); }
+              finally { setPredLoading(false); }
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LIVE PAGE
+// ═══════════════════════════════════════════════════════════════
+function LivePage() {
+  const [meetings, setMeetings] = useState([]);
+  const [selMeetingKey, setSelMeetingKey] = useState(null);
+  const [sessions, setSessions] = useState([]);
+  const [selSessionKey, setSelSessionKey] = useState(null);
+  const [drivers, setDrivers] = useState([]);
+  const [allDriverLaps, setAllDriverLaps] = useState({});
+  const [weekendStints, setWeekendStints] = useState([]);
+  const [activeTab, setActiveTab] = useState('timing');
+  const [groqKey, setGroqKey] = useState('');
+  const [groqKeySet, setGroqKeySet] = useState(false);
+  const [predictions, setPredictions] = useState([]);
+  const [liveProbs, setLiveProbs] = useState([]);
+  const [updating, setUpdating] = useState(false);
+  const [updateError, setUpdateError] = useState(null);
+
+  const { positions, intervals, raceControl, pits, weather, stints, carData, teamRadio, liveLaps, location }
+    = useLivePoll(selSessionKey, !!selSessionKey);
+
+  useEffect(() => {
+    const year = new Date().getFullYear();
+    fetchF1('/meetings', { year })
+      .then(data => {
+        const sorted = [...(data||[])].sort((a,b)=>new Date(b.date_start)-new Date(a.date_start));
+        setMeetings(sorted);
+        if (sorted.length) setSelMeetingKey(sorted[0].meeting_key);
+      }).catch(()=>{});
+  }, []);
+
+  useEffect(() => {
+    if (!selMeetingKey) return;
+    setSessions([]); setSelSessionKey(null);
+    fetchF1('/sessions', { meeting_key: selMeetingKey })
+      .then(data => {
+        const sess = data || [];
+        setSessions(sess);
+        const latest = sess[sess.length-1];
+        if (latest) setSelSessionKey(latest.session_key);
+      }).catch(()=>{});
+  }, [selMeetingKey]);
+
+  useEffect(() => {
+    if (!selSessionKey) return;
+    fetchF1('/drivers', { session_key: selSessionKey }).then(d=>setDrivers(d||[])).catch(()=>{});
+    fetchF1('/laps',    { session_key: selSessionKey }).then(data => {
+      const byD = {};
+      (data||[]).forEach(l=>{if(!byD[l.driver_number])byD[l.driver_number]=[];byD[l.driver_number].push(l);});
+      setAllDriverLaps(byD);
+    }).catch(()=>{});
+    fetchF1('/stints',  { session_key: selSessionKey }).then(d=>setWeekendStints(d||[])).catch(()=>{});
+  }, [selSessionKey]);
+
+  const driverMap = useMemo(() => { const m={}; drivers.forEach(d=>{m[d.driver_number]=d;}); return m; }, [drivers]);
+  const meeting = meetings.find(m=>m.meeting_key===selMeetingKey);
+  const session = sessions.find(s=>s.session_key===selSessionKey);
+
+  const TABS = [
+    {id:'timing',   label:'Timing Tower'}, {id:'tracker',  label:'Circuit Tracker'},
+    {id:'history',  label:'Positions'},    {id:'gaps',     label:'Gap Evolution'},
+    {id:'overtake', label:'Overtake'},     {id:'telemetry',label:'Telemetry'},
+    {id:'tyres',    label:'Tyres'},        {id:'laptimes', label:'Lap Times'},
+    {id:'pits',     label:'Pit Tracker'},  {id:'radio',    label:'Team Radio'},
+    {id:'rc',       label:'Race Control'}, {id:'ai',       label:'🤖 AI'},
+  ];
+
+  return (
+    <div>
+      <div className="sec-hdr" style={{marginBottom:'16px'}}>
+        <div>
+          <div className="sec-title">LIVE RACE MODE</div>
+          <div className="sec-sub">Real-time timing · telemetry · GPS tracker · team radio</div>
+        </div>
+        {weather && <WeatherStrip weather={weather} />}
+      </div>
+      <div className="card" style={{marginBottom:'12px',padding:'12px 16px'}}>
+        <div style={{display:'flex',gap:'10px',alignItems:'center',flexWrap:'wrap'}}>
+          <select style={{padding:'6px 10px',background:'var(--bg-secondary)',border:'1px solid var(--border)',borderRadius:'4px',color:'var(--text-primary)',fontFamily:'var(--font-head)',fontSize:'12px',cursor:'pointer'}}
+            value={selMeetingKey||''} onChange={e=>setSelMeetingKey(Number(e.target.value))}>
+            {meetings.map(m=><option key={m.meeting_key} value={m.meeting_key}>{m.meeting_name} — {m.year}</option>)}
+          </select>
+          {sessions.length>0 && (
+            <select style={{padding:'6px 10px',background:'var(--bg-secondary)',border:'1px solid var(--border)',borderRadius:'4px',color:'var(--text-primary)',fontFamily:'var(--font-head)',fontSize:'12px',cursor:'pointer'}}
+              value={selSessionKey||''} onChange={e=>setSelSessionKey(Number(e.target.value))}>
+              {sessions.map(s=><option key={s.session_key} value={s.session_key}>{s.session_name}</option>)}
+            </select>
+          )}
+          {meeting && <span style={{fontFamily:'var(--font-head)',fontSize:'11px',color:'var(--text-muted)',letterSpacing:'1px',marginLeft:'auto'}}>{meeting.location}</span>}
+        </div>
+      </div>
+      <div style={{display:'flex',gap:'4px',flexWrap:'wrap',marginBottom:'16px'}}>
+        {TABS.map(t=>(
+          <button key={t.id} onClick={()=>setActiveTab(t.id)}
+            style={{padding:'5px 12px',fontFamily:'var(--font-head)',fontSize:'10px',fontWeight:700,letterSpacing:'1.5px',textTransform:'uppercase',cursor:'pointer',borderRadius:'4px',transition:'all .15s',
+              border:activeTab===t.id?'1px solid var(--accent-red)':'1px solid var(--border)',
+              background:activeTab===t.id?'rgba(232,0,45,.12)':'var(--bg-elevated)',
+              color:activeTab===t.id?'var(--accent-red)':'var(--text-secondary)'}}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+      {!selSessionKey
+        ? <div className="card"><div className="empty">Select a meeting and session above to load data</div></div>
+        : <div className="card">
+            {activeTab==='timing'    && <TimingTower positions={positions} intervals={intervals} drivers={drivers} stints={stints} pits={pits} />}
+            {activeTab==='tracker'   && <CircuitTracker location={location} positions={positions} drivers={drivers} practiceSession={session?.session_name} enabled={!!selSessionKey} />}
+            {activeTab==='history'   && <PositionHistory positions={positions} drivers={drivers} />}
+            {activeTab==='gaps'      && <GapEvolution intervals={intervals} positions={positions} drivers={drivers} />}
+            {activeTab==='overtake'  && <OvertakePanel positions={positions} intervals={intervals} carData={carData} drivers={drivers} stints={stints} />}
+            {activeTab==='telemetry' && <CarTelemetry carData={carData} drivers={drivers} positions={positions} sessionYear={session?.year||new Date().getFullYear()} />}
+            {activeTab==='tyres'     && <TyreStrategy stints={stints.length?stints:weekendStints} drivers={drivers} />}
+            {activeTab==='laptimes'  && <LapTimeChart allDriverLaps={allDriverLaps} drivers={drivers} />}
+            {activeTab==='pits'      && <PitTracker pits={pits} drivers={drivers} stints={stints} currentLap={positions[0]?.lap_number||0} />}
+            {activeTab==='radio'     && <TeamRadio messages={teamRadio} drivers={drivers} />}
+            {activeTab==='rc'        && <RaceControl messages={raceControl} />}
+            {activeTab==='ai'        && (
+              <LiveAnalystPanel
+                predictions={predictions} liveProbs={liveProbs}
+                positions={positions} driverMap={driverMap}
+                groqKeySet={groqKeySet} updating={updating} updateError={updateError}
+                onUpdate={async () => {
+                  if (!groqKey || !predictions.length) return;
+                  setUpdating(true); setUpdateError(null);
+                  try {
+                    const snap = positions.slice(0,10).map(p => {
+                      const d = driverMap[p.driver_number];
+                      const st = [...stints].filter(s=>s.driver_number===p.driver_number).sort((a,b)=>b.stint_number-a.stint_number)[0];
+                      return { position:p.position, name:d?.full_name||`#${p.driver_number}`, gap:p.gap_to_leader||'—', stops:stints.filter(s=>s.driver_number===p.driver_number).length, tyre:st?.compound||'?', tyreAge:st?(p.lap_number||0)-(st.lap_start||0):0, lap:p.lap_number||0 };
+                    });
+                    setLiveProbs(await callGroqLiveUpdate(groqKey, predictions, snap, meeting?.meeting_name||'this race'));
+                  } catch(e) { setUpdateError(e.message); }
+                  finally { setUpdating(false); }
+                }}
+              />
+            )}
+          </div>
+      }
+    </div>
+  );
+}
+
+// Expose as globals so app.js can reference after Babel compiles
+if (typeof window !== 'undefined') {
+  window.WeekendPage = WeekendPage;
+  window.LivePage    = LivePage;
+}

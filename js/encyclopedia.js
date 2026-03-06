@@ -376,7 +376,7 @@ function DriverDetail({ driver: d, onBack }) {
 
   React.useEffect(() => {
     // Try to load driver stats from Ergast via Jolpica
-    fetchErgast(`/drivers/${d.code.toLowerCase()}/results`)
+    fetchErgast(`/drivers/${d.ergastId || d.code.toLowerCase()}/results`)
       .then(data => {
         const races = data.RaceTable?.Races || [];
         const wins = races.filter(r => r.Results?.[0]?.position === '1').length;
@@ -386,7 +386,7 @@ function DriverDetail({ driver: d, onBack }) {
       })
       .catch(() => {});
     fetchWiki(d.wikiTitle).then(setWikiData).catch(() => {});
-  }, [d.code]);
+  }, [d.code, d.ergastId]);
 
   const age = Math.floor((new Date() - new Date(d.dob)) / (365.25 * 24 * 3600 * 1000));
 

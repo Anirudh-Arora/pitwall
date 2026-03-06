@@ -510,105 +510,102 @@ const CIRCUITS = [
 // DRIVER DATA (current 2025/2026 grid)
 // ═══════════════════════════════════════════════════════════════
 const CURRENT_DRIVERS = [
-  // ── McLaren F1 Team — 2025 WDC & WCC ──────────────────────────
-  // Lando Norris: Won 2025 WDC → keeps #1 as defending champion
-  { num:1,  code:'NOR', first:'Lando',     last:'Norris',     nat:'🇬🇧', team:'McLaren',          dob:'1999-11-13', wikiTitle:'Lando_Norris',
+  // McLaren — 2025 WDC (Norris) & WCC (10th title)
+  { num:1,  code:'NOR', ergastId:'norris',        first:'Lando',     last:'Norris',     nat:'🇬🇧', team:'McLaren',         dob:'1999-11-13', wikiTitle:'Lando_Norris',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LANNOR01_Lando_Norris/lannor01.png',
     stats:{ wdc:1, wins:21, podiums:48, poles:16 } },
-  { num:81, code:'PIA', first:'Oscar',     last:'Piastri',    nat:'🇦🇺', team:'McLaren',          dob:'2001-04-06', wikiTitle:'Oscar_Piastri',
+  { num:81, code:'PIA', ergastId:'piastri',        first:'Oscar',     last:'Piastri',    nat:'🇦🇺', team:'McLaren',         dob:'2001-04-06', wikiTitle:'Oscar_Piastri',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/O/OSCPIA01_Oscar_Piastri/oscpia01.png',
     stats:{ wdc:0, wins:8,  podiums:32, poles:5  } },
-  // ── Scuderia Ferrari ───────────────────────────────────────────
-  { num:16, code:'LEC', first:'Charles',   last:'Leclerc',    nat:'🇲🇨', team:'Ferrari',          dob:'1997-10-16', wikiTitle:'Charles_Leclerc',
+  // Ferrari — Hamilton joins for 2025/2026
+  { num:16, code:'LEC', ergastId:'leclerc',        first:'Charles',   last:'Leclerc',    nat:'🇲🇨', team:'Ferrari',         dob:'1997-10-16', wikiTitle:'Charles_Leclerc',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/C/CHALEC01_Charles_Leclerc/chalec01.png',
     stats:{ wdc:0, wins:8,  podiums:45, poles:26 } },
-  { num:44, code:'HAM', first:'Lewis',     last:'Hamilton',   nat:'🇬🇧', team:'Ferrari',          dob:'1985-01-07', wikiTitle:'Lewis_Hamilton',
+  { num:44, code:'HAM', ergastId:'hamilton',       first:'Lewis',     last:'Hamilton',   nat:'🇬🇧', team:'Ferrari',         dob:'1985-01-07', wikiTitle:'Lewis_Hamilton',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LEWHAM01_Lewis_Hamilton/lewham01.png',
-    stats:{ wdc:7, wins:103,podiums:197,poles:104} },
-  // ── Oracle Red Bull Racing ─────────────────────────────────────
-  // Verstappen: 4× WDC, keeps #1 from 2021–2024; yielded to Norris 2025
-  { num:33, code:'VER', first:'Max',       last:'Verstappen', nat:'🇳🇱', team:'Red Bull Racing',  dob:'1997-09-30', wikiTitle:'Max_Verstappen',
+    stats:{ wdc:7, wins:103, podiums:197, poles:104 } },
+  // Red Bull — Verstappen + Hadjar (Tsunoda moved to Racing Bulls)
+  { num:33, code:'VER', ergastId:'max_verstappen', first:'Max',       last:'Verstappen', nat:'🇳🇱', team:'Red Bull Racing',  dob:'1997-09-30', wikiTitle:'Max_Verstappen',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/M/MAXVER01_Max_Verstappen/maxver01.png',
-    stats:{ wdc:4, wins:65, podiums:113,poles:40 } },
-  { num:22, code:'TSU', first:'Yuki',      last:'Tsunoda',    nat:'🇯🇵', team:'Red Bull Racing',  dob:'2000-05-11', wikiTitle:'Yuki_Tsunoda',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/Y/YUKTSU01_Yuki_Tsunoda/yuktsu01.png',
-    stats:{ wdc:0, wins:0,  podiums:2,  poles:0  } },
-  // ── Mercedes-AMG Petronas ──────────────────────────────────────
-  { num:63, code:'RUS', first:'George',    last:'Russell',    nat:'🇬🇧', team:'Mercedes',         dob:'1998-02-15', wikiTitle:'George_Russell_(racing_driver)',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/G/GEORUS01_George_Russell/georus01.png',
-    stats:{ wdc:0, wins:3,  podiums:21, poles:8  } },
-  { num:12, code:'ANT', first:'Kimi',      last:'Antonelli',  nat:'🇮🇹', team:'Mercedes',         dob:'2006-08-25', wikiTitle:'Andrea_Kimi_Antonelli',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ANDANT01_Andrea_Kimi_Antonelli/andant01.png',
-    stats:{ wdc:0, wins:0,  podiums:1,  poles:1  } },
-  // ── Aston Martin Aramco ────────────────────────────────────────
-  { num:14, code:'ALO', first:'Fernando',  last:'Alonso',     nat:'🇪🇸', team:'Aston Martin',     dob:'1981-07-29', wikiTitle:'Fernando_Alonso',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/F/FERALO01_Fernando_Alonso/feralo01.png',
-    stats:{ wdc:2, wins:32, podiums:106,poles:22 } },
-  { num:18, code:'STR', first:'Lance',     last:'Stroll',     nat:'🇨🇦', team:'Aston Martin',     dob:'1998-10-29', wikiTitle:'Lance_Stroll',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LANSTR01_Lance_Stroll/lanstr01.png',
-    stats:{ wdc:0, wins:0,  podiums:3,  poles:1  } },
-  // ── BWT Alpine F1 Team ─────────────────────────────────────────
-  { num:10, code:'GAS', first:'Pierre',    last:'Gasly',      nat:'🇫🇷', team:'Alpine',           dob:'1996-02-07', wikiTitle:'Pierre_Gasly',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/P/PIEGAS01_Pierre_Gasly/piegas01.png',
-    stats:{ wdc:0, wins:1,  podiums:4,  poles:0  } },
-  { num:43, code:'COL', first:'Franco',    last:'Colapinto',  nat:'🇦🇷', team:'Alpine',           dob:'2003-05-27', wikiTitle:'Franco_Colapinto',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/F/FRACOL01_Franco_Colapinto/fracol01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
-  // ── MoneyGram Haas F1 Team ─────────────────────────────────────
-  { num:87, code:'BEA', first:'Oliver',    last:'Bearman',    nat:'🇬🇧', team:'Haas',             dob:'2005-05-08', wikiTitle:'Oliver_Bearman',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/O/OLIBEA01_Oliver_Bearman/olibea01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
-  { num:31, code:'OCO', first:'Esteban',   last:'Ocon',       nat:'🇫🇷', team:'Haas',             dob:'1996-09-17', wikiTitle:'Esteban_Ocon',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/E/ESTOCO01_Esteban_Ocon/estoco01.png',
-    stats:{ wdc:0, wins:1,  podiums:3,  poles:0  } },
-  // ── Visa Cash App Racing Bulls ─────────────────────────────────
-  { num:30, code:'LAW', first:'Liam',      last:'Lawson',     nat:'🇳🇿', team:'Racing Bulls',     dob:'2002-02-11', wikiTitle:'Liam_Lawson_(racing_driver)',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LIALAW01_Liam_Lawson/lialaw01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
-  { num:6,  code:'HAD', first:'Isack',     last:'Hadjar',     nat:'🇫🇷', team:'Racing Bulls',     dob:'2004-09-28', wikiTitle:'Isack_Hadjar',
+    stats:{ wdc:4, wins:65, podiums:113, poles:40 } },
+  { num:6,  code:'HAD', ergastId:'hadjar',         first:'Isack',     last:'Hadjar',     nat:'🇫🇷', team:'Red Bull Racing',  dob:'2004-09-28', wikiTitle:'Isack_Hadjar',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/I/ISAHAD01_Isack_Hadjar/isahad01.png',
     stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
-  // ── Williams Racing ────────────────────────────────────────────
-  { num:23, code:'ALB', first:'Alexander', last:'Albon',      nat:'🇹🇭', team:'Williams',         dob:'1996-03-23', wikiTitle:'Alexander_Albon',
+  // Mercedes
+  { num:63, code:'RUS', ergastId:'russell',        first:'George',    last:'Russell',    nat:'🇬🇧', team:'Mercedes',        dob:'1998-02-15', wikiTitle:'George_Russell_(racing_driver)',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/G/GEORUS01_George_Russell/georus01.png',
+    stats:{ wdc:0, wins:3,  podiums:21, poles:8  } },
+  { num:12, code:'ANT', ergastId:'antonelli',      first:'Kimi',      last:'Antonelli',  nat:'🇮🇹', team:'Mercedes',        dob:'2006-08-25', wikiTitle:'Andrea_Kimi_Antonelli',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ANDANT01_Andrea_Kimi_Antonelli/andant01.png',
+    stats:{ wdc:0, wins:0,  podiums:1,  poles:1  } },
+  // Aston Martin
+  { num:14, code:'ALO', ergastId:'alonso',         first:'Fernando',  last:'Alonso',     nat:'🇪🇸', team:'Aston Martin',    dob:'1981-07-29', wikiTitle:'Fernando_Alonso',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/F/FERALO01_Fernando_Alonso/feralo01.png',
+    stats:{ wdc:2, wins:32, podiums:106, poles:22 } },
+  { num:18, code:'STR', ergastId:'stroll',         first:'Lance',     last:'Stroll',     nat:'🇨🇦', team:'Aston Martin',    dob:'1998-10-29', wikiTitle:'Lance_Stroll',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LANSTR01_Lance_Stroll/lanstr01.png',
+    stats:{ wdc:0, wins:0,  podiums:3,  poles:1  } },
+  // Alpine
+  { num:10, code:'GAS', ergastId:'gasly',          first:'Pierre',    last:'Gasly',      nat:'🇫🇷', team:'Alpine',          dob:'1996-02-07', wikiTitle:'Pierre_Gasly',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/P/PIEGAS01_Pierre_Gasly/piegas01.png',
+    stats:{ wdc:0, wins:1,  podiums:4,  poles:0  } },
+  { num:43, code:'COL', ergastId:'colapinto',      first:'Franco',    last:'Colapinto',  nat:'🇦🇷', team:'Alpine',          dob:'2003-05-27', wikiTitle:'Franco_Colapinto',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/F/FRACOL01_Franco_Colapinto/fracol01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  // Haas
+  { num:87, code:'BEA', ergastId:'bearman',        first:'Oliver',    last:'Bearman',    nat:'🇬🇧', team:'Haas',            dob:'2005-05-08', wikiTitle:'Oliver_Bearman',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/O/OLIBEA01_Oliver_Bearman/olibea01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  { num:31, code:'OCO', ergastId:'ocon',           first:'Esteban',   last:'Ocon',       nat:'🇫🇷', team:'Haas',            dob:'1996-09-17', wikiTitle:'Esteban_Ocon',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/E/ESTOCO01_Esteban_Ocon/estoco01.png',
+    stats:{ wdc:0, wins:1,  podiums:3,  poles:0  } },
+  // Racing Bulls — Tsunoda + Lindblad
+  { num:22, code:'TSU', ergastId:'tsunoda',        first:'Yuki',      last:'Tsunoda',    nat:'🇯🇵', team:'Racing Bulls',    dob:'2000-05-11', wikiTitle:'Yuki_Tsunoda',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/Y/YUKTSU01_Yuki_Tsunoda/yuktsu01.png',
+    stats:{ wdc:0, wins:0,  podiums:2,  poles:0  } },
+  { num:7,  code:'LIN', ergastId:'lindblad',       first:'Arvid',     last:'Lindblad',   nat:'🇸🇪', team:'Racing Bulls',    dob:'2006-06-14', wikiTitle:'Arvid_Lindblad',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ARVLIN01_Arvid_Lindblad/arvlin01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  // Williams
+  { num:23, code:'ALB', ergastId:'albon',          first:'Alexander', last:'Albon',      nat:'🇹🇭', team:'Williams',        dob:'1996-03-23', wikiTitle:'Alexander_Albon',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ALEALB01_Alexander_Albon/alealb01.png',
     stats:{ wdc:0, wins:0,  podiums:1,  poles:0  } },
-  { num:55, code:'SAI', first:'Carlos',    last:'Sainz',      nat:'🇪🇸', team:'Williams',         dob:'1994-09-01', wikiTitle:'Carlos_Sainz_Jr.',
+  { num:55, code:'SAI', ergastId:'sainz',          first:'Carlos',    last:'Sainz',      nat:'🇪🇸', team:'Williams',        dob:'1994-09-01', wikiTitle:'Carlos_Sainz_Jr.',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/C/CARSAI01_Carlos_Sainz/carsai01.png',
     stats:{ wdc:0, wins:4,  podiums:30, poles:6  } },
-  // ── Stake F1 Team Kick Sauber → Audi 2026 ─────────────────────
-  { num:27, code:'HUL', first:'Nico',      last:'Hulkenberg',  nat:'🇩🇪', team:'Kick Sauber',      dob:'1987-08-19', wikiTitle:'Nico_Hülkenberg',
+  // Audi (ex-Sauber)
+  { num:27, code:'HUL', ergastId:'hulkenberg',     first:'Nico',      last:'Hulkenberg', nat:'🇩🇪', team:'Kick Sauber',     dob:'1987-08-19', wikiTitle:'Nico_Hülkenberg',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/N/NICHUL01_Nico_Hulkenberg/nichul01.png',
     stats:{ wdc:0, wins:0,  podiums:0,  poles:1  } },
-  { num:5,  code:'BOR', first:'Gabriel',   last:'Bortoleto',  nat:'🇧🇷', team:'Kick Sauber',      dob:'2004-10-14', wikiTitle:'Gabriel_Bortoleto',
+  { num:5,  code:'BOR', ergastId:'bortoleto',      first:'Gabriel',   last:'Bortoleto',  nat:'🇧🇷', team:'Kick Sauber',     dob:'2004-10-14', wikiTitle:'Gabriel_Bortoleto',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/G/GABCOL01_Gabriel_Bortoleto/gabcol01.png',
     stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
-  // ── Cadillac Formula 1 Team ── NEW 11th team from 2026 ─────────
-  { num:2,  code:'ILO', first:'Marcus',    last:'Ericsson',   nat:'🇸🇪', team:'Cadillac',         dob:'1990-09-02', wikiTitle:'Marcus_Ericsson',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/M/MARERI01_Marcus_Ericsson/mareri01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
-  { num:70, code:'POW', first:'Callum',    last:'Ilott',      nat:'🇬🇧', team:'Cadillac',         dob:'1998-11-11', wikiTitle:'Callum_Ilott',
-    photo:'https://www.formula1.com/content/dam/fom-website/drivers/C/CALILO01_Callum_Ilott/calilo01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  // Cadillac — Bottas + Perez
+  { num:77, code:'BOT', ergastId:'bottas',         first:'Valtteri',  last:'Bottas',     nat:'🇫🇮', team:'Cadillac',        dob:'1989-08-28', wikiTitle:'Valtteri_Bottas',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/V/VALBOT01_Valtteri_Bottas/valbot01.png',
+    stats:{ wdc:0, wins:10, podiums:67, poles:20 } },
+  { num:11, code:'PER', ergastId:'perez',          first:'Sergio',    last:'Perez',      nat:'🇲🇽', team:'Cadillac',        dob:'1990-01-26', wikiTitle:'Sergio_Pérez',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/S/SERPER01_Sergio_Perez/serper01.png',
+    stats:{ wdc:0, wins:6,  podiums:42, poles:3  } },
 ]
-
 // ═══════════════════════════════════════════════════════════════
 // CONSTRUCTORS (current)
 // ═══════════════════════════════════════════════════════════════
 const CONSTRUCTORS = [
   {
     id:'mclaren', name:'McLaren', fullName:'McLaren F1 Team',
-    base:'Woking, United Kingdom', firstYear:1966, titles:9,
+    base:'Woking, United Kingdom', firstYear:1966, titles:10,
     ergastId:'mclaren', color:'#FF8000',
-    chassis:'MCL39', engine:'Mercedes M15 V6 Hybrid',
+    chassis:'MCL43', engine:'Mercedes M16 V6 Hybrid',
     principal:'Andrea Stella', wikiTitle:'McLaren',
     drivers:['Lando Norris','Oscar Piastri'],
-    notes:'2025 WCC champions. 9th constructors title, Norris won 2025 WDC.',
+    notes:'2025 WDC (Norris) & WCC champions. 10th constructors title. Reigning double champions entering 2026.',
   },
   {
     id:'ferrari', name:'Ferrari', fullName:'Scuderia Ferrari HP',
     base:'Maranello, Italy', firstYear:1950, titles:16,
     ergastId:'ferrari', color:'#E8002D',
-    chassis:'SF-25', engine:'Ferrari 066/13 V6 Hybrid',
+    chassis:'SF-26', engine:'Ferrari 066/13 V6 Hybrid',
     principal:'Frederic Vasseur', wikiTitle:'Scuderia_Ferrari',
     drivers:['Charles Leclerc','Lewis Hamilton'],
     notes:'Hamilton joined Ferrari for 2025, ending his 12-year stint at Mercedes.',
@@ -619,8 +616,8 @@ const CONSTRUCTORS = [
     ergastId:'red_bull', color:'#3671C6',
     chassis:'RB21', engine:'Red Bull Powertrains (Honda-derived) V6 Hybrid',
     principal:'Christian Horner', wikiTitle:'Red_Bull_Racing',
-    drivers:['Max Verstappen','Yuki Tsunoda'],
-    notes:'Red Bull developed their own in-house power unit (Red Bull Powertrains) in collaboration with Ford for 2026, ending the Honda partnership.',
+    drivers:['Max Verstappen','Isack Hadjar'],
+    notes:'Hadjar promoted from Racing Bulls for 2026. Red Bull Powertrains (Ford collaboration) replaces Honda from 2026.',
   },
   {
     id:'mercedes', name:'Mercedes', fullName:'Mercedes-AMG Petronas F1 Team',
@@ -682,8 +679,8 @@ const CONSTRUCTORS = [
     ergastId:'rb', color:'#6692FF',
     chassis:'VCARB02', engine:'Red Bull Powertrains (Honda-derived) V6 Hybrid',
     principal:'Laurent Mekies', wikiTitle:'Racing_Bulls_(Formula_One_team)',
-    drivers:['Liam Lawson','Isack Hadjar'],
-    notes:'Lawson returned after being swapped from Red Bull Racing in 2025.',
+    drivers:['Yuki Tsunoda','Arvid Lindblad'],
+    notes:'Tsunoda joins from Red Bull Racing. Lindblad (born 2006) is the youngest driver on the 2026 grid.',
   },
   {
     id:'cadillac', name:'Cadillac', fullName:'Cadillac Formula 1 Team',
@@ -691,8 +688,8 @@ const CONSTRUCTORS = [
     ergastId:'cadillac', color:'#CC0000',
     chassis:'VGMF1-01', engine:'Ferrari V6 Hybrid (customer, transitioning to GM unit)',
     principal:'Graeme Lowdon', wikiTitle:'Andretti_Global',
-    drivers:['Marcus Ericsson','Callum Ilott'],
-    notes:'11th team on the F1 grid from 2026 season. Originally Andretti Global, now backed by General Motors/Cadillac. GM developing own PU for future seasons.',
+    drivers:['Valtteri Bottas','Sergio Perez'],
+    notes:'11th team on the 2026 F1 grid. Bottas and Perez bring veteran experience. GM developing own PU for future seasons.',
   },
 ]
 
@@ -915,7 +912,7 @@ const ALL_TIME_RECORDS = {
   ],
   constructorTitles: [
     { team:'Ferrari',   val:16 },
-    { team:'McLaren',   val:9  },
+    { team:'McLaren',   val:10 },
     { team:'Williams',  val:9  },
     { team:'Mercedes',  val:8  },
     { team:'Red Bull',  val:6  },

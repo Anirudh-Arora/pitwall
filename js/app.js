@@ -343,8 +343,14 @@ function App() {
   const renderSection = () => {
     switch(section) {
       case 'home':         return renderHome();
-      case 'live':         return React.createElement('div', { id: 'live-mount' });
-      case 'weekend':      return React.createElement('div', { id: 'weekend-mount' });
+      case 'live':
+        if (!window.LivePage) return React.createElement('div', { className:'loading', style:{padding:'60px 0',textAlign:'center'} },
+          React.createElement('div',{className:'spin'}), React.createElement('span',{style:{fontFamily:'var(--font-head)',fontSize:'12px',letterSpacing:'2px',color:'var(--text-dim)',marginLeft:'10px'}},'Loading Live Mode…'));
+        return React.createElement(window.LivePage);
+      case 'weekend':
+        if (!window.WeekendPage) return React.createElement('div', { className:'loading', style:{padding:'60px 0',textAlign:'center'} },
+          React.createElement('div',{className:'spin'}), React.createElement('span',{style:{fontFamily:'var(--font-head)',fontSize:'12px',letterSpacing:'2px',color:'var(--text-dim)',marginLeft:'10px'}},'Loading Weekend…'));
+        return React.createElement(window.WeekendPage);
       case 'circuits':     return React.createElement(CircuitsPage, null);
       case 'drivers':      return React.createElement(DriversPage, null);
       case 'constructors': return React.createElement(ConstructorsPage, null);
