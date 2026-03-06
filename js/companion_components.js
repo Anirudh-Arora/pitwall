@@ -1,16 +1,24 @@
 const { useState, useEffect, useCallback, useMemo, useRef } = React;
 // Recharts lazy resolver — call at render time, not module parse time
 function useRecharts() {
-  // window.Recharts loads from CDN — poll until available, then force re-render
+  // Recharts CDN loads synchronously before Babel parses these scripts
+  // so window.Recharts should always be available immediately
+  // Still use state as fallback in case of slow CDN
   const [rc, setRc] = React.useState(() => window.Recharts || null);
   React.useEffect(() => {
-    if (rc) return; // already loaded
-    const check = () => { if (window.Recharts) { setRc(window.Recharts); } };
-    check(); // check immediately in effect
-    const t = setInterval(check, 100);
-    setTimeout(() => clearInterval(t), 15000); // give up after 15s
+    // Immediately check (covers async Babel parse edge case)
+    if (window.Recharts && !rc) { setRc(window.Recharts); return; }
+    if (rc) return;
+    // Poll as fallback — CDN may still be loading
+    let attempts = 0;
+    const t = setInterval(() => {
+      attempts++;
+      if (window.Recharts) { setRc(window.Recharts); clearInterval(t); }
+      else if (attempts > 80) clearInterval(t); // give up after 8s
+    }, 100);
     return () => clearInterval(t);
-  }, []); // eslint-disable-line
+  }, [rc]);
+  // Always try window.Recharts directly in case state update hasn't propagated
   return rc || window.Recharts || null;
 }
 // Keep destructured refs for non-chart code (fallback to empty)
@@ -453,7 +461,7 @@ function PositionHistory({ positions, drivers }) {
 
   if (!chartData.length) return <div className="empty">Position history builds as race progresses</div>;
   const _RC = useRecharts();
-  if (!_RC) return <div className="empty" style={{padding:'20px'}}>⏳ Loading charts…</div>;
+  if (!_RC) return <div style={{padding:'32px 20px',textAlign:'center',color:'var(--t3)',fontSize:'12px',fontFamily:'var(--fh)',letterSpacing:'1px',textTransform:'uppercase'}}>⏳ Loading chart library…<div style={{fontSize:'10px',marginTop:'6px',color:'var(--t4)'}}>Recharts CDN</div></div>;
   const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _RC;
 
   return (
@@ -522,7 +530,7 @@ function GapEvolution({ intervals, positions, drivers }) {
 
   if (!chartData.length) return <div className="empty">Gap data builds as race progresses</div>;
   const _RC = useRecharts();
-  if (!_RC) return <div className="empty" style={{padding:'20px'}}>⏳ Loading charts…</div>;
+  if (!_RC) return <div style={{padding:'32px 20px',textAlign:'center',color:'var(--t3)',fontSize:'12px',fontFamily:'var(--fh)',letterSpacing:'1px',textTransform:'uppercase'}}>⏳ Loading chart library…<div style={{fontSize:'10px',marginTop:'6px',color:'var(--t4)'}}>Recharts CDN</div></div>;
   const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _RC;
 
   return (
@@ -743,7 +751,7 @@ function PaceProgression({ weekendSessionsLaps, drivers }) {
 
   if (!chartData.length) return <div className="empty">Loading session data...</div>;
   const _RC = useRecharts();
-  if (!_RC) return <div className="empty" style={{padding:'20px'}}>⏳ Loading charts…</div>;
+  if (!_RC) return <div style={{padding:'32px 20px',textAlign:'center',color:'var(--t3)',fontSize:'12px',fontFamily:'var(--fh)',letterSpacing:'1px',textTransform:'uppercase'}}>⏳ Loading chart library…<div style={{fontSize:'10px',marginTop:'6px',color:'var(--t4)'}}>Recharts CDN</div></div>;
   const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _RC;
 
   return (
@@ -1255,7 +1263,7 @@ function LapTimeChart({ allDriverLaps, drivers }) {
 
   if (!allNums.length) return <div className="empty">No lap data available</div>;
   const _RC = useRecharts();
-  if (!_RC) return <div className="empty" style={{padding:'20px'}}>⏳ Loading charts…</div>;
+  if (!_RC) return <div style={{padding:'32px 20px',textAlign:'center',color:'var(--t3)',fontSize:'12px',fontFamily:'var(--fh)',letterSpacing:'1px',textTransform:'uppercase'}}>⏳ Loading chart library…<div style={{fontSize:'10px',marginTop:'6px',color:'var(--t4)'}}>Recharts CDN</div></div>;
   const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = _RC;
 
   const inputStyle = {

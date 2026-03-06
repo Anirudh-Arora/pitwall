@@ -1042,3 +1042,142 @@ img{display:block;max-width:100%}
 }
 .groq-input:focus{border-color:var(--b2);outline:none}
 .groq-input::placeholder{color:var(--t3)}
+
+/* ════════════════════════════════════════════════════════════════
+   DRIVER CARD v2 — with photo + career stats
+   ════════════════════════════════════════════════════════════════ */
+.driver-card {
+  background: var(--s1);
+  border: 1px solid var(--b0);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .2s var(--ease);
+}
+.driver-card:hover {
+  border-color: var(--b2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,.45);
+}
+.dc-header {
+  padding: 14px 14px 10px;
+  border-left: 4px solid var(--tc, #444);
+  position: relative;
+  overflow: hidden;
+  min-height: 90px;
+}
+.dc-photo {
+  position: absolute; right: 0; bottom: 0;
+  height: 90px; object-fit: contain; object-position: bottom right;
+  opacity: .55; pointer-events: none;
+}
+.dc-number-bg {
+  position: absolute; right: 10px; top: 4px;
+  font-family: var(--fm); font-size: 52px; font-weight: 700;
+  line-height: 1; pointer-events: none; opacity: .25;
+}
+
+/* Constructor card v2 */
+.constructor-card {
+  background: var(--s1);
+  border: 1px solid var(--b0);
+  border-top: 3px solid var(--tc, #444);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .2s var(--ease);
+}
+.constructor-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,0,0,.4);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   WEEKEND SESSION BAR — fix tab overflow
+   ════════════════════════════════════════════════════════════════ */
+.weekend-sessions {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+}
+.weekend-sessions::-webkit-scrollbar { display: none }
+.sess-tab {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Meeting picker scrollable row */
+.meeting-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  scrollbar-width: none;
+}
+.meeting-row::-webkit-scrollbar { display: none }
+
+/* ════════════════════════════════════════════════════════════════
+   STAT VALUE ALIAS — both 'stat-value' and 'sv' work
+   ════════════════════════════════════════════════════════════════ */
+.stat-value { font-family: var(--fm); font-size: 22px; font-weight: 700; line-height: 1; color: var(--t1) }
+.stat-value.accent { color: var(--red) }
+.stat-value.lg { font-size: 28px }
+
+/* ════════════════════════════════════════════════════════════════
+   CIRCUIT MAP PANEL
+   ════════════════════════════════════════════════════════════════ */
+.circuit-map-panel {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+}
+.circuit-map-svg-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--s2);
+  min-height: 160px;
+}
+.circuit-map-sectors {
+  width: 148px;
+  border-left: 1px solid var(--b0);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.sector-row {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--b0);
+}
+.sector-row:last-of-type { border-bottom: none }
+.sector-label {
+  font-family: var(--fh); font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+}
+.sector-time {
+  font-family: var(--fm); font-size: 16px; font-weight: 700;
+  color: var(--t1); margin-top: 1px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ALL-TIME RECORDS TABLE
+   ════════════════════════════════════════════════════════════════ */
+.records-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--b0);
+}
+.records-bar:last-child { border-bottom: none }
+.records-driver { font-family: var(--fh); font-size: 14px; font-weight: 700; flex: 1 }
+.records-val { font-family: var(--fm); font-size: 14px; font-weight: 700; width: 40px; text-align: right }
+.records-fill-track { flex: 2; height: 4px; background: var(--b1); border-radius: 3px; overflow: hidden }
+.records-fill { height: 100%; border-radius: 3px }

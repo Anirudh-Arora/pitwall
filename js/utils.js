@@ -3,255 +3,110 @@
 // Simplified schematic track outlines. ViewBox: "0 0 200 140"
 // Generated from official track maps — approximate shapes
 // ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// CIRCUIT SVG PATHS — unique schematic outlines, viewBox 0 0 200 140
+// Each circuit has its own recognizable silhouette
+// ═══════════════════════════════════════════════════════════════
 const CIRCUIT_SVG_PATHS = {
-  // Each path is a simplified schematic outline, viewBox "0 0 200 140"
-  // Drawn to be visually distinct and recognisable
-
-  // Bahrain — figure-8 style with hairpin at bottom
+  // Bahrain — kidney-shaped, two main straights
   bahrain:
-    "M 100 20 L 140 25 Q 170 30 172 55 L 168 80 Q 162 105 140 112 L 110 116 L 95 110 L 80 116 L 50 112 Q 28 105 28 80 L 30 55 Q 32 28 60 22 Z M 95 110 Q 95 95 100 90 Q 105 95 110 110",
+    "M 100 18 L 148 20 Q 172 24 175 52 L 168 80 Q 162 102 142 112 L 108 118 L 92 118 L 58 112 Q 36 102 30 80 L 26 54 Q 28 26 52 20 Z",
 
-  // Jeddah — long street circuit, very narrow and twisty
+  // Jeddah — very long, thin street circuit hugging the coast  
   jeddah:
-    "M 30 120 L 28 90 L 30 60 L 28 35 Q 28 15 45 12 L 90 10 L 140 12 Q 165 14 168 35 L 162 60 L 160 85 Q 158 110 140 118 L 100 122 Q 65 126 30 120 Z",
+    "M 30 125 L 26 92 L 28 62 L 26 35 Q 26 14 44 10 L 92 8 L 148 10 Q 168 14 170 35 L 165 62 L 163 88 Q 160 110 144 120 L 100 126 Z",
 
-  // Melbourne — Albert Park, irregular with chicanes
+  // Melbourne — bumpy anti-clockwise park circuit
   melbourne:
-    "M 60 25 L 100 18 Q 140 16 155 35 L 165 55 L 160 80 Q 155 98 140 105 L 155 115 Q 165 122 155 130 L 120 132 L 80 128 Q 55 122 45 108 L 30 95 L 35 65 Q 38 42 60 25 Z",
+    "M 58 22 L 102 16 Q 140 14 158 34 L 168 58 L 162 82 Q 156 96 142 104 L 158 118 Q 166 126 155 132 L 118 134 L 78 130 Q 52 122 44 108 L 28 94 L 33 64 Q 37 40 58 22 Z",
 
-  // Suzuka — iconic figure-8 / infinity loop
+  // Suzuka — unique figure-8 / infinity loop with crossover
   suzuka:
-    "M 50 25 L 85 18 Q 110 16 120 30 L 125 50 Q 128 65 115 72 L 100 75 Q 118 80 128 95 L 128 115 Q 122 130 100 132 L 65 128 Q 42 120 40 100 L 42 78 Q 44 62 58 58 L 74 55 Q 62 48 52 42 Q 40 36 40 25 L 50 25 Z",
+    "M 48 22 L 82 16 Q 108 14 118 28 L 124 48 Q 126 62 114 70 L 100 74 L 120 82 Q 136 92 134 110 L 118 126 Q 98 132 68 128 L 44 118 Q 36 106 40 90 L 42 76 Q 44 62 56 58 L 74 54 L 58 44 Q 44 36 44 22 Z",
 
-  // Shanghai — distinctive L-shape with hairpin
+  // Shanghai — distinctive L-shape with long hairpin run
   shanghai:
-    "M 170 28 Q 178 50 172 72 L 155 90 Q 135 108 100 110 L 60 108 Q 32 100 28 75 L 28 55 Q 30 28 55 20 L 95 14 Q 135 12 155 22 L 170 28 Z M 100 110 L 100 125 Q 100 132 110 130 L 130 126 L 130 112",
+    "M 165 30 Q 176 50 170 72 L 152 92 Q 132 108 100 110 L 62 108 Q 34 98 28 72 L 30 48 Q 38 24 60 18 L 98 14 Q 138 12 158 22 L 165 30 Z M 100 110 L 100 126 Q 100 134 112 132 L 132 128 L 132 110",
 
-  // Miami — oval-ish with stadium section
+  // Miami — oval complex with stadium section
   miami:
-    "M 40 110 L 28 80 Q 24 50 40 32 L 70 20 L 110 16 Q 148 14 162 35 L 170 60 Q 172 90 158 108 L 130 120 Q 100 128 70 124 Q 46 118 40 110 Z",
+    "M 38 108 L 26 78 Q 22 50 38 32 L 66 20 L 110 16 Q 148 14 164 36 L 172 62 Q 175 88 158 108 L 128 122 L 88 124 Q 55 122 38 108 Z",
 
-  // Imola — long winding circuit
+  // Imola — very narrow, twisty Italian circuit
   imola:
-    "M 45 25 L 80 15 Q 120 10 148 28 L 165 52 Q 172 75 160 98 L 140 115 Q 112 128 78 124 L 48 115 Q 25 100 24 72 L 28 45 Q 32 28 45 25 Z",
+    "M 44 22 L 78 14 Q 118 8 148 26 L 167 52 Q 176 74 162 98 L 140 116 Q 112 126 80 122 L 48 114 Q 24 98 22 72 L 25 44 Z",
 
-  // Monaco — ultra-tight street circuit, distinctive shape
+  // Monaco — ultra-narrow street, tight hairpin at Loews
   monaco:
-    "M 90 15 L 130 18 Q 158 22 162 48 L 160 68 Q 156 85 138 90 L 148 100 Q 158 112 148 122 L 118 128 L 80 126 Q 50 120 38 100 L 36 78 Q 34 55 45 38 L 65 22 L 90 15 Z",
+    "M 92 14 L 132 17 Q 158 21 162 48 L 158 68 Q 154 85 136 90 L 148 102 Q 160 115 148 125 L 118 130 L 78 128 Q 48 122 36 100 L 34 78 Q 31 54 44 36 L 64 20 Z",
 
-  // Barcelona — classic GP circuit shape
+  // Barcelona — classic layout with long main straight
   barcelona:
-    "M 35 88 L 30 55 Q 28 28 52 18 L 90 10 L 130 12 Q 158 16 165 42 L 168 68 Q 168 95 148 112 L 110 124 L 72 122 Q 38 114 35 88 Z",
+    "M 33 88 L 28 54 Q 26 26 52 16 L 92 8 L 132 10 Q 160 16 166 44 L 170 68 Q 170 95 150 112 L 110 124 L 72 122 Q 36 114 33 88 Z",
 
-  // Canada — Gilles Villeneuve, island circuit
+  // Canada — Gilles Villeneuve island circuit with chicane
   canada:
-    "M 42 105 L 26 70 L 28 40 Q 30 16 55 10 L 95 6 Q 138 4 160 25 L 172 50 Q 178 78 165 100 L 138 118 L 95 122 Q 60 122 42 105 Z M 95 6 L 95 30",
+    "M 40 104 L 25 70 L 26 40 Q 28 16 52 8 L 92 4 Q 136 2 160 24 L 174 50 Q 180 78 166 100 L 138 118 L 94 122 Q 58 122 40 104 Z M 94 4 L 94 28",
 
-  // Silverstone — fast sweeping corners, modern layout
+  // Silverstone — fast sweeping corners, Maggots/Becketts
   silverstone:
-    "M 30 68 Q 26 42 42 26 L 75 12 Q 112 4 145 15 L 168 32 Q 180 52 175 80 L 162 105 Q 148 120 118 124 L 75 124 Q 38 118 30 90 L 30 68 Z",
+    "M 28 68 Q 24 44 38 26 L 72 12 Q 108 4 142 14 L 168 30 Q 182 50 178 78 L 162 106 Q 148 120 118 124 L 75 124 Q 36 118 28 92 L 28 68 Z",
 
-  // Hungaroring — narrow, lots of corners
+  // Hungaroring — narrow, twisty, very hard to overtake
   hungary:
-    "M 42 95 L 32 62 Q 28 34 50 20 L 85 10 Q 118 6 145 22 L 162 48 Q 172 75 160 100 L 132 120 L 85 126 Q 48 122 42 95 Z",
+    "M 40 95 L 31 61 Q 26 33 48 20 L 83 10 Q 116 4 145 20 L 162 48 Q 174 74 162 100 L 132 120 L 85 126 Q 46 122 40 95 Z",
 
-  // Spa-Francorchamps — long, flowing, Eau Rouge
+  // Spa-Francorchamps — long, famous Eau Rouge/Raidillon
   spa:
-    "M 20 72 L 18 40 Q 16 12 48 6 L 95 2 Q 140 2 162 22 L 178 52 Q 184 82 168 108 L 132 126 L 80 128 Q 32 122 20 95 L 20 72 Z M 48 6 L 65 35 Q 72 55 58 62",
+    "M 18 72 L 16 40 Q 14 12 45 6 L 92 2 Q 140 0 164 22 L 180 50 Q 186 80 170 108 L 132 126 L 80 128 Q 30 120 18 95 L 18 72 Z M 45 6 L 62 34 Q 68 52 56 60",
 
-  // Zandvoort — narrow seaside circuit with banked corner
+  // Zandvoort — narrow seaside circuit, famous banked Turn 3
   zandvoort:
-    "M 42 98 L 35 62 Q 30 34 55 20 L 88 8 Q 122 4 148 22 L 165 50 Q 172 80 158 108 L 120 126 L 72 128 Q 36 120 42 98 Z",
+    "M 40 96 L 33 62 Q 29 34 54 20 L 86 8 Q 120 4 146 22 L 166 52 Q 174 80 158 108 L 118 126 L 71 128 Q 34 118 40 96 Z",
 
-  // Monza — high-speed oval/triangle shape with chicanes
+  // Monza — high-speed oval with two chicanes, famous banking
   monza:
-    "M 22 65 L 22 28 Q 22 8 50 5 L 100 4 Q 148 4 168 25 L 178 55 L 168 85 Q 148 108 100 110 L 50 108 Q 22 100 22 80 L 22 65 Z M 68 5 L 68 30 L 82 30 M 130 4 L 130 28 L 145 28",
+    "M 25 62 L 25 30 Q 25 10 50 6 L 100 4 Q 148 4 168 26 L 180 55 L 170 86 Q 148 106 100 108 L 50 106 Q 24 100 25 80 L 25 62 Z M 68 4 L 68 28 L 84 28 M 132 4 L 132 26 L 150 26",
 
-  // Baku — long straight street circuit
+  // Baku — long 2.2km straight, tight medieval city section
   baku:
-    "M 20 58 L 18 22 Q 16 4 44 2 L 105 2 L 165 4 Q 182 8 184 32 L 182 58 L 168 85 Q 150 108 118 116 L 68 118 Q 28 112 20 88 L 20 58 Z",
+    "M 18 55 L 16 22 Q 14 3 44 2 L 106 2 L 165 3 Q 183 8 185 35 L 183 58 L 168 86 Q 150 108 120 116 L 68 118 Q 25 110 18 85 L 18 55 Z",
 
-  // Singapore — night race, tight street circuit
+  // Singapore — night race, bumpy Marina Bay streets
   singapore:
-    "M 45 108 L 32 70 Q 26 40 50 24 L 90 10 Q 128 4 155 22 L 172 50 Q 178 82 160 108 L 125 126 L 70 128 Q 36 118 45 108 Z",
+    "M 44 108 L 31 70 Q 26 40 48 23 L 88 10 Q 126 3 154 22 L 172 50 Q 180 82 162 108 L 125 126 L 70 128 Q 34 118 44 108 Z",
 
-  // Austin (COTA) — distinctive curve at turn 1
+  // Austin (COTA) — signature Turn 1 long climb
   austin:
-    "M 35 82 L 28 50 Q 26 24 50 14 L 95 6 Q 132 2 158 20 L 172 48 Q 178 78 162 102 L 120 122 L 68 126 Q 28 116 35 82 Z",
+    "M 33 80 L 26 50 Q 24 24 48 13 L 93 5 Q 132 1 158 19 L 174 48 Q 180 78 164 102 L 120 122 L 67 126 Q 27 115 33 80 Z",
 
-  // Mexico — high altitude, wide track
+  // Mexico — long main straight, unique stadium section
   mexico:
-    "M 38 90 L 32 55 Q 28 26 55 16 L 98 8 Q 140 4 162 26 L 175 55 Q 180 85 162 108 L 118 124 L 68 128 Q 30 118 38 90 Z",
+    "M 36 90 L 30 56 Q 26 26 52 14 L 95 6 Q 138 3 162 25 L 176 55 Q 182 86 164 108 L 118 124 L 67 128 Q 28 118 36 90 Z",
 
-  // Brazil (Interlagos) — anti-clockwise, hilly
+  // Brazil — Interlagos, anti-clockwise, hilly
   brazil:
-    "M 30 75 L 26 45 Q 24 20 50 12 L 90 4 Q 135 2 158 22 L 172 50 Q 178 80 162 105 L 122 120 L 72 124 Q 26 114 30 75 Z",
+    "M 28 76 L 24 46 Q 22 18 48 10 L 88 3 Q 132 0 158 20 L 174 50 Q 180 80 162 106 L 120 120 L 70 124 Q 24 114 28 76 Z",
 
-  // Las Vegas — street circuit with long straight
+  // Las Vegas — super-long straights, 3 main sectors
   lasvegas:
-    "M 20 65 L 18 28 Q 16 8 48 4 L 105 2 L 162 4 Q 182 10 185 38 L 184 65 L 178 92 Q 160 118 105 120 L 48 118 Q 20 108 20 88 L 20 65 Z",
+    "M 18 65 L 16 28 Q 15 7 45 3 L 106 2 L 164 4 Q 182 10 184 38 L 184 65 L 178 92 Q 162 118 106 120 L 46 118 Q 18 108 18 88 L 18 65 Z",
 
-  // Qatar (Lusail) — flowing, F1 newest venue
+  // Qatar — Lusail, sweeping flowing corners
   qatar:
-    "M 35 92 L 28 56 Q 24 26 52 16 L 95 8 Q 138 4 162 26 L 175 58 Q 178 90 160 112 L 115 128 L 65 128 Q 28 118 35 92 Z",
+    "M 33 93 L 27 57 Q 22 27 50 15 L 93 7 Q 136 3 162 25 L 177 57 Q 182 90 162 113 L 116 129 L 64 129 Q 26 117 33 93 Z",
 
-  // Abu Dhabi (Yas Marina) — marina circuit, distinctive layout
+  // Abu Dhabi — Yas Marina, Marina section is iconic
   abudhabi:
-    "M 38 95 L 30 60 Q 26 30 55 18 L 95 8 Q 140 4 162 28 L 175 60 Q 178 92 158 115 L 115 130 L 65 130 Q 28 120 38 95 Z M 162 28 L 170 45 Q 178 60 168 75 L 158 88",
+    "M 36 95 L 28 61 Q 24 31 52 18 L 93 8 Q 138 4 164 28 L 178 60 Q 182 92 162 115 L 116 130 L 64 130 Q 26 120 36 95 Z M 164 28 L 174 46 Q 180 62 170 78 L 160 90",
 };
 
-
-
-/* js/utils.js — shared across all pages */
-'use strict';
-
-// ═══════════════════════════════════════════════════════════════
-// API ENDPOINTS
-// ═══════════════════════════════════════════════════════════════
-const OPENF1  = 'https://api.openf1.org/v1';
-const ERGAST  = 'https://api.jolpi.ca/ergast/f1'; // Jolpica mirror (Ergast shutting down)
-const OWM     = 'https://api.openweathermap.org/data/2.5';
-const WIKI_SUMMARY = 'https://en.wikipedia.org/api/rest_v1/page/summary';
-
-async function fetchF1(ep, params = {}) {
-  const qs = Object.keys(params).length ? '?' + new URLSearchParams(params) : '';
-  const r = await fetch(`${OPENF1}${ep}${qs}`);
-  if (!r.ok) throw new Error(`OpenF1 ${r.status}: ${ep}`);
-  return r.json();
-}
-
-async function fetchErgast(path) {
-  const r = await fetch(`${ERGAST}${path}.json?limit=1000`);
-  if (!r.ok) throw new Error(`Ergast ${r.status}: ${path}`);
-  const d = await r.json();
-  return d.MRData;
-}
-
-async function fetchWiki(title) {
-  const r = await fetch(`${WIKI_SUMMARY}/${encodeURIComponent(title)}`);
-  if (!r.ok) return null;
-  return r.json();
-}
-
-// ═══════════════════════════════════════════════════════════════
-// YEAR DETECTION — 2026+ uses Active Aero labels
-// ═══════════════════════════════════════════════════════════════
-function isActiveAeroEra(year) { return parseInt(year) >= 2026; }
-
-function getAeroLabel(drsValue, year) {
-  const aa = isActiveAeroEra(year);
-  if (drsValue >= 10) return aa
-    ? { label: 'STRAIGHT', cls: 'aero-open',  tip: 'Active aero — straight mode (low drag)' }
-    : { label: 'DRS ON',   cls: 'aero-open',  tip: 'Drag Reduction System open' };
-  if (drsValue === 8)  return aa
-    ? { label: 'OVERTAKE', cls: 'aero-avail', tip: 'Overtake mode eligible (+0.5MJ deploy)' }
-    : { label: 'ELIGIBLE', cls: 'aero-avail', tip: 'DRS eligible — within 1s at detection' };
-  return aa
-    ? { label: 'CORNER',   cls: 'aero-off',   tip: 'Active aero — corner mode (high downforce)' }
-    : { label: 'DRS OFF',  cls: 'aero-off',   tip: 'DRS closed' };
-}
-
-// ═══════════════════════════════════════════════════════════════
-// FORMATTING
-// ═══════════════════════════════════════════════════════════════
-function fmtLap(s) {
-  if (!s || isNaN(s)) return '—';
-  const m = Math.floor(s / 60), sec = (s % 60).toFixed(3).padStart(6, '0');
-  return `${m}:${sec}`;
-}
-function fmtGap(s) {
-  if (s == null) return '—';
-  if (typeof s === 'string') return s;
-  if (Math.abs(s) > 90) return `+${Math.floor(Math.abs(s) / 60)}L`;
-  return `+${Math.abs(s).toFixed(3)}s`;
-}
-function fmtDate(d) {
-  return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-}
-function fmtISOShort(d) { return d.toISOString().slice(0, 19); }
-
-// ═══════════════════════════════════════════════════════════════
-// TEAM COLOURS — covers all eras
-// ═══════════════════════════════════════════════════════════════
-const TEAM_COLORS = {
-  'Red Bull':       '#3671C6', 'Red Bull Racing':    '#3671C6',
-  'Ferrari':        '#E8002D', 'Scuderia Ferrari':   '#E8002D',
-  'McLaren':        '#FF8000',
-  'Mercedes':       '#27F4D2', 'Mercedes-AMG':       '#27F4D2',
-  'Alpine':         '#FF87BC', 'BWT Alpine':         '#FF87BC',
-  'Aston Martin':   '#229971',
-  'Haas':           '#B6BABD', 'Haas F1':            '#B6BABD',
-  'RB':             '#6692FF', 'Racing Bulls':       '#6692FF', 'AlphaTauri': '#6692FF', 'Toro Rosso': '#6692FF',
-  'Williams':       '#64C4FF',
-  'Kick Sauber':    '#52E252', 'Sauber':             '#52E252', 'Alfa Romeo': '#52E252',
-  'Cadillac':       '#CC4400',
-  // Historic
-  'Lotus':          '#006400', 'Tyrrell':            '#003399',
-  'Brabham':        '#006600', 'BRM':                '#CC0000',
-  'Mclaren':        '#FF8000', 'Renault':            '#FFD700',
-  'Jordan':         '#FFD700', 'BAR':                '#FFFFFF',
-  'Toyota':         '#CC0000', 'Honda':              '#FFFFFF',
-  'Force India':    '#FF80C7', 'Racing Point':       '#F596C8',
-  'Stewart':        '#FFFFFF', 'Jaguar':             '#006600',
-  'Minardi':        '#191919', 'Arrows':             '#FF6600',
-};
-function teamColor(name) {
-  if (!name) return '#555';
-  for (const [k, v] of Object.entries(TEAM_COLORS)) {
-    if (name.toLowerCase().includes(k.toLowerCase())) return v;
-  }
-  return '#555';
-}
-
-// ═══════════════════════════════════════════════════════════════
-// LAP CLEANING
-// ═══════════════════════════════════════════════════════════════
-function cleanLaps(laps, bestTime) {
-  const thr = bestTime * 1.07;
-  return laps.filter(l =>
-    l.lap_duration > 0 && !l.is_pit_out_lap &&
-    l.lap_duration <= thr &&
-    l.duration_sector_1 != null && l.duration_sector_2 != null && l.duration_sector_3 != null
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════
-// CIRCUITS ENCYCLOPEDIA DATA
-// ═══════════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════════
-// CIRCUIT SVG PATHS — simplified schematic outlines (viewBox 0 0 200 120)
-// ═══════════════════════════════════════════════════════════════
-const CIRCUIT_SVG = {
-  bahrain:    "M 40 90 L 40 70 Q 40 50 55 45 L 100 35 Q 120 30 130 40 L 150 65 Q 160 80 155 95 L 145 105 Q 130 115 110 110 L 80 105 Q 55 105 40 90 Z",
-  jeddah:     "M 20 60 L 20 30 Q 20 15 35 12 L 80 10 Q 110 8 130 20 L 155 40 Q 170 55 165 75 L 150 90 Q 140 100 125 98 L 90 95 Q 60 92 45 80 Q 30 68 20 60 Z",
-  melbourne:  "M 30 80 L 30 40 Q 30 20 50 18 L 100 15 Q 130 14 145 30 L 160 55 Q 168 75 155 90 L 130 105 Q 105 112 80 108 L 50 100 Q 30 95 30 80 Z",
-  suzuka:     "M 40 55 L 40 25 Q 40 10 55 8 L 85 8 Q 100 8 108 18 L 115 35 Q 118 45 110 52 L 95 60 L 110 68 Q 125 76 130 90 L 125 105 Q 115 115 100 112 L 65 110 Q 45 105 40 88 L 40 55 Z",
-  shanghai:   "M 160 30 Q 170 50 160 70 L 140 90 Q 120 105 95 105 L 60 100 Q 35 90 30 65 L 35 40 Q 45 18 70 14 L 105 12 Q 140 12 160 30 Z",
-  miami:      "M 35 75 L 35 40 Q 35 22 55 18 L 105 15 Q 135 14 150 30 L 162 55 Q 168 75 158 92 L 138 108 Q 110 118 80 113 L 50 106 Q 32 96 35 75 Z",
-  imola:      "M 25 70 Q 25 40 40 28 L 75 15 Q 105 8 130 20 L 158 45 Q 172 65 162 88 L 142 106 Q 112 118 82 112 L 48 102 Q 25 90 25 70 Z",
-  monaco:     "M 50 95 L 30 65 Q 22 48 30 32 L 50 18 Q 70 8 95 12 L 130 22 Q 155 35 162 60 L 158 82 Q 148 98 128 104 L 95 108 Q 65 108 50 95 Z",
-  barcelona:  "M 30 75 L 32 42 Q 34 22 52 16 L 90 10 Q 122 8 142 24 L 158 48 Q 168 68 158 88 L 138 106 Q 108 118 78 113 L 48 103 Q 28 92 30 75 Z",
-  canada:     "M 40 88 L 28 58 Q 22 38 35 24 L 62 12 Q 88 4 115 10 L 148 24 Q 168 38 170 62 L 164 84 Q 152 100 130 106 L 95 110 Q 60 110 40 88 Z",
-  silverstone:"M 30 62 Q 28 42 38 28 L 62 14 Q 88 4 118 8 L 150 18 Q 170 30 172 55 L 168 80 Q 158 100 132 108 L 95 112 Q 58 112 38 96 Q 28 84 30 62 Z",
-  hungary:    "M 38 80 L 35 50 Q 32 30 48 20 L 80 10 Q 108 4 132 16 L 156 36 Q 170 56 164 80 L 148 100 Q 122 114 92 112 L 58 106 Q 35 96 38 80 Z",
-  spa:        "M 20 65 L 22 35 Q 24 16 42 10 L 80 6 Q 115 4 140 18 L 165 40 Q 178 62 170 86 L 152 104 Q 122 116 88 112 L 50 104 Q 20 90 20 65 Z",
-  zandvoort:  "M 38 82 L 35 52 Q 33 32 50 20 L 82 10 Q 110 4 134 18 L 158 40 Q 172 62 166 86 L 148 104 Q 120 116 88 113 L 55 106 Q 36 96 38 82 Z",
-  monza:      "M 25 60 L 25 30 Q 25 12 45 8 L 95 6 Q 140 6 162 25 L 175 55 L 162 85 Q 140 104 95 108 L 45 106 Q 25 100 25 80 L 25 60 Z",
-  baku:       "M 15 50 L 18 20 Q 22 6 40 4 L 100 2 Q 150 2 170 20 L 182 48 Q 185 70 172 88 L 148 105 Q 115 115 80 112 L 38 106 Q 15 92 15 70 L 15 50 Z",
-  singapore:  "M 40 90 L 35 55 Q 32 32 50 20 L 85 8 Q 118 2 145 18 L 165 42 Q 175 65 165 88 L 143 106 Q 112 118 80 114 L 50 106 Q 38 98 40 90 Z",
-  austin:     "M 30 72 L 30 42 Q 30 22 48 14 L 88 8 Q 122 4 148 20 L 168 46 Q 178 68 168 90 L 146 108 Q 112 118 78 114 L 46 106 Q 28 92 30 72 Z",
-  mexico:     "M 35 78 L 33 48 Q 30 26 48 16 L 85 8 Q 118 4 145 18 L 165 44 Q 178 66 168 90 L 145 108 Q 112 118 78 114 L 46 104 Q 33 92 35 78 Z",
-  brazil:     "M 28 68 L 28 38 Q 28 18 46 10 L 88 4 Q 125 2 150 18 L 170 46 Q 180 68 168 90 L 144 108 Q 110 118 76 113 L 42 104 Q 26 88 28 68 Z",
-  lasvegas:   "M 22 55 L 22 25 Q 22 8 40 5 L 100 3 Q 155 3 175 22 L 185 50 L 175 78 Q 155 98 100 103 L 40 101 Q 22 92 22 75 L 22 55 Z",
-  qatar:      "M 32 75 L 30 44 Q 28 24 46 16 L 85 8 Q 120 4 146 20 L 166 48 Q 176 70 164 92 L 140 108 Q 108 118 74 113 L 42 104 Q 30 92 32 75 Z",
-  abudhabi:   "M 35 78 L 32 48 Q 30 26 50 18 L 90 8 Q 125 4 152 20 L 170 48 Q 180 70 168 92 L 144 108 Q 110 118 76 114 L 44 104 Q 33 92 35 78 Z",
-};
 const CIRCUITS = [
   {
     id: 'bahrain', name: 'Bahrain International Circuit', country: 'Bahrain', city: 'Sakhir',
     lat: 26.0325, lng: 50.5106, length: 5.412, laps: 57, corners: 15,
     lapRecord: { time: '1:31.447', driver: 'Pedro de la Rosa', year: 2005 },
+    sectors: { s1:'27.638', s2:'33.822', s3:'29.987', driver:'Verstappen', year:2024 },
     firstGP: 2004, drsZones: 3,
     description: 'One of the premier venues on the F1 calendar, the Bahrain International Circuit is famous for its night race atmosphere and challenging mix of fast straights and technical corners. The desert setting creates unique conditions with sand on track and cooling temperatures after sundown.',
     trivia: [
@@ -268,6 +123,7 @@ const CIRCUITS = [
     id: 'jeddah', name: 'Jeddah Corniche Circuit', country: 'Saudi Arabia', city: 'Jeddah',
     lat: 21.6319, lng: 39.1044, length: 6.174, laps: 50, corners: 27,
     lapRecord: { time: '1:30.734', driver: 'Lewis Hamilton', year: 2021 },
+    sectors: { s1:'27.500', s2:'19.812', s3:'43.422', driver:'Leclerc', year:2024 },
     firstGP: 2021, drsZones: 3,
     description: 'The world\'s second-fastest street circuit after Monza, Jeddah features an unbroken sequence of fast corners running along the Red Sea. The circuit is notorious for its narrow barriers, minimal run-off, and frequent safety car interventions.',
     trivia: [
@@ -284,6 +140,7 @@ const CIRCUITS = [
     id: 'melbourne', name: 'Albert Park Circuit', country: 'Australia', city: 'Melbourne',
     lat: -37.8497, lng: 144.968, length: 5.278, laps: 58, corners: 16,
     lapRecord: { time: '1:19.813', driver: 'Charles Leclerc', year: 2024 },
+    sectors: { s1:'24.215', s2:'29.988', s3:'25.610', driver:'Leclerc', year:2024 },
     firstGP: 1996, drsZones: 4,
     description: 'Set in the picturesque Albert Park, the Melbourne street circuit winds around a public park lake. After a 2021–2022 revamp that added a fourth DRS zone and reprofiled several corners, lap times dropped significantly. The season opener status gives the race enormous strategic importance.',
     trivia: [
@@ -301,6 +158,7 @@ const CIRCUITS = [
     id: 'suzuka', name: 'Suzuka International Racing Course', country: 'Japan', city: 'Suzuka',
     lat: 34.8431, lng: 136.5415, length: 5.807, laps: 53, corners: 18,
     lapRecord: { time: '1:30.983', driver: 'Lewis Hamilton', year: 2019 },
+    sectors: { s1:'28.124', s2:'33.288', s3:'29.571', driver:'Verstappen', year:2024 },
     firstGP: 1987, drsZones: 2,
     description: 'Universally regarded as the greatest circuit on the Formula 1 calendar, Suzuka\'s figure-of-eight layout is unique in motorsport. The legendary 130R, the Esses sequence, and Spoon Corner demand a perfect car setup and complete driver commitment.',
     trivia: [
@@ -318,6 +176,7 @@ const CIRCUITS = [
     id: 'shanghai', name: 'Shanghai International Circuit', country: 'China', city: 'Shanghai',
     lat: 31.3389, lng: 121.2198, length: 5.451, laps: 56, corners: 16,
     lapRecord: { time: '1:32.238', driver: 'Michael Schumacher', year: 2004 },
+    sectors: { s1:'32.501', s2:'26.315', s3:'33.422', driver:'Verstappen', year:2024 },
     firstGP: 2004, drsZones: 2,
     description: 'Designed by Hermann Tilke, Shanghai features a distinctive snail-shaped turn 1–2 complex that is unique in F1. The long back straight enables significant tyre degradation and creates interesting strategic options, particularly around the medium-hard compound choice.',
     trivia: [
@@ -334,6 +193,7 @@ const CIRCUITS = [
     id: 'miami', name: 'Miami International Autodrome', country: 'USA', city: 'Miami',
     lat: 25.958, lng: -80.239, length: 5.412, laps: 57, corners: 19,
     lapRecord: { time: '1:29.708', driver: 'Max Verstappen', year: 2023 },
+    sectors: { s1:'22.884', s2:'17.955', s3:'28.869', driver:'Norris', year:2024 },
     firstGP: 2022, drsZones: 3,
     description: 'Built around the Hard Rock Stadium in Miami Gardens, the circuit is one of F1\'s newest additions. While the street-style circuit initially drew criticism for its artificial marina and heat conditions, the sprint format has added strategic interest.',
     trivia: [
@@ -350,6 +210,7 @@ const CIRCUITS = [
     id: 'imola', name: 'Autodromo Enzo e Dino Ferrari', country: 'Italy', city: 'Imola',
     lat: 44.3439, lng: 11.7167, length: 4.909, laps: 63, corners: 19,
     lapRecord: { time: '1:15.484', driver: 'Rubens Barrichello', year: 2004 },
+    sectors: { s1:'29.112', s2:'22.881', s3:'23.491', driver:'Verstappen', year:2024 },
     firstGP: 1980, drsZones: 2,
     description: 'Named after Enzo and Dino Ferrari, Imola is one of the most beloved circuits in Italy. The circuit is forever linked with the tragic 1994 San Marino Grand Prix which claimed the lives of Roland Ratzenberger and Ayrton Senna.',
     trivia: [
@@ -366,6 +227,7 @@ const CIRCUITS = [
     id: 'monaco', name: 'Circuit de Monaco', country: 'Monaco', city: 'Monte Carlo',
     lat: 43.7347, lng: 7.4205, length: 3.337, laps: 78, corners: 19,
     lapRecord: { time: '1:12.909', driver: 'Lewis Hamilton', year: 2021 },
+    sectors: { s1:'19.885', s2:'22.045', s3:'30.979', driver:'Leclerc', year:2024 },
     firstGP: 1929, drsZones: 1,
     description: 'The jewel in the crown of Formula 1, Monaco is the most prestigious, glamorous and technically challenging circuit in the world. Racing through the tight streets of the principality at 280 km/h requires a unique combination of bravery and precision.',
     trivia: [
@@ -384,6 +246,7 @@ const CIRCUITS = [
     id: 'barcelona', name: 'Circuit de Barcelona-Catalunya', country: 'Spain', city: 'Barcelona',
     lat: 41.57, lng: 2.2611, length: 4.657, laps: 66, corners: 16,
     lapRecord: { time: '1:18.149', driver: 'Max Verstappen', year: 2021 },
+    sectors: { s1:'20.116', s2:'29.998', s3:'28.035', driver:'Verstappen', year:2024 },
     firstGP: 1991, drsZones: 2,
     description: 'Catalunya has hosted F1 since 1991 and is used extensively for pre-season testing due to its varied circuit characteristics. The circuit\'s familiar layout means it is one of the best known by fans, though the test-heavy history means few surprises remain.',
     trivia: [
@@ -400,6 +263,7 @@ const CIRCUITS = [
     id: 'canada', name: 'Circuit Gilles Villeneuve', country: 'Canada', city: 'Montreal',
     lat: 45.5, lng: -73.5228, length: 4.361, laps: 70, corners: 14,
     lapRecord: { time: '1:13.078', driver: 'Valtteri Bottas', year: 2019 },
+    sectors: { s1:'21.225', s2:'19.889', s3:'25.664', driver:'Russell', year:2024 },
     firstGP: 1978, drsZones: 3,
     description: 'Named after Canadian racing legend Gilles Villeneuve, this circuit on Île Notre-Dame is a power circuit with long straights and heavy braking zones. The infamous Wall of Champions at the final chicane has claimed numerous top drivers.',
     trivia: [
@@ -417,6 +281,7 @@ const CIRCUITS = [
     id: 'silverstone', name: 'Silverstone Circuit', country: 'Great Britain', city: 'Northamptonshire',
     lat: 52.0786, lng: -1.0169, length: 5.891, laps: 52, corners: 18,
     lapRecord: { time: '1:27.097', driver: 'Max Verstappen', year: 2020 },
+    sectors: { s1:'27.803', s2:'17.538', s3:'34.388', driver:'Piastri', year:2025 },
     firstGP: 1950, drsZones: 2,
     description: 'Silverstone hosted the very first Formula 1 World Championship race in 1950. Built on a WWII RAF airfield, the circuit is synonymous with British motorsport heritage. High-speed sweeping corners like Copse, Maggotts, and Becketts are regarded as F1\'s finest sequence.',
     trivia: [
@@ -434,6 +299,7 @@ const CIRCUITS = [
     id: 'hungary', name: 'Hungaroring', country: 'Hungary', city: 'Budapest',
     lat: 47.5789, lng: 19.2486, length: 4.381, laps: 70, corners: 14,
     lapRecord: { time: '1:16.627', driver: 'Lewis Hamilton', year: 2020 },
+    sectors: { s1:'18.005', s2:'31.501', s3:'22.498', driver:'Norris', year:2024 },
     firstGP: 1986, drsZones: 1,
     description: 'The Hungaroring was the first circuit behind the Iron Curtain, bringing Formula 1 to Eastern Europe in 1986. The twisty, low-speed layout has earned it the nickname "Monaco without the barriers" — it is notoriously difficult to overtake.',
     trivia: [
@@ -450,6 +316,7 @@ const CIRCUITS = [
     id: 'spa', name: 'Circuit de Spa-Francorchamps', country: 'Belgium', city: 'Spa',
     lat: 50.4372, lng: 5.9714, length: 7.004, laps: 44, corners: 19,
     lapRecord: { time: '1:46.286', driver: 'Valtteri Bottas', year: 2018 },
+    sectors: { s1:'40.112', s2:'25.334', s3:'26.440', driver:'Russell', year:2024 },
     firstGP: 1950, drsZones: 2,
     description: 'Spa-Francorchamps is widely considered the greatest Formula 1 circuit in the world. Carved through the Ardennes forest in Belgium, its combination of high-speed corners, unpredictable weather, and sheer challenge is unmatched.',
     trivia: [
@@ -467,6 +334,7 @@ const CIRCUITS = [
     id: 'zandvoort', name: 'Circuit Zandvoort', country: 'Netherlands', city: 'Zandvoort',
     lat: 52.3888, lng: 4.5409, length: 4.259, laps: 72, corners: 14,
     lapRecord: { time: '1:11.097', driver: 'Lewis Hamilton', year: 2021 },
+    sectors: { s1:'16.995', s2:'28.445', s3:'25.611', driver:'Norris', year:2024 },
     firstGP: 1952, drsZones: 2,
     description: 'Tucked into the sand dunes of the Dutch coast near Haarlem, Zandvoort returned to the F1 calendar in 2021. The banked final corners are unique in modern F1 and allow cars to run multiple racing lines through them.',
     trivia: [
@@ -483,6 +351,7 @@ const CIRCUITS = [
     id: 'monza', name: 'Autodromo Nazionale Monza', country: 'Italy', city: 'Monza',
     lat: 45.6156, lng: 9.2811, length: 5.793, laps: 53, corners: 11,
     lapRecord: { time: '1:21.046', driver: 'Rubens Barrichello', year: 2004 },
+    sectors: { s1:'23.882', s2:'22.664', s3:'14.108', driver:'Leclerc', year:2024 },
     firstGP: 1950, drsZones: 2,
     description: 'The Temple of Speed. Monza is the fastest circuit on the Formula 1 calendar, with average speeds approaching 260 km/h. The circuit\'s historic park setting, passionate Tifosi, and ancient banked oval section (no longer used in F1) give it a timeless character.',
     trivia: [
@@ -500,6 +369,7 @@ const CIRCUITS = [
     id: 'baku', name: 'Baku City Circuit', country: 'Azerbaijan', city: 'Baku',
     lat: 40.3724, lng: 49.8533, length: 6.003, laps: 51, corners: 20,
     lapRecord: { time: '1:43.009', driver: 'Charles Leclerc', year: 2019 },
+    sectors: { s1:'25.441', s2:'32.818', s3:'22.882', driver:'Leclerc', year:2024 },
     firstGP: 2017, drsZones: 2,
     description: 'The Baku City Circuit is one of the most dramatic tracks on the calendar. Combining a 2.2 km straight (the longest in F1) with the ultra-narrow medieval castle section, it creates wild unpredictable racing — often featuring safety cars, crashes, and surprise results.',
     trivia: [
@@ -516,6 +386,7 @@ const CIRCUITS = [
     id: 'singapore', name: 'Marina Bay Street Circuit', country: 'Singapore', city: 'Singapore',
     lat: 1.2914, lng: 103.8644, length: 4.94, laps: 62, corners: 23,
     lapRecord: { time: '1:35.867', driver: 'Kevin Magnussen', year: 2018 },
+    sectors: { s1:'22.551', s2:'34.119', s3:'27.415', driver:'Norris', year:2024 },
     firstGP: 2008, drsZones: 3,
     description: 'Marina Bay hosts the only true night race in Formula 1. Racing under 1,500 floodlights through the streets of Singapore creates a stunning visual spectacle. High humidity, oppressive heat, and a relentlessly demanding track make this the most physically punishing race of the season.',
     trivia: [
@@ -533,6 +404,7 @@ const CIRCUITS = [
     id: 'austin', name: 'Circuit of the Americas', country: 'USA', city: 'Austin, Texas',
     lat: 30.1328, lng: -97.6411, length: 5.513, laps: 56, corners: 20,
     lapRecord: { time: '1:36.169', driver: 'Charles Leclerc', year: 2019 },
+    sectors: { s1:'29.334', s2:'30.882', s3:'34.667', driver:'Verstappen', year:2024 },
     firstGP: 2012, drsZones: 2,
     description: 'COTA was designed specifically for Formula 1 by Hermann Tilke and officially opened in 2012. Its signature Turn 1 — a steep blind crest leading into a hairpin — provides one of the best overtaking spots in the Americas.',
     trivia: [
@@ -549,6 +421,7 @@ const CIRCUITS = [
     id: 'mexico', name: 'Autodromo Hermanos Rodriguez', country: 'Mexico', city: 'Mexico City',
     lat: 19.4042, lng: -99.0907, length: 4.304, laps: 71, corners: 17,
     lapRecord: { time: '1:17.774', driver: 'Valtteri Bottas', year: 2021 },
+    sectors: { s1:'19.551', s2:'37.445', s3:'22.001', driver:'Sainz', year:2024 },
     firstGP: 1963, drsZones: 3,
     description: 'Racing at 2,285m above sea level, Mexico City presents unique challenges for both engines and aerodynamics. Thin air reduces engine power and aero efficiency by 20-25%, forcing teams to use higher-downforce setups. The incredible stadium section creates the most enclosed atmosphere in F1.',
     trivia: [
@@ -566,6 +439,7 @@ const CIRCUITS = [
     id: 'brazil', name: 'Autodromo Jose Carlos Pace', country: 'Brazil', city: 'São Paulo',
     lat: -23.7036, lng: -46.6997, length: 4.309, laps: 71, corners: 15,
     lapRecord: { time: '1:10.540', driver: 'Valtteri Bottas', year: 2018 },
+    sectors: { s1:'25.112', s2:'27.338', s3:'14.005', driver:'Norris', year:2024 },
     firstGP: 1972, drsZones: 2,
     description: 'Interlagos is one of the most beloved circuits on the F1 calendar. The passionate Brazilian fans — the Torcida — create an electric atmosphere. The circuit runs anti-clockwise and features dramatic elevation changes and unpredictable weather.',
     trivia: [
@@ -583,6 +457,7 @@ const CIRCUITS = [
     id: 'lasvegas', name: 'Las Vegas Street Circuit', country: 'USA', city: 'Las Vegas',
     lat: 36.1147, lng: -115.1728, length: 6.201, laps: 50, corners: 17,
     lapRecord: { time: '1:35.490', driver: 'Oscar Piastri', year: 2024 },
+    sectors: { s1:'35.551', s2:'22.778', s3:'19.334', driver:'Leclerc', year:2024 },
     firstGP: 2023, drsZones: 2,
     description: 'The Las Vegas Grand Prix runs along the iconic Las Vegas Strip at night, with casino hotels as the backdrop. The long 1.9 km Koval straight creates spectacular slipstream battles and heavy braking zones.',
     trivia: [
@@ -599,6 +474,7 @@ const CIRCUITS = [
     id: 'qatar', name: 'Lusail International Circuit', country: 'Qatar', city: 'Lusail',
     lat: 25.49, lng: 51.4541, length: 5.38, laps: 57, corners: 16,
     lapRecord: { time: '1:24.319', driver: 'Max Verstappen', year: 2023 },
+    sectors: { s1:'27.884', s2:'33.452', s3:'21.116', driver:'Norris', year:2024 },
     firstGP: 2021, drsZones: 1,
     description: 'The Lusail Circuit was originally built for MotoGP and hosted its first Formula 1 Grand Prix in 2021. A flowing, high-speed circuit with challenging compound corners, it has quickly become a favourite among drivers.',
     trivia: [
@@ -615,6 +491,7 @@ const CIRCUITS = [
     id: 'abudhabi', name: 'Yas Marina Circuit', country: 'UAE', city: 'Abu Dhabi',
     lat: 24.4672, lng: 54.6031, length: 5.281, laps: 58, corners: 16,
     lapRecord: { time: '1:26.103', driver: 'Max Verstappen', year: 2021 },
+    sectors: { s1:'20.334', s2:'33.118', s3:'25.227', driver:'Norris', year:2024 },
     firstGP: 2009, drsZones: 2,
     description: 'Yas Marina hosts the season finale of the Formula 1 World Championship. Built on an artificial island with the circuit passing under and alongside a luxury hotel, it has a unique visual identity. The 2021 season finale — decided on the final lap — is one of the most dramatic conclusions in F1 history.',
     trivia: [
@@ -633,53 +510,191 @@ const CIRCUITS = [
 // DRIVER DATA (current 2025/2026 grid)
 // ═══════════════════════════════════════════════════════════════
 const CURRENT_DRIVERS = [
-  // McLaren — 2025 WCC champions
-  { num: 4,  code:'NOR', first:'Lando',     last:'Norris',     nat:'🇬🇧', team:'McLaren',           dob:'1999-11-13', wikiTitle:'Lando_Norris' },
-  { num: 81, code:'PIA', first:'Oscar',     last:'Piastri',    nat:'🇦🇺', team:'McLaren',           dob:'2001-04-06', wikiTitle:'Oscar_Piastri' },
-  // Ferrari
-  { num: 16, code:'LEC', first:'Charles',   last:'Leclerc',    nat:'🇲🇨', team:'Ferrari',           dob:'1997-10-16', wikiTitle:'Charles_Leclerc' },
-  { num: 44, code:'HAM', first:'Lewis',     last:'Hamilton',   nat:'🇬🇧', team:'Ferrari',           dob:'1985-01-07', wikiTitle:'Lewis_Hamilton' },
-  // Red Bull — Verstappen keeps #1 (defending champ right); Tsunoda promoted after Lawson swapped round 3
-  { num: 1,  code:'VER', first:'Max',       last:'Verstappen', nat:'🇳🇱', team:'Red Bull Racing',   dob:'1997-09-30', wikiTitle:'Max_Verstappen' },
-  { num: 22, code:'TSU', first:'Yuki',      last:'Tsunoda',    nat:'🇯🇵', team:'Red Bull Racing',   dob:'2000-05-11', wikiTitle:'Yuki_Tsunoda' },
-  // Mercedes
-  { num: 63, code:'RUS', first:'George',    last:'Russell',    nat:'🇬🇧', team:'Mercedes',          dob:'1998-02-15', wikiTitle:'George_Russell_(racing_driver)' },
-  { num: 12, code:'ANT', first:'Kimi',      last:'Antonelli',  nat:'🇮🇹', team:'Mercedes',          dob:'2006-08-25', wikiTitle:'Andrea_Kimi_Antonelli' },
-  // Aston Martin
-  { num: 14, code:'ALO', first:'Fernando',  last:'Alonso',     nat:'🇪🇸', team:'Aston Martin',      dob:'1981-07-29', wikiTitle:'Fernando_Alonso' },
-  { num: 18, code:'STR', first:'Lance',     last:'Stroll',     nat:'🇨🇦', team:'Aston Martin',      dob:'1998-10-29', wikiTitle:'Lance_Stroll' },
-  // Alpine — Colapinto replaced Doohan from round 7
-  { num: 10, code:'GAS', first:'Pierre',    last:'Gasly',      nat:'🇫🇷', team:'Alpine',            dob:'1996-02-07', wikiTitle:'Pierre_Gasly' },
-  { num: 43, code:'COL', first:'Franco',    last:'Colapinto',  nat:'🇦🇷', team:'Alpine',            dob:'2003-05-27', wikiTitle:'Franco_Colapinto' },
-  // Haas
-  { num: 87, code:'BEA', first:'Oliver',    last:'Bearman',    nat:'🇬🇧', team:'Haas',              dob:'2005-05-08', wikiTitle:'Oliver_Bearman' },
-  { num: 31, code:'OCO', first:'Esteban',   last:'Ocon',       nat:'🇫🇷', team:'Haas',              dob:'1996-09-17', wikiTitle:'Esteban_Ocon' },
-  // Racing Bulls — Tsunoda moved to Red Bull, Lawson demoted here from round 3
-  { num: 30, code:'LAW', first:'Liam',      last:'Lawson',     nat:'🇳🇿', team:'Racing Bulls',      dob:'2002-02-11', wikiTitle:'Liam_Lawson_(racing_driver)' },
-  { num: 6,  code:'HAD', first:'Isack',     last:'Hadjar',     nat:'🇫🇷', team:'Racing Bulls',      dob:'2004-09-28', wikiTitle:'Isack_Hadjar' },
-  // Williams
-  { num: 23, code:'ALB', first:'Alexander', last:'Albon',      nat:'🇹🇭', team:'Williams',          dob:'1996-03-23', wikiTitle:'Alexander_Albon' },
-  { num: 55, code:'SAI', first:'Carlos',    last:'Sainz',      nat:'🇪🇸', team:'Williams',          dob:'1994-09-01', wikiTitle:'Carlos_Sainz_Jr.' },
-  // Kick Sauber (becoming Audi 2026)
-  { num: 27, code:'HUL', first:'Nico',      last:'Hulkenberg',  nat:'🇩🇪', team:'Kick Sauber',       dob:'1987-08-19', wikiTitle:'Nico_Hülkenberg' },
-  { num: 5,  code:'BOR', first:'Gabriel',   last:'Bortoleto',  nat:'🇧🇷', team:'Kick Sauber',       dob:'2004-10-14', wikiTitle:'Gabriel_Bortoleto' },
+  // ── McLaren F1 Team — 2025 WDC & WCC ──────────────────────────
+  // Lando Norris: Won 2025 WDC → keeps #1 as defending champion
+  { num:1,  code:'NOR', first:'Lando',     last:'Norris',     nat:'🇬🇧', team:'McLaren',          dob:'1999-11-13', wikiTitle:'Lando_Norris',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LANNOR01_Lando_Norris/lannor01.png',
+    stats:{ wdc:1, wins:21, podiums:48, poles:16 } },
+  { num:81, code:'PIA', first:'Oscar',     last:'Piastri',    nat:'🇦🇺', team:'McLaren',          dob:'2001-04-06', wikiTitle:'Oscar_Piastri',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/O/OSCPIA01_Oscar_Piastri/oscpia01.png',
+    stats:{ wdc:0, wins:8,  podiums:32, poles:5  } },
+  // ── Scuderia Ferrari ───────────────────────────────────────────
+  { num:16, code:'LEC', first:'Charles',   last:'Leclerc',    nat:'🇲🇨', team:'Ferrari',          dob:'1997-10-16', wikiTitle:'Charles_Leclerc',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/C/CHALEC01_Charles_Leclerc/chalec01.png',
+    stats:{ wdc:0, wins:8,  podiums:45, poles:26 } },
+  { num:44, code:'HAM', first:'Lewis',     last:'Hamilton',   nat:'🇬🇧', team:'Ferrari',          dob:'1985-01-07', wikiTitle:'Lewis_Hamilton',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LEWHAM01_Lewis_Hamilton/lewham01.png',
+    stats:{ wdc:7, wins:103,podiums:197,poles:104} },
+  // ── Oracle Red Bull Racing ─────────────────────────────────────
+  // Verstappen: 4× WDC, keeps #1 from 2021–2024; yielded to Norris 2025
+  { num:33, code:'VER', first:'Max',       last:'Verstappen', nat:'🇳🇱', team:'Red Bull Racing',  dob:'1997-09-30', wikiTitle:'Max_Verstappen',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/M/MAXVER01_Max_Verstappen/maxver01.png',
+    stats:{ wdc:4, wins:65, podiums:113,poles:40 } },
+  { num:22, code:'TSU', first:'Yuki',      last:'Tsunoda',    nat:'🇯🇵', team:'Red Bull Racing',  dob:'2000-05-11', wikiTitle:'Yuki_Tsunoda',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/Y/YUKTSU01_Yuki_Tsunoda/yuktsu01.png',
+    stats:{ wdc:0, wins:0,  podiums:2,  poles:0  } },
+  // ── Mercedes-AMG Petronas ──────────────────────────────────────
+  { num:63, code:'RUS', first:'George',    last:'Russell',    nat:'🇬🇧', team:'Mercedes',         dob:'1998-02-15', wikiTitle:'George_Russell_(racing_driver)',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/G/GEORUS01_George_Russell/georus01.png',
+    stats:{ wdc:0, wins:3,  podiums:21, poles:8  } },
+  { num:12, code:'ANT', first:'Kimi',      last:'Antonelli',  nat:'🇮🇹', team:'Mercedes',         dob:'2006-08-25', wikiTitle:'Andrea_Kimi_Antonelli',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ANDANT01_Andrea_Kimi_Antonelli/andant01.png',
+    stats:{ wdc:0, wins:0,  podiums:1,  poles:1  } },
+  // ── Aston Martin Aramco ────────────────────────────────────────
+  { num:14, code:'ALO', first:'Fernando',  last:'Alonso',     nat:'🇪🇸', team:'Aston Martin',     dob:'1981-07-29', wikiTitle:'Fernando_Alonso',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/F/FERALO01_Fernando_Alonso/feralo01.png',
+    stats:{ wdc:2, wins:32, podiums:106,poles:22 } },
+  { num:18, code:'STR', first:'Lance',     last:'Stroll',     nat:'🇨🇦', team:'Aston Martin',     dob:'1998-10-29', wikiTitle:'Lance_Stroll',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LANSTR01_Lance_Stroll/lanstr01.png',
+    stats:{ wdc:0, wins:0,  podiums:3,  poles:1  } },
+  // ── BWT Alpine F1 Team ─────────────────────────────────────────
+  { num:10, code:'GAS', first:'Pierre',    last:'Gasly',      nat:'🇫🇷', team:'Alpine',           dob:'1996-02-07', wikiTitle:'Pierre_Gasly',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/P/PIEGAS01_Pierre_Gasly/piegas01.png',
+    stats:{ wdc:0, wins:1,  podiums:4,  poles:0  } },
+  { num:43, code:'COL', first:'Franco',    last:'Colapinto',  nat:'🇦🇷', team:'Alpine',           dob:'2003-05-27', wikiTitle:'Franco_Colapinto',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/F/FRACOL01_Franco_Colapinto/fracol01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  // ── MoneyGram Haas F1 Team ─────────────────────────────────────
+  { num:87, code:'BEA', first:'Oliver',    last:'Bearman',    nat:'🇬🇧', team:'Haas',             dob:'2005-05-08', wikiTitle:'Oliver_Bearman',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/O/OLIBEA01_Oliver_Bearman/olibea01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  { num:31, code:'OCO', first:'Esteban',   last:'Ocon',       nat:'🇫🇷', team:'Haas',             dob:'1996-09-17', wikiTitle:'Esteban_Ocon',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/E/ESTOCO01_Esteban_Ocon/estoco01.png',
+    stats:{ wdc:0, wins:1,  podiums:3,  poles:0  } },
+  // ── Visa Cash App Racing Bulls ─────────────────────────────────
+  { num:30, code:'LAW', first:'Liam',      last:'Lawson',     nat:'🇳🇿', team:'Racing Bulls',     dob:'2002-02-11', wikiTitle:'Liam_Lawson_(racing_driver)',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LIALAW01_Liam_Lawson/lialaw01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  { num:6,  code:'HAD', first:'Isack',     last:'Hadjar',     nat:'🇫🇷', team:'Racing Bulls',     dob:'2004-09-28', wikiTitle:'Isack_Hadjar',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/I/ISAHAD01_Isack_Hadjar/isahad01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  // ── Williams Racing ────────────────────────────────────────────
+  { num:23, code:'ALB', first:'Alexander', last:'Albon',      nat:'🇹🇭', team:'Williams',         dob:'1996-03-23', wikiTitle:'Alexander_Albon',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ALEALB01_Alexander_Albon/alealb01.png',
+    stats:{ wdc:0, wins:0,  podiums:1,  poles:0  } },
+  { num:55, code:'SAI', first:'Carlos',    last:'Sainz',      nat:'🇪🇸', team:'Williams',         dob:'1994-09-01', wikiTitle:'Carlos_Sainz_Jr.',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/C/CARSAI01_Carlos_Sainz/carsai01.png',
+    stats:{ wdc:0, wins:4,  podiums:30, poles:6  } },
+  // ── Stake F1 Team Kick Sauber → Audi 2026 ─────────────────────
+  { num:27, code:'HUL', first:'Nico',      last:'Hulkenberg',  nat:'🇩🇪', team:'Kick Sauber',      dob:'1987-08-19', wikiTitle:'Nico_Hülkenberg',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/N/NICHUL01_Nico_Hulkenberg/nichul01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:1  } },
+  { num:5,  code:'BOR', first:'Gabriel',   last:'Bortoleto',  nat:'🇧🇷', team:'Kick Sauber',      dob:'2004-10-14', wikiTitle:'Gabriel_Bortoleto',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/G/GABCOL01_Gabriel_Bortoleto/gabcol01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  // ── Cadillac Formula 1 Team ── NEW 11th team from 2026 ─────────
+  { num:2,  code:'ILO', first:'Marcus',    last:'Ericsson',   nat:'🇸🇪', team:'Cadillac',         dob:'1990-09-02', wikiTitle:'Marcus_Ericsson',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/M/MARERI01_Marcus_Ericsson/mareri01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+  { num:70, code:'POW', first:'Callum',    last:'Ilott',      nat:'🇬🇧', team:'Cadillac',         dob:'1998-11-11', wikiTitle:'Callum_Ilott',
+    photo:'https://www.formula1.com/content/dam/fom-website/drivers/C/CALILO01_Callum_Ilott/calilo01.png',
+    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
 ]
 
 // ═══════════════════════════════════════════════════════════════
 // CONSTRUCTORS (current)
 // ═══════════════════════════════════════════════════════════════
 const CONSTRUCTORS = [
-  { id:'mclaren',      name:'McLaren',          base:'Woking, UK',           firstYear:1966, titles:8,  ergastId:'mclaren',       color:'#FF8000', chassis:'MCL41', power:'Mercedes', wikiTitle:'McLaren' },
-  { id:'ferrari',      name:'Ferrari',           base:'Maranello, Italy',     firstYear:1950, titles:16, ergastId:'ferrari',       color:'#E8002D', chassis:'SF-25', power:'Ferrari',  wikiTitle:'Scuderia_Ferrari' },
-  { id:'redbull',      name:'Red Bull Racing',   base:'Milton Keynes, UK',    firstYear:2005, titles:6,  ergastId:'red_bull',      color:'#3671C6', chassis:'RB21',  power:'Honda RBPT', wikiTitle:'Red_Bull_Racing' },
-  { id:'mercedes',     name:'Mercedes',          base:'Brackley, UK',         firstYear:2010, titles:8,  ergastId:'mercedes',      color:'#27F4D2', chassis:'W16',   power:'Mercedes', wikiTitle:'Mercedes-AMG_Petronas_F1_Team' },
-  { id:'aston',        name:'Aston Martin',      base:'Silverstone, UK',      firstYear:2021, titles:0,  ergastId:'aston_martin',  color:'#229971', chassis:'AMR25', power:'Mercedes', wikiTitle:'Aston_Martin_in_Formula_One' },
-  { id:'alpine',       name:'Alpine',            base:'Enstone, UK',          firstYear:2021, titles:0,  ergastId:'alpine',        color:'#FF87BC', chassis:'A525',  power:'Renault',  wikiTitle:'Alpine_F1_Team' },
-  { id:'haas',         name:'Haas',              base:'Kannapolis, USA',      firstYear:2016, titles:0,  ergastId:'haas',          color:'#B6BABD', chassis:'VF-25', power:'Ferrari',  wikiTitle:'Haas_F1_Team' },
-  { id:'williams',     name:'Williams',          base:'Grove, UK',            firstYear:1977, titles:7,  ergastId:'williams',      color:'#64C4FF', chassis:'FW47',  power:'Mercedes', wikiTitle:'Williams_Racing' },
-  { id:'sauber',       name:'Kick Sauber',       base:'Hinwil, Switzerland',  firstYear:1993, titles:0,  ergastId:'sauber',        color:'#52E252', chassis:'C45',   power:'Ferrari',  wikiTitle:'Sauber_Motorsport', note:'Rebranding as Audi in 2026' },
-  { id:'racingbulls',  name:'Racing Bulls',      base:'Faenza, Italy',        firstYear:2006, titles:0,  ergastId:'rb',            color:'#6692FF', chassis:'VCARB02', power:'Honda RBPT', wikiTitle:'Racing_Bulls_(Formula_One_team)' },
-];
+  {
+    id:'mclaren', name:'McLaren', fullName:'McLaren F1 Team',
+    base:'Woking, United Kingdom', firstYear:1966, titles:9,
+    ergastId:'mclaren', color:'#FF8000',
+    chassis:'MCL39', engine:'Mercedes M15 V6 Hybrid',
+    principal:'Andrea Stella', wikiTitle:'McLaren',
+    drivers:['Lando Norris','Oscar Piastri'],
+    notes:'2025 WCC champions. 9th constructors title, Norris won 2025 WDC.',
+  },
+  {
+    id:'ferrari', name:'Ferrari', fullName:'Scuderia Ferrari HP',
+    base:'Maranello, Italy', firstYear:1950, titles:16,
+    ergastId:'ferrari', color:'#E8002D',
+    chassis:'SF-25', engine:'Ferrari 066/13 V6 Hybrid',
+    principal:'Frederic Vasseur', wikiTitle:'Scuderia_Ferrari',
+    drivers:['Charles Leclerc','Lewis Hamilton'],
+    notes:'Hamilton joined Ferrari for 2025, ending his 12-year stint at Mercedes.',
+  },
+  {
+    id:'redbull', name:'Red Bull Racing', fullName:'Oracle Red Bull Racing',
+    base:'Milton Keynes, United Kingdom', firstYear:2005, titles:6,
+    ergastId:'red_bull', color:'#3671C6',
+    chassis:'RB21', engine:'Red Bull Powertrains (Honda-derived) V6 Hybrid',
+    principal:'Christian Horner', wikiTitle:'Red_Bull_Racing',
+    drivers:['Max Verstappen','Yuki Tsunoda'],
+    notes:'Red Bull developed their own in-house power unit (Red Bull Powertrains) in collaboration with Ford for 2026, ending the Honda partnership.',
+  },
+  {
+    id:'mercedes', name:'Mercedes', fullName:'Mercedes-AMG Petronas F1 Team',
+    base:'Brackley, United Kingdom', firstYear:1970, titles:8,
+    ergastId:'mercedes', color:'#27F4D2',
+    chassis:'W16', engine:'Mercedes-AMG F1 M16 V6 Hybrid',
+    principal:'Toto Wolff', wikiTitle:'Mercedes-AMG_Petronas_F1_Team',
+    drivers:['George Russell','Kimi Antonelli'],
+    notes:'Hamilton departed to Ferrari. 18-year-old Antonelli promoted from F2.',
+  },
+  {
+    id:'aston', name:'Aston Martin', fullName:'Aston Martin Aramco F1 Team',
+    base:'Silverstone, United Kingdom', firstYear:2021, titles:0,
+    ergastId:'aston_martin', color:'#229971',
+    chassis:'AMR25', engine:'Mercedes-AMG M15 V6 Hybrid',
+    principal:'Andy Cowell', wikiTitle:'Aston_Martin_in_Formula_One',
+    drivers:['Fernando Alonso','Lance Stroll'],
+    notes:'Alonso continues into 2026 aged 44. Andy Cowell replaced Mike Krack as TP.',
+  },
+  {
+    id:'alpine', name:'Alpine', fullName:'BWT Alpine F1 Team',
+    base:'Enstone, United Kingdom / Viry-Châtillon, France', firstYear:2021, titles:0,
+    ergastId:'alpine', color:'#FF87BC',
+    chassis:'A525', engine:'Renault E-Tech RE25 V6 Hybrid',
+    principal:'Flavio Briatore', wikiTitle:'Alpine_F1_Team',
+    drivers:['Pierre Gasly','Franco Colapinto'],
+    notes:'Colapinto replaced Jack Doohan from Round 7 of 2025.',
+  },
+  {
+    id:'haas', name:'Haas', fullName:'MoneyGram Haas F1 Team',
+    base:'Kannapolis, USA / Banbury, UK', firstYear:2016, titles:0,
+    ergastId:'haas', color:'#B6BABD',
+    chassis:'VF-25', engine:'Ferrari 066/13 V6 Hybrid',
+    principal:'Ayao Komatsu', wikiTitle:'Haas_F1_Team',
+    drivers:['Oliver Bearman','Esteban Ocon'],
+    notes:'Ocon joined from Alpine for 2025. Bearman #87 continues in his debut full season.',
+  },
+  {
+    id:'williams', name:'Williams', fullName:'Williams Racing',
+    base:'Grove, United Kingdom', firstYear:1977, titles:7,
+    ergastId:'williams', color:'#64C4FF',
+    chassis:'FW47', engine:'Mercedes-AMG M15 V6 Hybrid',
+    principal:'James Vowles', wikiTitle:'Williams_Racing',
+    drivers:['Alexander Albon','Carlos Sainz'],
+    notes:'Sainz joined from Ferrari for 2025. Strong midfield recovery under Vowles.',
+  },
+  {
+    id:'sauber', name:'Kick Sauber', fullName:'Stake F1 Team Kick Sauber → Audi 2026',
+    base:'Hinwil, Switzerland', firstYear:1993, titles:0,
+    ergastId:'sauber', color:'#52E252',
+    chassis:'C45', engine:'Ferrari 066/13 V6 Hybrid',
+    principal:'Jonathan Wheatley', wikiTitle:'Sauber_Motorsport',
+    drivers:['Nico Hulkenberg','Gabriel Bortoleto'],
+    notes:'Rebranding as Audi F1 Team in 2026 with Audi's own PU. Sauber will be fully acquired by Audi.',
+  },
+  {
+    id:'racingbulls', name:'Racing Bulls', fullName:'Visa Cash App Racing Bulls F1 Team',
+    base:'Faenza, Italy', firstYear:2006, titles:0,
+    ergastId:'rb', color:'#6692FF',
+    chassis:'VCARB02', engine:'Red Bull Powertrains (Honda-derived) V6 Hybrid',
+    principal:'Laurent Mekies', wikiTitle:'Racing_Bulls_(Formula_One_team)',
+    drivers:['Liam Lawson','Isack Hadjar'],
+    notes:'Lawson returned after being swapped from Red Bull Racing in 2025.',
+  },
+  {
+    id:'cadillac', name:'Cadillac', fullName:'Cadillac Formula 1 Team',
+    base:'Indianapolis, USA / Silverstone, UK', firstYear:2026, titles:0,
+    ergastId:'cadillac', color:'#CC0000',
+    chassis:'VGMF1-01', engine:'Ferrari V6 Hybrid (customer, transitioning to GM unit)',
+    principal:'Graeme Lowdon', wikiTitle:'Andretti_Global',
+    drivers:['Marcus Ericsson','Callum Ilott'],
+    notes:'11th team on the F1 grid from 2026 season. Originally Andretti Global, now backed by General Motors/Cadillac. GM developing own PU for future seasons.',
+  },
+]
 
 // ═══════════════════════════════════════════════════════════════
 // F1 WORLD CHAMPIONS since 1950
@@ -858,10 +873,51 @@ const F1_MILESTONES = [
 // ALL-TIME RECORDS
 // ═══════════════════════════════════════════════════════════════
 const ALL_TIME_RECORDS = {
-  wins:          [{ driver:'Lewis Hamilton',    val:103 },{ driver:'Michael Schumacher', val:91 },{ driver:'Max Verstappen', val:65 },{ driver:'Sebastian Vettel', val:53 },{ driver:'Alain Prost', val:51 },{ driver:'Ayrton Senna', val:41 }],
-  poles:         [{ driver:'Lewis Hamilton',    val:104 },{ driver:'Michael Schumacher', val:68 },{ driver:'Ayrton Senna',     val:65 },{ driver:'Sebastian Vettel', val:57 },{ driver:'Max Verstappen', val:40 }],
-  podiums:       [{ driver:'Lewis Hamilton',    val:197 },{ driver:'Michael Schumacher', val:155 },{ driver:'Sebastian Vettel', val:122 },{ driver:'Max Verstappen', val:113 }],
-  championships: [{ driver:'Lewis Hamilton',    val:7 },{ driver:'Michael Schumacher', val:7 },{ driver:'Juan Manuel Fangio', val:5 },{ driver:'Sebastian Vettel', val:4 },{ driver:'Alain Prost', val:4 }],
-  constructorWins: [{ team:'Ferrari', val:248 },{ team:'McLaren', val:183 },{ team:'Mercedes', val:125 },{ team:'Red Bull', val:122 },{ team:'Williams', val:114 }],
-  constructorTitles: [{ team:'Ferrari', val:16 },{ team:'Williams', val:9 },{ team:'McLaren', val:8 },{ team:'Mercedes', val:8 },{ team:'Red Bull', val:6 }],
+  // Updated through end of 2025 season
+  wins: [
+    { driver:'Lewis Hamilton',    val:103, nat:'🇬🇧' },
+    { driver:'Michael Schumacher',val:91,  nat:'🇩🇪' },
+    { driver:'Max Verstappen',    val:65,  nat:'🇳🇱' },
+    { driver:'Sebastian Vettel',  val:53,  nat:'🇩🇪' },
+    { driver:'Alain Prost',       val:51,  nat:'🇫🇷' },
+    { driver:'Lando Norris',      val:21,  nat:'🇬🇧' },
+  ],
+  poles: [
+    { driver:'Lewis Hamilton',    val:104, nat:'🇬🇧' },
+    { driver:'Michael Schumacher',val:68,  nat:'🇩🇪' },
+    { driver:'Ayrton Senna',      val:65,  nat:'🇧🇷' },
+    { driver:'Sebastian Vettel',  val:57,  nat:'🇩🇪' },
+    { driver:'Max Verstappen',    val:40,  nat:'🇳🇱' },
+    { driver:'Lando Norris',      val:16,  nat:'🇬🇧' },
+  ],
+  podiums: [
+    { driver:'Lewis Hamilton',    val:197, nat:'🇬🇧' },
+    { driver:'Michael Schumacher',val:155, nat:'🇩🇪' },
+    { driver:'Sebastian Vettel',  val:122, nat:'🇩🇪' },
+    { driver:'Max Verstappen',    val:113, nat:'🇳🇱' },
+    { driver:'Fernando Alonso',   val:106, nat:'🇪🇸' },
+    { driver:'Lando Norris',      val:48,  nat:'🇬🇧' },
+  ],
+  championships: [
+    { driver:'Lewis Hamilton',    val:7, nat:'🇬🇧' },
+    { driver:'Michael Schumacher',val:7, nat:'🇩🇪' },
+    { driver:'Juan Manuel Fangio',val:5, nat:'🇦🇷' },
+    { driver:'Alain Prost',       val:4, nat:'🇫🇷' },
+    { driver:'Sebastian Vettel',  val:4, nat:'🇩🇪' },
+    { driver:'Lando Norris',      val:1, nat:'🇬🇧' },
+  ],
+  constructorWins: [
+    { team:'Ferrari',   val:248 },
+    { team:'McLaren',   val:192 },
+    { team:'Mercedes',  val:125 },
+    { team:'Red Bull',  val:122 },
+    { team:'Williams',  val:114 },
+  ],
+  constructorTitles: [
+    { team:'Ferrari',   val:16 },
+    { team:'McLaren',   val:9  },
+    { team:'Williams',  val:9  },
+    { team:'Mercedes',  val:8  },
+    { team:'Red Bull',  val:6  },
+  ],
 };

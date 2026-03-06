@@ -38,19 +38,29 @@ function CircuitsPage() {
   );
 }
 
-function CircuitSVG({ circuitId }) {
-  const path = (typeof CIRCUIT_SVG_PATHS !== 'undefined' && CIRCUIT_SVG_PATHS[circuitId]) || null;
-  if (!path) return React.createElement('div', { style: { fontSize: '11px', color: 'var(--t3)', textAlign: 'center' } }, '— map —');
-  return React.createElement('svg', { viewBox: '0 0 200 140', style: { width: '100%', maxHeight: '100%' } },
-    React.createElement('path', { d: path, className: 'trk-bg' }),
-    React.createElement('path', { d: path, className: 'trk-fg' })
+function CircuitSVG({ circuitId, size }) {
+  // Try new CIRCUIT_SVG_PATHS first, then fall back to old CIRCUIT_SVG
+  const paths = typeof CIRCUIT_SVG_PATHS !== 'undefined' ? CIRCUIT_SVG_PATHS : (typeof CIRCUIT_SVG !== 'undefined' ? CIRCUIT_SVG : {});
+  const path = paths[circuitId] || null;
+  if (!path) return React.createElement('div', { style: { fontSize:'11px', color:'var(--t3)', textAlign:'center', padding:'20px' } }, '— map unavailable —');
+  const w = size || 140;
+  const h = Math.round(w * 0.7);
+  return React.createElement('svg', {
+    viewBox: '0 0 200 140',
+    style: { width: w+'px', height: h+'px', maxWidth:'100%' },
+    xmlns: 'http://www.w3.org/2000/svg'
+  },
+    React.createElement('path', { d: path, fill:'none', stroke:'var(--b2)', strokeWidth:7, strokeLinecap:'round', strokeLinejoin:'round' }),
+    React.createElement('path', { d: path, fill:'none', stroke:'var(--green)', strokeWidth:3.5, strokeLinecap:'round', strokeLinejoin:'round',
+      style:{ filter:'drop-shadow(0 0 6px rgba(0,232,168,.5))' }
+    })
   );
 }
 
 function CircuitCard({ circuit: c, onClick }) {
   return React.createElement('div', { className: 'circuit-card', onClick },
     React.createElement('div', { className: 'cc-map' },
-      React.createElement(CircuitSVG, { circuitId: c.id })
+      React.createElement(CircuitSVG, { circuitId: c.id, size: 130 })
     ),
     React.createElement('div', { className: 'cc-head' },
       React.createElement('div', { className: 'cc-country' }, `${c.country} · ${c.city}`),
@@ -133,13 +143,37 @@ function CircuitDetail({ circuit: c, onBack }) {
 
     tab === 'overview' && React.createElement('div', { className: 'g2', style: { alignItems: 'start' } },
       React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+        // Circuit SVG map with sector callouts
+        React.createElement('div', { className: 'card card-flush' },
+          React.createElement('div', { style: { padding:'14px 16px 12px', borderBottom:'1px solid var(--b0)' } },
+            React.createElement('div', { className:'card-title' }, 'Circuit Map')
+          ),
+          React.createElement('div', { style: { display:'flex', gap:0, alignItems:'stretch' } },
+            React.createElement('div', { style: { flex:1, padding:'16px', display:'flex', alignItems:'center', justifyContent:'center', background:'var(--s2)', minHeight:'160px' } },
+              React.createElement(CircuitSVG, { circuitId: c.id, size: 180 })
+            ),
+            c.sectors && React.createElement('div', { style: { width:'150px', borderLeft:'1px solid var(--b0)', padding:'12px' } },
+              React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'9px', fontWeight:700, letterSpacing:'2px', color:'var(--t3)', textTransform:'uppercase', marginBottom:'8px' } }, 'Sector Bests'),
+              [['S1', c.sectors.s1, 'var(--green)'], ['S2', c.sectors.s2, 'var(--amber)'], ['S3', c.sectors.s3, 'var(--blue)']].map(([s, t, col]) =>
+                React.createElement('div', { key: s, style: { padding:'6px 0', borderBottom:'1px solid var(--b0)' } },
+                  React.createElement('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'center' } },
+                    React.createElement('span', { style: { fontFamily:'var(--fh)', fontSize:'10px', fontWeight:700, color: col, letterSpacing:'1px' } }, s),
+                    React.createElement('span', { style: { fontFamily:'var(--fm)', fontSize:'13px', fontWeight:700, color:'var(--t1)' } }, t)
+                  )
+                )
+              ),
+              React.createElement('div', { style: { marginTop:'8px', fontFamily:'var(--fh)', fontSize:'9px', color:'var(--t3)', letterSpacing:'1px' } }, `${c.sectors.driver} ${c.sectors.year}`)
+            )
+          )
+        ),
+        // About
         React.createElement('div', { className: 'card' },
           React.createElement('div', { className: 'card-title', style: { marginBottom: '12px' } }, 'About'),
-          React.createElement('p', { style: { fontSize: '14px', lineHeight: '1.7', color: 'var(--text-secondary)' } }, c.description)
+          React.createElement('p', { style: { fontSize: '13px', lineHeight: '1.75', color: 'var(--text-secondary)' } }, c.description)
         ),
         wikiSummary && React.createElement('div', { className: 'card' },
           React.createElement('div', { className: 'card-title', style: { marginBottom: '12px' } }, 'Wikipedia'),
-          React.createElement('p', { style: { fontSize: '13px', lineHeight: '1.7', color: 'var(--text-secondary)' } }, wikiSummary.extract?.slice(0, 600) + '…'),
+          React.createElement('p', { style: { fontSize: '13px', lineHeight: '1.65', color: 'var(--text-secondary)' } }, wikiSummary.extract?.slice(0, 500) + '…'),
           React.createElement('a', {
             href: wikiSummary.content_urls?.desktop?.page, target: '_blank',
             style: { fontSize: '11px', color: 'var(--green)', letterSpacing: '1px', fontFamily: 'var(--font-display)', display: 'inline-block', marginTop: '8px' }
@@ -147,29 +181,31 @@ function CircuitDetail({ circuit: c, onBack }) {
         )
       ),
       React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+        // Big lap record card
+        React.createElement('div', { className: 'card', style: { background: 'linear-gradient(135deg, rgba(0,232,168,.06) 0%, var(--s1) 60%)' } },
+          React.createElement('div', { className: 'card-title', style: { marginBottom: '10px' } }, 'Lap Record'),
+          React.createElement('div', { style: { fontFamily:'var(--fm)', fontSize:'36px', fontWeight:700, color:'var(--green)', letterSpacing:'-1px', marginBottom:'4px' } }, c.lapRecord.time),
+          React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'17px', fontWeight:700, color:'var(--t1)' } }, c.lapRecord.driver),
+          React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'11px', color:'var(--t3)', letterSpacing:'1px', textTransform:'uppercase' } }, `Set in ${c.lapRecord.year}`)
+        ),
+        // Stats grid
         React.createElement('div', { className: 'card' },
           React.createElement('div', { className: 'card-title', style: { marginBottom: '12px' } }, 'Circuit Stats'),
-          React.createElement('div', { className: 'stat-grid' },
+          React.createElement('div', { style: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px' } },
             [
-              ['LAP RECORD', c.lapRecord.time, 'accent'],
-              ['LENGTH', `${c.length}km`, ''],
-              ['LAPS', c.laps, ''],
-              ['CORNERS', c.corners, ''],
-              ['DRS ZONES', c.drsZones, ''],
-              ['FIRST GP', c.firstGP, ''],
-            ].map(([label, val, cls]) =>
+              ['LENGTH', `${c.length} km`],
+              ['LAPS', c.laps],
+              ['CORNERS', c.corners],
+              ['DRS/AERO', c.drsZones + ' zones'],
+              ['FIRST GP', c.firstGP],
+              ['COUNTRY', c.country],
+            ].map(([label, val]) =>
               React.createElement('div', { key: label, className: 'scel' },
-                React.createElement('div', { className: `stat-value ${cls}` }, val),
+                React.createElement('div', { style: { fontFamily:'var(--fm)', fontSize:'18px', fontWeight:700, color:'var(--t1)' } }, val),
                 React.createElement('div', { className: 'sl' }, label)
               )
             )
           )
-        ),
-        React.createElement('div', { className: 'card' },
-          React.createElement('div', { className: 'card-title', style: { marginBottom: '10px' } }, 'Lap Record'),
-          React.createElement('div', { style: { fontSize: '32px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--green)', marginBottom: '4px' } }, c.lapRecord.time),
-          React.createElement('div', { style: { fontFamily: 'var(--font-display)', fontSize: '14px', fontWeight: 700 } }, c.lapRecord.driver),
-          React.createElement('div', { style: { fontFamily: 'var(--font-display)', fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '1px' } }, c.lapRecord.year)
         )
       )
     ),
@@ -298,28 +334,35 @@ function DriversPage() {
 
 function DriverCard({ driver: d, onClick }) {
   const color = teamColor(d.team);
-  const age = new Date().getFullYear() - parseInt(d.dob);
+  const age = Math.floor((new Date() - new Date(d.dob)) / (365.25 * 24 * 3600 * 1000));
+  const s = d.stats || {};
   return React.createElement('div', {
     className: 'driver-card', onClick,
-    style: { '--team-color': color }
+    style: { '--tc': color, borderTopColor: color }
   },
-    React.createElement('div', { className: 'driver-card-top' },
-      React.createElement('div', { className: 'driver-card-num' }, d.num),
-      React.createElement('div', { className: 'driver-card-name' }, `${d.first} ${d.last}`),
-      React.createElement('div', { className: 'driver-card-team' }, `${d.nat} · ${d.team}`)
+    // Photo + number header
+    React.createElement('div', { className: 'dc-header', style: { borderLeft: `4px solid ${color}`, position:'relative', overflow:'hidden', background:`linear-gradient(135deg,${color}18 0%,transparent 60%)`, padding:'14px 14px 10px', minHeight:'90px' } },
+      d.photo && React.createElement('img', {
+        src: d.photo,
+        style: { position:'absolute', right:0, bottom:0, height:'90px', objectFit:'contain', objectPosition:'bottom right', opacity:0.6 },
+        onError: e => e.target.style.display = 'none',
+      }),
+      React.createElement('div', { style: { fontFamily:'var(--fm)', fontSize:'52px', fontWeight:700, color: color + '30', lineHeight:1, position:'absolute', right:'10px', top:'4px' } }, d.num),
+      React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'11px', fontWeight:600, letterSpacing:'2px', textTransform:'uppercase', color:'var(--t3)', marginBottom:'4px' } }, `${d.nat} · ${d.team}`),
+      React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'22px', fontWeight:700, lineHeight:1.1, position:'relative', zIndex:1 } }, `${d.first} ${d.last}`),
+      React.createElement('div', { style: { marginTop:'6px', display:'flex', gap:'5px', flexWrap:'wrap' } },
+        React.createElement('span', { className:'badge b-dim' }, `#${d.num}`),
+        d.stats?.wdc > 0 && React.createElement('span', { className:'badge b-gold' }, `${d.stats.wdc}× WDC`),
+      )
     ),
-    React.createElement('div', { className: 'driver-card-stats' },
-      React.createElement('div', { className: 'driver-card-stat' },
-        React.createElement('div', { className: 'driver-card-stat-val' }, `#${d.num}`),
-        React.createElement('div', { className: 'driver-card-stat-label' }, 'Number')
-      ),
-      React.createElement('div', { className: 'driver-card-stat' },
-        React.createElement('div', { className: 'driver-card-stat-val' }, d.code),
-        React.createElement('div', { className: 'driver-card-stat-label' }, 'Code')
-      ),
-      React.createElement('div', { className: 'driver-card-stat' },
-        React.createElement('div', { className: 'driver-card-stat-val' }, age),
-        React.createElement('div', { className: 'driver-card-stat-label' }, 'Age')
+    // Quick stats bar
+    React.createElement('div', { style: { display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr', borderTop:'1px solid var(--b0)' } },
+      [['WINS', s.wins||0], ['PODS', s.podiums||0], ['POLES', s.poles||0], ['AGE', age]].map(([label, val]) =>
+        React.createElement('div', { key: label, style: { padding:'8px 6px', textAlign:'center', borderRight:'1px solid var(--b0)' },
+          className: label !== 'AGE' ? '' : '' },
+          React.createElement('div', { style: { fontFamily:'var(--fm)', fontSize:'14px', fontWeight:700, color:'var(--t1)' } }, val),
+          React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'9px', fontWeight:600, letterSpacing:'1.5px', textTransform:'uppercase', color:'var(--t3)', marginTop:'2px' } }, label)
+        )
       )
     )
   );
@@ -484,21 +527,25 @@ function ConstructorsPage() {
 function ConstructorCard({ constructor: c, onClick }) {
   return React.createElement('div', {
     className: 'constructor-card', onClick,
-    style: { '--team-color': c.color }
+    style: { '--tc': c.color, borderTopColor: c.color }
   },
-    React.createElement('div', { className: 'constructor-card-header' },
-      React.createElement('div', { className: 'constructor-card-name' }, c.name),
-      React.createElement('div', { className: 'constructor-card-base' }, `${c.base} · Since ${c.firstYear}`)
+    React.createElement('div', { style: { padding:'16px 16px 12px', borderLeft:`3px solid ${c.color}` } },
+      React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'20px', fontWeight:700, lineHeight:1.1 } }, c.name),
+      React.createElement('div', { style: { fontSize:'11px', color:'var(--t2)', marginTop:'3px' } }, c.base),
+      React.createElement('div', { style: { marginTop:'8px', display:'flex', gap:'5px', flexWrap:'wrap' } },
+        c.titles > 0 && React.createElement('span', { className:'badge b-gold' }, `${c.titles}× WCC`),
+        React.createElement('span', { className:'badge b-dim' }, `Est. ${c.firstYear}`),
+        c.firstYear === 2026 && React.createElement('span', { className:'badge b-red' }, 'NEW')
+      )
     ),
-    React.createElement('div', { className: 'constructor-card-body' },
+    React.createElement('div', { style: { display:'grid', gridTemplateColumns:'1fr 1fr', borderTop:'1px solid var(--b0)' } },
       [
-        [c.titles, 'WCC TITLES'],
         [c.chassis, 'CHASSIS'],
-        [c.power, 'POWER UNIT'],
+        [c.engine?.split(' ')[0] + ' ' + (c.engine?.split(' ')[1]||''), 'ENGINE'],
       ].map(([val, label]) =>
-        React.createElement('div', { key: label, className: 'constructor-card-stat' },
-          React.createElement('div', { style: { fontFamily: 'var(--font-mono)', fontSize: '16px', fontWeight: 700 } }, val),
-          React.createElement('div', { style: { fontFamily: 'var(--font-display)', fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: 'var(--text-dim)', marginTop: '3px' } }, label)
+        React.createElement('div', { key: label, style: { padding:'9px 12px', borderRight:'1px solid var(--b0)', overflow:'hidden' } },
+          React.createElement('div', { style: { fontFamily:'var(--fm)', fontSize:'13px', fontWeight:700, color:'var(--t1)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' } }, val),
+          React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'9px', fontWeight:600, letterSpacing:'2px', textTransform:'uppercase', color:'var(--t3)', marginTop:'2px' } }, label)
         )
       )
     )
@@ -533,7 +580,7 @@ function ConstructorDetail({ constructor: c, onBack }) {
         React.createElement('div', { style: { display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' } },
           React.createElement('span', { className: 'badge b-gold' }, `${c.titles} WCC Titles`),
           React.createElement('span', { className: 'badge b-dim' }, c.chassis),
-          React.createElement('span', { className: 'badge b-dim' }, c.power)
+          React.createElement('span', { className: 'badge b-dim' }, (c.engine||c.power||'').split(' ').slice(0,2).join(' '))
         )
       )
     ),
@@ -562,13 +609,15 @@ function ConstructorDetail({ constructor: c, onBack }) {
       React.createElement('div', { className: 'card' },
         React.createElement('div', { className: 'card-title', style: { marginBottom: '12px' } }, 'Team Info'),
         [
-          ['Full Name', c.name],
+          ['Full Name', c.fullName || c.name],
           ['Base', c.base],
           ['Founded', c.firstYear],
           ['Chassis', c.chassis],
-          ['Power Unit', c.power],
+          ['Power Unit', c.engine || c.power],
+          ['Team Principal', c.principal || '—'],
           ['WCC Titles', c.titles],
-        ].map(([label, val]) =>
+          ['2026 Drivers', (c.drivers||[]).join(' & ')],
+        ].concat(c.notes ? [['Notes', c.notes]] : []).map(([label, val]) =>
           React.createElement('div', { key: label, className: 'drow' },
             React.createElement('span', { style: { fontSize: '12px', color: 'var(--text-muted)' } }, label),
             React.createElement('span', { style: { fontFamily: 'var(--font-display)', fontSize: '13px', fontWeight: 700 } }, val)
@@ -678,12 +727,12 @@ function HistoryPage() {
             style: {
               display: 'grid', gridTemplateColumns: '52px 1fr 1fr 80px', gap: '10px',
               padding: '9px 14px', borderBottom: '1px solid var(--border)',
-              background: c.year >= 2020 ? 'rgba(255,215,0,.02)' : 'transparent',
+              background: c.year === 2025 ? 'rgba(245,200,66,.06)' : c.year === 2024 ? 'rgba(255,37,71,.03)' : 'transparent',
               transition: 'background .15s', cursor: 'default',
               alignItems: 'center',
             },
             onMouseEnter: e => { e.currentTarget.style.background = 'var(--bg-elevated)'; },
-            onMouseLeave: e => { e.currentTarget.style.background = c.year >= 2020 ? 'rgba(255,215,0,.02)' : 'transparent'; }
+            onMouseLeave: e => { e.currentTarget.style.background = c.year === 2025 ? 'rgba(245,200,66,.06)' : c.year === 2024 ? 'rgba(255,37,71,.03)' : 'transparent'; }
           },
             React.createElement('span', { style: { fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)' } }, c.year),
             React.createElement('div', null,
@@ -741,16 +790,19 @@ function HistoryPage() {
           data.map((row, i) => {
             const maxVal = data[0].val;
             const pct = (row.val / maxVal) * 100;
-            return React.createElement('div', { key: i, style: { marginBottom: '10px' } },
-              React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '4px' } },
+            const isActive = CURRENT_DRIVERS.some(d => (d.first + ' ' + d.last) === row.driver);
+            return React.createElement('div', { key: i, style: { marginBottom: '12px' } },
+              React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' } },
                 React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
-                  React.createElement('span', { style: { fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)', width: '18px', textAlign: 'right' } }, i + 1),
-                  React.createElement('span', { style: { fontFamily: 'var(--font-display)', fontSize: '14px', fontWeight: 700 } }, row.driver || row.team)
+                  React.createElement('span', { style: { fontFamily:'var(--fm)', fontSize:'11px', color:'var(--t3)', width:'18px', textAlign:'right', flexShrink:0 } }, i + 1),
+                  row.nat && React.createElement('span', { style: { fontSize:'14px' } }, row.nat),
+                  React.createElement('span', { style: { fontFamily:'var(--fh)', fontSize:'15px', fontWeight:700, color: isActive ? 'var(--t1)' : 'var(--t2)' } }, row.driver || row.team),
+                  isActive && React.createElement('span', { className:'badge b-green', style: { fontSize:'8px' } }, 'ACTIVE')
                 ),
-                React.createElement('span', { style: { fontFamily: 'var(--font-mono)', fontSize: '16px', fontWeight: 700, color: i === 0 ? accent : 'var(--text-primary)' } }, row.val)
+                React.createElement('span', { style: { fontFamily:'var(--fm)', fontSize:'18px', fontWeight:700, color: i === 0 ? accent : 'var(--t1)' } }, row.val)
               ),
-              React.createElement('div', { className: 'progress-bar' },
-                React.createElement('div', { className: 'progress-fill', style: { width: `${pct}%`, background: i === 0 ? accent : 'var(--border-bright)' } })
+              React.createElement('div', { style: { height:'5px', background:'var(--b1)', borderRadius:'3px', overflow:'hidden' } },
+                React.createElement('div', { style: { height:'100%', width:`${pct}%`, borderRadius:'3px', background: i === 0 ? accent : 'var(--b2)', transition:'width .6s' } })
               )
             );
           })
