@@ -1,108 +1,203 @@
-# 🏎 PITWALL — F1 Race Weekend Companion
+# PITWALL — F1 Race Weekend Companion
 
-A self-contained, single-file web app for analysing Formula 1 race weekends — from practice sessions through to live race tracking. Built with React, Recharts, the [OpenF1](https://openf1.org) public API, and Groq AI.
+> Your complete Formula 1 companion. Live race data, weekend analysis, circuit encyclopedia, driver profiles, constructor history, and F1 history since 1950.
 
-**Live at → [anirudh-arora.github.io/pitwall](https://anirudh-arora.github.io/pitwall)**
-
----
-
-## Features
-
-### Pre-Race Mode
-
-| Feature | Description |
-|---|---|
-| **Lap Times** | Interactive lap time chart for any session — FP1, FP2, FP3, Qualifying |
-| **Sector Analysis** | Best sector times per driver across a session, colour-coded heatmap, sorted by theoretical best lap |
-| **Tyre Strategy** | Visual stint timeline showing compound choices and lap ranges for all drivers |
-| **Head-to-Head** | Select any two drivers and compare best lap, average pace, consistency (±stdev), sector bests, and an overlaid lap time chart |
-| **Pace Progression** | Line chart showing each driver's best lap across FP1 → FP2 → FP3 → Qualifying — reveals who improved through the weekend |
-| **Performance Ratings** | Scored table (0–100) across four dimensions: Qualifying extraction, Race pace, Consistency, vs Teammate |
-| **Qualifying Grid** | Full starting grid with gap to pole |
-| **Race Result** | Final classification from the race session |
-| **AI Race Analyst** | Uses all FP + Qualifying data to predict the top 3 race finishers with win probabilities, reasoning, and confidence ratings. Powered by Llama 3.3 70B via Groq. Adapts automatically when qualifying hasn't happened yet. |
-
-### Live Race Mode
-
-| Feature | Description |
-|---|---|
-| **Timing Tower** | Live position, gap to leader, tyre compound + age, pit stop count, position change flashes |
-| **Circuit Tracker** | Real-time GPS driver positions on an SVG circuit outline drawn from actual telemetry data |
-| **Position History** | Line chart of every driver's position over race laps — tells the story of the race at a glance |
-| **Gap Evolution** | Gap to leader over time for the top 8 — shows undercuts, VSC bunching, strategy windows |
-| **Overtake Probability** | Scores each driver pairing (0–99%) based on gap to car ahead, DRS status, speed delta, and tyre compound advantage |
-| **Car Telemetry** | Live speed, RPM, gear, throttle %, brake, and DRS status per driver, ordered by race position |
-| **Team Radio** | Live team radio messages with inline audio playback |
-| **Race Control** | Live flags, safety car, penalties, and steward messages with colour-coded severity |
-| **Pit Stops** | Pit stop count, last stop duration, and laps-on-current-tyre with overdue warnings |
-| **Weather** | Live track and air temperature, wind speed/direction, humidity, pressure, rain alert |
-| **Weather Forecast** | 6-period race-day rain forecast via OpenWeatherMap (optional key) |
-| **Live Win Probability** | AI-updated win probabilities mid-race, comparing live state vs pre-race predictions with trend indicators |
+🌐 **Live site:** [anirudh-arora.github.io/pitwall](https://anirudh-arora.github.io/pitwall)
 
 ---
 
-## Getting Started
+## What's inside
 
-No installation. No build step. Just open the file.
+| Section | Features |
+|---|---|
+| 🏠 **Home** | Next race countdown · Live championship standings · Quick navigation |
+| 📊 **Weekend** | Lap times (driver filter + lap window zoom) · Sector analysis · Tyre strategy · Head-to-head · Pace progression · Performance ratings · Qualifying grid · Race results · AI analyst (Groq) |
+| ⏺ **Live** | Timing tower · Circuit tracker (GPS) · Position history · Gap evolution · Overtake probability · Car telemetry · Team radio · Race control · Pit tracker · Live weather |
+| 🏟 **Circuits** | All 24 GP venues · Length, corners, lap records · Track characteristics · Trivia · Wikipedia biography · Historical race winners |
+| 👤 **Drivers** | Full 2026 grid · Profiles · Career stats (wins, poles, podiums) · Recent race results · Wikipedia biographies |
+| 🔧 **Constructors** | All current teams · Stats · 2026 driver lineup · Histories |
+| 📖 **History** | Every F1 World Champion since 1950 · WCC winners · Decade filter · Key milestones timeline · All-time records (wins, poles, podiums, titles) |
+| 💬 **Glossary** | Every F1 technical term explained in plain English |
+
+---
+
+## 2026 Active Aero
+
+Traditional DRS is replaced by **Active Aerodynamics** from 2026. Pitwall detects the session year automatically and updates all labels:
+
+| Old (≤2025) | New (2026+) | Meaning |
+|---|---|---|
+| DRS OFF | **CORNER MODE** | Wings closed — max downforce |
+| DRS ELIGIBLE | **OVERTAKE MODE** | Within 1s — +0.5MJ deploy available |
+| DRS ON | **STRAIGHT MODE** | Wings open — low drag |
+
+The `drs` field in the OpenF1 API continues to carry the same values (0/8/10/12/14) — Pitwall re-labels them based on season year.
+
+---
+
+## File structure
 
 ```
-1. Download index.html
-2. Open it in any modern browser
-3. Select a race weekend
-4. Everything loads automatically from the OpenF1 public API
+pitwall/
+├── index.html                 ← App shell + navigation router
+├── css/
+│   └── styles.css             ← Complete design system
+├── js/
+│   ├── utils.js               ← API helpers, data constants (circuits, drivers, champions)
+│   ├── companion_components.js ← Live race + weekend analysis components
+│   ├── encyclopedia.js        ← Circuits, Drivers, Constructors, History pages
+│   └── app.js                 ← Navigation, home page, standings widget
+└── README.md
 ```
 
-### Optional API Keys
+---
 
-The app works without any API keys for all timing and analysis features. Keys are only needed for AI and weather:
+## Data sources
 
-| Key | Used For | How to Get | Cost |
-|---|---|---|---|
-| **Groq** | AI race predictions + live win probability | [console.groq.com](https://console.groq.com) | Free |
-| **OpenWeatherMap** | Race-day weather forecast | [openweathermap.org/api](https://openweathermap.org/api) | Free tier |
-
-Keys are entered inside the app and stay in your browser session only — they are never stored or transmitted anywhere except directly to Groq and OpenWeatherMap.
+| Source | What it provides | Auth needed |
+|---|---|---|
+| [OpenF1 API](https://openf1.org) | Live timing, GPS, telemetry, laps, stints, radio | No (free) |
+| [Jolpica/Ergast](https://api.jolpi.ca/ergast/) | Historical results, standings, champions since 1950 | No (free) |
+| [Wikipedia REST API](https://en.wikipedia.org/api/rest_v1/) | Driver/circuit biographies and summaries | No (free) |
+| [Groq](https://console.groq.com) | AI race predictions and live win probability | Optional (free key) |
+| [OpenWeatherMap](https://openweathermap.org/api) | Weather forecast for race venue | Optional (free key) |
 
 ---
 
-## Data Sources
+## Optional API keys
 
-| Source | What it provides |
+Both are free and optional — the app works without them, but with reduced features.
+
+**Groq (AI Analyst):**
+1. Go to [console.groq.com](https://console.groq.com)
+2. Sign in → API Keys → Create new key
+3. Paste key starting with `gsk_` into the AI panel in the Weekend section
+
+**OpenWeatherMap (Weather):**
+1. Go to [openweathermap.org](https://openweathermap.org/api)
+2. Sign up → My API Keys → copy the key
+3. Paste into the weather panel
+
+---
+
+## GitHub Pages deployment
+
+### First time setup (creating the repo)
+
+```bash
+# 1. Go to github.com/new
+#    - Repository name: pitwall
+#    - Visibility: Public
+#    - DO NOT add README (you already have one)
+#    - Click "Create repository"
+
+# 2. Clone the empty repo locally
+git clone https://github.com/anirudh-arora/pitwall.git
+cd pitwall
+```
+
+### Upload the files
+
+```bash
+# 3. Copy all Pitwall files into the cloned folder:
+#    - index.html
+#    - README.md
+#    - css/styles.css
+#    - js/utils.js
+#    - js/companion_components.js
+#    - js/encyclopedia.js
+#    - js/app.js
+
+# 4. Stage, commit and push
+git add .
+git commit -m "Initial Pitwall release — full F1 companion"
+git push origin main
+```
+
+### Enable GitHub Pages
+
+```bash
+# 5. Go to your repo on GitHub:
+#    github.com/anirudh-arora/pitwall
+
+# 6. Click Settings → Pages (left sidebar)
+
+# 7. Under "Build and deployment":
+#    - Source: Deploy from a branch
+#    - Branch: main
+#    - Folder: / (root)
+#    - Click Save
+
+# 8. Wait ~60 seconds, then visit:
+#    https://anirudh-arora.github.io/pitwall
+```
+
+---
+
+### Updating files after changes
+
+```bash
+# Navigate to your local pitwall folder
+cd pitwall
+
+# Copy updated files in (replace existing ones)
+# Then:
+git add .
+git commit -m "Update: [describe what changed]"
+git push origin main
+
+# GitHub Pages auto-deploys within ~30 seconds
+# Hard-refresh the browser (Ctrl+Shift+R) to clear cache
+```
+
+---
+
+### Updating specific files (quick reference)
+
+| What changed | Which file to update |
 |---|---|
-| [OpenF1 API](https://openf1.org) | All timing, lap, sector, position, telemetry, GPS, radio, weather data — completely free and no key required |
-| [Groq](https://groq.com) | LLM inference for AI race analyst (Llama 3.3 70B) |
-| [OpenWeatherMap](https://openweathermap.org) | Weather forecast for circuit location |
-
-OpenF1 provides live data during race weekends and historical data for all past sessions back to the 2023 season.
-
----
-
-## Tech Stack
-
-- **React 18** — UI framework (loaded via CDN, no build step)
-- **Recharts** — lap time, sector, gap evolution, and pace progression charts
-- **Babel Standalone** — JSX transpilation in-browser
-- **OpenF1 REST API** — all F1 data
-- **Groq API** — AI inference
-- **Pure SVG** — circuit position tracker
-
-Everything ships in a single `index.html` file with zero local dependencies.
+| Live race / Weekend analysis features | `js/companion_components.js` |
+| Circuit info, trivia, driver list | `js/utils.js` |
+| Driver/Constructor/History pages | `js/encyclopedia.js` |
+| Navigation, home page, standings | `js/app.js` |
+| Visual design, colours, layout | `css/styles.css` |
+| HTML shell or script loading order | `index.html` |
 
 ---
 
 ## Notes
 
-- **Circuit Tracker** draws the track outline from GPS telemetry recorded during practice sessions. Live driver positions update every 2 seconds during a race. GPS data availability depends on what OpenF1 receives from the FOM feed — some sessions may show "GPS data unavailable".
-- **AI Analyst** clearly distinguishes between pre-qualifying projections (practice data only) and post-qualifying predictions (full grid + pace data). It will never fabricate a qualifying grid that hasn't happened.
-- **Live polling** intervals: positions/intervals every 5s, car telemetry every 3s, GPS every 2s, pit/radio every 10s, stints/weather every 15s.
-- Historical data is available for all races from the **2023 season onwards**.
+- **Historical data:** OpenF1 covers 2023 onwards. Ergast/Jolpica covers 1950–present.
+- **Live data:** OpenF1 free tier has a ~3–8 second delay behind the official FOM feed. Live mode polls at 2–15 second intervals depending on data type.
+- **Circuit GPS:** Loads from a practice session at the start of the race weekend. Will show "Circuit data unavailable" outside of race weekends.
+- **AI predictions:** Generated by `llama-3.3-70b-versatile` via Groq. Based on lap time distributions, stint lengths, and qualifying data from the current weekend. Not financial advice.
+- **Mobile:** Fully responsive. Best experienced on desktop for the live timing view.
 
 ---
 
-## License
+## Tech stack
 
-MIT — do whatever you want with it.
+- **React 18** (CDN, no build step needed)
+- **Recharts** for all charts
+- **Babel Standalone** for JSX compilation in-browser
+- **Pure CSS** — no Tailwind or framework
+- **Vanilla JS** — no bundler, no Node.js required
+
+Everything runs in the browser. No server needed.
 
 ---
 
-*Built by [Anirudh Arora](https://github.com/anirudh-arora)*
+## Roadmap / future ideas
+
+- [ ] Sprint weekend support (sprint qualifying + sprint race)
+- [ ] Tyre performance model (degradation curves per compound per circuit)
+- [ ] Driver comparison tool (career head-to-head across seasons)
+- [ ] Lap time sector heatmap (coloured by S1/S2/S3 vs field)
+- [ ] Historical race replay (lap-by-lap position reconstruction)
+- [ ] Push notifications for race control messages
+- [ ] Light mode
+
+---
+
+*Pitwall is an unofficial project and is not associated with Formula 1, the FIA, or any F1 team.*
+*F1, FORMULA ONE, FORMULA 1 and related marks are trade marks of Formula One Licensing B.V.*
