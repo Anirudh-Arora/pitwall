@@ -921,3 +921,48 @@ const ALL_TIME_RECORDS = {
     { team:'Red Bull',  val:6  },
   ],
 };
+
+// ═══════════════════════════════════════════════════════════════
+// API HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+async function fetchErgast(path) {
+  const base = 'https://api.jolpi.ca/ergast/f1';
+  const url = `${base}${path}.json?limit=200`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Ergast ${r.status}`);
+  const j = await r.json();
+  return j.MRData;
+}
+
+async function fetchWiki(title) {
+  const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Wiki ${r.status}`);
+  return r.json();
+}
+
+function teamColor(teamName) {
+  if (!teamName) return 'var(--text-muted)';
+  const t = teamName.toLowerCase();
+  if (t.includes('mclaren'))      return '#FF8000';
+  if (t.includes('ferrari'))      return '#E8002D';
+  if (t.includes('red bull'))     return '#3671C6';
+  if (t.includes('mercedes'))     return '#27F4D2';
+  if (t.includes('aston'))        return '#229971';
+  if (t.includes('alpine'))       return '#FF87BC';
+  if (t.includes('williams'))     return '#64C4FF';
+  if (t.includes('racing bulls') || t.includes('rb ') || t.includes('alphatauri') || t.includes('toro rosso')) return '#6692FF';
+  if (t.includes('haas'))         return '#B6BABD';
+  if (t.includes('sauber') || t.includes('alfa'))  return '#52E252';
+  if (t.includes('cadillac') || t.includes('andretti')) return '#CC0000';
+  if (t.includes('renault'))      return '#FFF500';
+  if (t.includes('brawn'))        return '#80FF00';
+  return 'var(--text-muted)';
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
