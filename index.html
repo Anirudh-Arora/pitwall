@@ -6,37 +6,51 @@
   <title>PITWALL — F1 Race Weekend Companion</title>
   <meta name="description" content="Your complete Formula 1 companion. Live race data, weekend analysis, circuit encyclopedia, driver profiles, constructor history, and F1 history since 1950." />
 
-  <!-- Favicon (optional — add your own or remove) -->
-  <!-- <link rel="icon" href="favicon.ico" /> -->
+  <!-- Preconnect cuts DNS + TCP handshake time for external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://unpkg.com" />
 
-  <!-- Stylesheet -->
+  <!-- Fonts: display=swap renders text immediately in fallback font, no invisible text during load -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+
+  <!-- App stylesheet -->
   <link rel="stylesheet" href="css/styles.css" />
 
-  <!-- React 18 + ReactDOM (UMD, CDN — no build step) -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- React 18 + ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-  <!-- Recharts (must load before app scripts so window.Recharts is available) -->
+  <!-- Recharts — must be present before companion_components.js parses -->
   <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
 
-  <!-- Babel Standalone (compiles JSX in-browser — keep last in head or before body scripts) -->
+  <!-- Babel Standalone — only needed for companion_components.js (the one file with real JSX).
+       utils.js, encyclopedia.js, and app.js all use React.createElement() directly
+       so they load as plain scripts — no Babel tax for them. -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
+
   <!-- React mounts here -->
   <div id="root"></div>
 
-  <!-- App scripts — order matters: utils → encyclopedia → companion → app -->
-  <script type="text/babel" src="js/utils.js"></script>
-  <script type="text/babel" src="js/encyclopedia.js"></script>
-  <script type="text/babel" src="js/companion_components.js"></script>
-  <script type="text/babel" src="js/app.js"></script>
+  <!--
+    Load order:
+      1. utils.js                — CIRCUITS, DRIVERS, API helpers (no JSX)
+      2. encyclopedia.js         — Circuits/Drivers/Constructors/History pages (no JSX)
+      3. companion_components.js — Live + Weekend (has JSX, needs Babel)
+      4. app.js                  — Router + home page (no JSX)
+      5. mount script            — ReactDOM.createRoot
+  -->
+  <script src="js/utils.js"></script>
+  <script src="js/encyclopedia.js"></script>
+  <script type="text/babel" data-presets="react" src="js/companion_components.js"></script>
+  <script src="js/app.js"></script>
 
-  <!-- Mount React root — must run after all component scripts above -->
-  <script type="text/babel">
-    const container = document.getElementById('root');
-    const root = ReactDOM.createRoot(container);
-    root.render(React.createElement(App));
+  <script>
+    const _root = ReactDOM.createRoot(document.getElementById('root'));
+    _root.render(React.createElement(App));
   </script>
+
 </body>
 </html>
