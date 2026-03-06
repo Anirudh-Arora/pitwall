@@ -1,13 +1,17 @@
 const { useState, useEffect, useCallback, useMemo, useRef } = React;
 // Recharts lazy resolver — call at render time, not module parse time
 function useRecharts() {
-  const [ready, setReady] = React.useState(!!window.Recharts);
+  // window.Recharts loads from CDN — poll until available, then force re-render
+  const [rc, setRc] = React.useState(() => window.Recharts || null);
   React.useEffect(() => {
-    if (window.Recharts) { setReady(true); return; }
-    const t = setInterval(() => { if (window.Recharts) { setReady(true); clearInterval(t); } }, 200);
+    if (rc) return; // already loaded
+    const check = () => { if (window.Recharts) { setRc(window.Recharts); } };
+    check(); // check immediately in effect
+    const t = setInterval(check, 100);
+    setTimeout(() => clearInterval(t), 15000); // give up after 15s
     return () => clearInterval(t);
-  }, []);
-  return ready ? window.Recharts : null;
+  }, []); // eslint-disable-line
+  return rc || window.Recharts || null;
 }
 // Keep destructured refs for non-chart code (fallback to empty)
 const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,

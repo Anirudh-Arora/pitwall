@@ -627,7 +627,7 @@ function HistoryPage() {
         c.team.toLowerCase().includes(search.toLowerCase()) ||
         String(c.year).includes(search);
       const matchDecade = decadeFilter === 'all' ||
-        Math.floor(c.year / 10) * 10 === parseInt(decadeFilter);
+        Math.floor(c.year / 10) * 10 === parseInt(decadeFilter.replace('s',''));
       return matchSearch && matchDecade;
     });
 

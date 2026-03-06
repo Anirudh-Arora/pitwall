@@ -863,3 +863,182 @@ img{display:block;max-width:100%}
   .dc-stats>div:last-child{display:none}
   .hh-title{font-size:34px}
 }
+
+/* ════════════════════════════════════════════════════════════════
+   DRIVER CARD — encyclopedia class names
+   ════════════════════════════════════════════════════════════════ */
+.driver-card-top {
+  padding:16px 16px 12px;
+  border-left:4px solid var(--tc,#444);
+  position:relative;overflow:hidden;
+}
+.driver-card-num {
+  position:absolute;right:10px;top:4px;
+  font-family:var(--fm);font-size:52px;font-weight:700;
+  color:var(--b1);line-height:1;pointer-events:none;
+}
+.driver-card-name {
+  font-family:var(--fh);font-size:21px;font-weight:700;
+  line-height:1.1;position:relative;z-index:1;
+}
+.driver-card-team {
+  font-size:11px;color:var(--t2);margin-top:3px;position:relative;z-index:1;
+}
+.driver-card-stats {
+  display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--b0);
+}
+.driver-card-stat {
+  padding:10px 10px;text-align:center;border-right:1px solid var(--b0);
+}
+.driver-card-stat:last-child { border-right:none }
+.driver-card-stat-val {
+  font-family:var(--fm);font-size:15px;font-weight:700;color:var(--t1);
+}
+.driver-card-stat-label {
+  font-family:var(--fh);font-size:9px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-top:2px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TYRE STRATEGY — companion_components class names
+   ════════════════════════════════════════════════════════════════ */
+.strategy-row {
+  display:flex;align-items:center;gap:8px;
+  padding:5px 8px;border-radius:6px;
+  background:var(--s2);border:1px solid var(--b0);margin-bottom:4px;
+}
+.strategy-name {
+  font-family:var(--fh);font-size:13px;font-weight:700;
+  width:90px;flex-shrink:0;color:var(--t1);
+}
+.strategy-bar {
+  flex:1;display:flex;height:24px;border-radius:4px;overflow:hidden;gap:1px;
+}
+/* stint block colors by compound */
+.stint-block {
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-size:10px;font-weight:700;
+  min-width:6px;transition:all .2s;border-radius:2px;
+  cursor:default;
+}
+.stint-S { background:#cc1520;color:#fff }
+.stint-M { background:#c8a020;color:#000 }
+.stint-H { background:#b0b0c8;color:#000 }
+.stint-I { background:#0070cc;color:#fff }
+.stint-W { background:#0030cc;color:#fff }
+.stint-? { background:var(--s4);color:var(--t3) }
+
+/* tyre badge (inline, circular) */
+.tyre-badge {
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;border:2px solid;
+  font-family:var(--fm);font-size:10px;font-weight:700;
+  vertical-align:middle;
+}
+.tyre-badge.tyre-S, .tyre-S { border-color:#cc1520;color:#cc1520 }
+.tyre-badge.tyre-M, .tyre-M { border-color:#c8a020;color:#c8a020 }
+.tyre-badge.tyre-H, .tyre-H { border-color:#c8c8dc;color:#c8c8dc }
+.tyre-badge.tyre-I, .tyre-I { border-color:var(--blue);color:var(--blue) }
+.tyre-badge.tyre-W, .tyre-W { border-color:#2060ff;color:#2060ff }
+
+/* ════════════════════════════════════════════════════════════════
+   QUALIFYING ROW
+   ════════════════════════════════════════════════════════════════ */
+.quali-row {
+  display:grid;
+  grid-template-columns:32px 1fr 80px 70px 1fr;
+  align-items:center;gap:6px;
+  padding:8px 10px;border-left:3px solid var(--b1);
+  border-bottom:1px solid var(--b0);
+  font-size:13px;
+}
+.quali-row:hover { background:var(--s2) }
+.q-team { font-size:10px;color:var(--t3) }
+.q-gap  { color:var(--t2) }
+.q-p1   { color:#ffd700;font-weight:700 }
+.q-p2   { color:var(--silver);font-weight:700 }
+.q-p3   { color:var(--bronze);font-weight:700 }
+
+/* ════════════════════════════════════════════════════════════════
+   WEATHER STRIP (companion)
+   ════════════════════════════════════════════════════════════════ */
+.weather-strip {
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:6px 16px;background:var(--s1);border-bottom:1px solid var(--b0);
+  font-size:11px;
+}
+.w-item { display:flex;align-items:center;gap:5px }
+.w-label { font-family:var(--fh);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--t3) }
+.w-value { font-family:var(--fm);font-size:11px;font-weight:600;color:var(--t1) }
+.w-rain  { color:var(--blue) }
+
+/* ════════════════════════════════════════════════════════════════
+   TOWER HEADER (alias)
+   ════════════════════════════════════════════════════════════════ */
+.tower-header {
+  font-family:var(--fh);font-size:9px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;color:var(--t3);
+  border-bottom:1px solid var(--b2)!important;padding:5px 10px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RC FEED
+   ════════════════════════════════════════════════════════════════ */
+.rc-feed { display:flex;flex-direction:column;gap:4px }
+
+/* ════════════════════════════════════════════════════════════════
+   OVERTAKE PROBABILITY
+   ════════════════════════════════════════════════════════════════ */
+.ot-prob {
+  font-family:var(--fm);font-size:15px;font-weight:700;
+  width:44px;text-align:right;flex-shrink:0;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ERROR STATE
+   ════════════════════════════════════════════════════════════════ */
+.error-state {
+  padding:24px 20px;text-align:center;
+  font-size:12px;color:var(--amber);
+  border:1px solid rgba(255,128,64,.2);border-radius:8px;
+  background:rgba(255,128,64,.04);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   AI DOTS (thinking animation)
+   ════════════════════════════════════════════════════════════════ */
+.ai-dots { display:flex;gap:4px;align-items:center }
+.ai-dot  {
+  width:6px;height:6px;border-radius:50%;background:var(--t3);
+  animation:dot-pulse 1.4s infinite;
+}
+.ai-dot:nth-child(2){animation-delay:.2s}
+.ai-dot:nth-child(3){animation-delay:.4s}
+@keyframes dot-pulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+/* ════════════════════════════════════════════════════════════════
+   SECTOR TABLE (companion uses sector-table class)
+   ════════════════════════════════════════════════════════════════ */
+.sector-table { width:100%;border-collapse:collapse }
+.sector-table th {
+  font-family:var(--fh);font-size:9px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--t3);
+  padding:6px 10px;border-bottom:1px solid var(--b1);
+}
+.sector-table td {
+  padding:7px 10px;border-bottom:1px solid var(--b0);
+  font-family:var(--fm);font-size:12px;color:var(--t2);
+}
+.sector-table tr:hover td { background:var(--s2) }
+
+/* ════════════════════════════════════════════════════════════════
+   GROQ INPUT
+   ════════════════════════════════════════════════════════════════ */
+.groq-input {
+  width:100%;padding:9px 13px;
+  background:var(--s2);border:1px solid var(--b1);
+  border-radius:8px;color:var(--t1);font-size:13px;
+  font-family:var(--fb);transition:border-color .15s;
+}
+.groq-input:focus{border-color:var(--b2);outline:none}
+.groq-input::placeholder{color:var(--t3)}
