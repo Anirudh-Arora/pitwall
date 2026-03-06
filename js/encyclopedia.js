@@ -46,7 +46,7 @@ function CircuitSVG({ circuitId, size }) {
   const w = size || 140;
   const h = Math.round(w * 0.7);
   return React.createElement('svg', {
-    viewBox: '0 0 200 140',
+    viewBox: '0 0 300 200',
     style: { width: w+'px', height: h+'px', maxWidth:'100%' },
     xmlns: 'http://www.w3.org/2000/svg'
   },

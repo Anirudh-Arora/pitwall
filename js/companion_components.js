@@ -1233,12 +1233,24 @@ function LapTimeChart({ allDriverLaps, drivers }) {
   // Full chart data (all laps)
   const { allChartData, maxLap } = useMemo(() => {
     if (!allDriverLaps || !activeNums.length) return { allChartData:[], maxLap:0 };
+    // First pass: find each driver's best (fastest) lap to use as threshold
+    const driverBest = {};
+    activeNums.forEach(num => {
+      const times = (allDriverLaps[num]||[]).map(l=>l.lap_duration).filter(t=>t>10 && t<600);
+      if (times.length) driverBest[num] = Math.min(...times);
+    });
     const byLap = {};
     activeNums.forEach(num => {
+      const best = driverBest[num] || 120;
+      const cutoff = best * 1.08; // allow up to 8% slower than best (covers traffic, not outlaps)
       (allDriverLaps[num]||[]).forEach(lap => {
-        if (!lap.lap_duration) return;
+        const t = lap.lap_duration;
+        // Filter: must exist, be plausible (10s–600s), not an outlap, within 8% of best
+        if (!t || t < 10 || t > 600) return;
+        if (lap.is_pit_out_lap) return;
+        if (t > cutoff) return; // outlap / slow lap
         if (!byLap[lap.lap_number]) byLap[lap.lap_number] = { lap: lap.lap_number };
-        byLap[lap.lap_number][num] = lap.lap_duration;
+        byLap[lap.lap_number][num] = t;
       });
     });
     const sorted = Object.values(byLap).sort((a,b)=>a.lap-b.lap);

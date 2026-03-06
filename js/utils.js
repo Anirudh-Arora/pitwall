@@ -8,138 +8,80 @@
 // Each circuit has its own recognizable silhouette
 // ═══════════════════════════════════════════════════════════════
 const CIRCUIT_SVG_PATHS = {
-  // ── Bahrain International Circuit ─────────────────────────────
-  // Kidney shape with long back straight and stadium section
-  bahrain:
-    "M 60 20 L 130 18 Q 162 18 168 48 L 166 72 Q 164 92 148 106 L 118 116 L 100 118 L 82 116 L 52 106 Q 36 92 34 72 L 32 48 Q 38 20 60 20 Z" +
-    " M 168 60 L 178 60 Q 182 60 182 70 L 182 90 L 168 90",
+  // ViewBox: "0 0 300 200" for all circuits
+  // Paths use L (lineto) for angular, circuit-like appearance
+  // Each circuit is designed to be distinctly recognizable
 
-  // ── Jeddah Corniche Circuit ────────────────────────────────────
-  // Very long oval-ish street circuit with tight second sector
-  jeddah:
-    "M 50 14 L 140 12 Q 164 12 168 32 L 166 62 L 164 90 Q 162 112 142 120 L 100 124 L 58 120 Q 38 112 36 90 L 34 62 L 32 32 Q 36 12 50 14 Z" +
-    " M 140 12 L 160 30 Q 170 50 162 70 L 150 90",
+  // BAHRAIN — kidney shape, two loops, stadium section
+  bahrain: "M 85 35 L 185 30 L 210 35 L 225 55 L 225 85 L 215 105 L 195 118 L 170 125 L 145 128 L 120 127 L 95 122 L 72 112 L 58 95 L 54 72 L 56 52 L 70 38 Z M 215 72 L 240 70 L 248 80 L 248 98 L 235 105 L 215 105",
 
-  // ── Albert Park Circuit — Melbourne ────────────────────────────
-  // Roughly rectangular park circuit, runs anti-clockwise
-  // Characteristic bump at pit exit, chicane sectors
-  melbourne:
-    "M 50 24 L 140 20 Q 162 20 166 42 L 164 64 Q 162 80 148 90 L 160 106 Q 170 118 158 126 L 120 130 L 80 128 Q 52 122 42 108 L 30 94 L 28 72 L 32 48 Q 38 22 50 24 Z",
+  // JEDDAH — very long thin oval, tight turns at each end, coastal
+  jeddah: "M 68 18 L 190 14 L 215 18 L 228 35 L 226 68 L 224 105 L 225 140 L 218 162 L 195 172 L 68 172 L 45 162 L 38 140 L 40 105 L 40 65 L 42 35 L 55 20 Z M 192 14 L 218 35 L 224 68",
 
-  // ── Suzuka International Racing Course ─────────────────────────
-  // Famous figure-8 layout — unique crossover point
-  suzuka:
-    "M 52 18 L 88 12 Q 112 10 122 24 L 130 44 Q 132 60 118 68 L 104 72 L 122 82 Q 138 92 136 110 L 120 124 Q 102 132 72 128 L 48 120 Q 36 106 40 90 L 42 76 Q 44 62 56 58 L 74 52 L 56 42 Q 46 34 46 20 L 52 18 Z",
+  // MELBOURNE — anti-clockwise park circuit, roughly rectangular, chicane sequences  
+  melbourne: "M 70 30 L 185 25 L 210 30 L 220 50 L 218 78 L 205 92 L 220 108 L 228 125 L 218 142 L 195 150 L 130 154 L 95 152 L 68 145 L 52 130 L 45 110 L 48 85 L 40 65 L 52 42 Z",
 
-  // ── Shanghai International Circuit ─────────────────────────────
-  // Distinctive snail-like Turn 1 leading into back straight
-  // Long back straight with 130R hairpin at end
-  shanghai:
-    "M 162 28 Q 174 46 170 68 L 154 90 Q 132 108 96 110 L 60 108 Q 36 98 30 72 L 32 50 Q 38 28 62 18 L 98 12 Q 140 10 162 28 Z" +
-    " M 96 110 L 96 126 Q 96 132 110 130 L 130 126 L 130 110",
+  // SUZUKA — figure-8 with crossover, very distinctive
+  suzuka: "M 68 25 L 108 18 L 138 22 L 155 38 L 160 58 L 152 76 L 136 86 L 118 90 L 138 100 L 158 115 L 162 138 L 150 158 L 128 168 L 98 170 L 72 162 L 56 145 L 54 122 L 62 104 L 75 95 L 92 90 L 108 90 L 118 90 L 100 82 L 85 72 L 72 58 L 65 42 Z",
 
-  // ── Miami International Autodrome ──────────────────────────────
-  // Flowing oval-based layout around Hard Rock Stadium
-  miami:
-    "M 44 108 L 28 80 Q 22 54 40 34 L 68 20 L 110 14 Q 148 12 164 36 L 172 62 Q 176 90 158 108 L 128 122 L 88 126 Q 58 124 44 108 Z",
+  // SHANGHAI — snail/spiral Turn 1, then long back straight with hairpin
+  shanghai: "M 220 38 L 242 62 L 240 95 L 225 115 L 198 128 L 155 132 L 110 130 L 75 122 L 55 105 L 52 82 L 62 62 L 82 50 L 108 42 L 148 36 L 185 30 L 208 28 L 222 34 Z M 155 132 L 155 155 L 168 162 L 182 155 L 182 132",
 
-  // ── Autodromo Enzo e Dino Ferrari — Imola ──────────────────────
-  // Long, narrow, twisty. Two distinct loops (Tamburello, Rivazza)
-  imola:
-    "M 40 26 L 78 14 Q 118 8 150 26 L 168 52 Q 178 74 162 100 L 138 118 Q 108 128 76 122 L 44 112 Q 20 96 22 68 L 26 44 Q 30 26 40 26 Z",
+  // MIAMI — flowing oval layout around stadium, S-section
+  miami: "M 68 120 L 48 95 L 42 68 L 52 45 L 72 28 L 105 18 L 148 15 L 185 18 L 212 32 L 228 55 L 232 82 L 225 108 L 210 128 L 188 142 L 155 150 L 118 152 L 88 148 Z",
 
-  // ── Circuit de Monaco ──────────────────────────────────────────
-  // Ultra-tight street circuit. Loews hairpin is the tightest in F1
-  // Characteristic shape: tunnel sector, Casino square
-  monaco:
-    "M 88 14 L 130 16 Q 160 20 164 48 L 158 68 Q 152 84 134 90 L 148 102 Q 162 116 148 126 L 114 130 L 74 128 Q 46 120 34 98 L 32 76 Q 29 52 44 36 L 66 18 Z",
+  // IMOLA — narrow, two distinct loops (Tamburello, Variante Alta, Rivazza)
+  imola: "M 58 32 L 88 20 L 125 15 L 162 20 L 192 38 L 210 62 L 215 90 L 205 115 L 185 132 L 165 140 L 148 138 L 142 148 L 148 158 L 142 165 L 122 165 L 105 155 L 100 142 L 82 138 L 62 128 L 46 105 L 42 78 L 46 52 Z",
 
-  // ── Circuit de Barcelona-Catalunya ─────────────────────────────
-  // Long main straight, heavy braking zones, COTA-like turn 3
-  barcelona:
-    "M 36 84 L 30 52 Q 28 26 54 16 L 95 8 L 136 10 Q 162 16 168 44 L 172 68 Q 170 96 148 112 L 108 124 L 70 122 Q 34 114 36 84 Z",
+  // MONACO — ultra-tight, Loews hairpin, Casino, tunnel
+  monaco: "M 105 22 L 148 18 L 175 25 L 188 45 L 185 68 L 172 82 L 158 88 L 165 100 L 178 115 L 172 132 L 155 142 L 132 148 L 105 148 L 78 142 L 58 128 L 52 108 L 56 88 L 65 72 L 58 55 L 62 38 L 80 25 Z",
 
-  // ── Circuit Gilles Villeneuve — Canada ─────────────────────────
-  // Island circuit. Two long straights, chicane at end of pit straight
-  canada:
-    "M 42 104 L 26 72 L 26 40 Q 28 16 52 8 L 94 4 Q 138 2 162 24 L 176 50 Q 182 78 166 100 L 138 118 L 96 122 Q 60 120 42 104 Z" +
-    " M 94 4 L 94 30 L 80 30",
+  // BARCELONA — long pit straight, technical S-sector, stadium section
+  barcelona: "M 52 95 L 45 68 L 48 45 L 62 28 L 92 18 L 132 14 L 168 17 L 196 28 L 212 48 L 215 72 L 208 95 L 192 112 L 175 122 L 148 128 L 115 130 L 85 128 L 65 118 Z",
 
-  // ── Silverstone Circuit ─────────────────────────────────────────
-  // Fast, sweeping, roughly diamond/square shape
-  // Maggots-Becketts-Chapel complex at top right
-  silverstone:
-    "M 28 68 Q 22 44 38 26 L 74 12 Q 110 4 144 14 L 170 30 Q 184 50 180 78 L 164 108 Q 148 122 116 126 L 74 126 Q 34 118 28 94 L 28 68 Z",
+  // CANADA — island, two long straights, chicane wall of champions
+  canada: "M 62 112 L 45 85 L 42 58 L 48 35 L 65 20 L 98 12 L 148 10 L 188 15 L 215 30 L 228 52 L 225 80 L 212 105 L 192 122 L 158 132 L 115 135 L 80 130 Z M 105 10 L 105 32 L 90 32",
 
-  // ── Hungaroring ─────────────────────────────────────────────────
-  // Tight, twisty, no straights worth speaking of
-  // Narrow S-bends dominate — low-speed technical
-  hungary:
-    "M 42 96 L 30 62 Q 24 34 48 20 L 84 10 Q 118 4 146 20 L 164 48 Q 176 74 162 100 L 132 120 L 84 126 Q 46 122 42 96 Z",
+  // SILVERSTONE — fast, wing-shaped, Maggots-Becketts esses
+  silverstone: "M 38 78 L 35 55 L 45 35 L 72 20 L 108 12 L 148 12 L 180 18 L 205 35 L 218 58 L 215 85 L 202 108 L 182 125 L 152 132 L 115 134 L 82 130 L 58 118 L 42 100 Z",
 
-  // ── Circuit de Spa-Francorchamps ────────────────────────────────
-  // Very long. Famous Eau Rouge / Raidillon climb, Pouhon, Blanchimont
-  // Distinctive shape: long right-hand loop at top, bus-stop chicane
-  spa:
-    "M 18 74 L 16 42 Q 14 14 46 6 L 94 2 Q 142 0 166 22 L 182 50 Q 188 80 172 108 L 132 128 L 80 130 Q 30 122 18 96 L 18 74 Z" +
-    " M 46 6 L 64 34 Q 72 52 58 62",
+  // HUNGARORING — tight, snaking, no real straights, very technical
+  hungary: "M 58 102 L 46 75 L 42 50 L 52 32 L 75 20 L 105 14 L 138 14 L 165 22 L 185 42 L 192 68 L 188 95 L 175 115 L 155 128 L 125 135 L 95 135 L 68 128 Z",
 
-  // ── Circuit Zandvoort ────────────────────────────────────────────
-  // Compact, beachside. Famous banked Turn 3 (Hugenholtz)
-  // Oval-ish with narrow exits
-  zandvoort:
-    "M 42 96 L 34 64 Q 28 36 54 20 L 88 8 Q 122 4 148 22 L 168 54 Q 176 82 158 108 L 118 128 L 72 130 Q 34 118 42 96 Z",
+  // SPA — very long, Eau Rouge climb, Pouhon, Blanchimont, bus-stop
+  spa: "M 25 82 L 22 55 L 28 32 L 52 15 L 88 8 L 132 6 L 168 10 L 198 22 L 218 42 L 228 68 L 225 98 L 212 122 L 188 138 L 155 145 L 112 145 L 72 138 L 45 120 Z M 52 15 L 68 40 L 72 60 L 62 72 L 52 78",
 
-  // ── Autodromo Nazionale Monza ───────────────────────────────────
-  // High-speed oval base with two chicanes inserted on main straight
-  // Distinctive: oval with chicane cuts across both long straights
-  monza:
-    "M 28 60 L 28 28 Q 28 8 52 4 L 100 2 Q 150 2 172 26 L 182 56 L 172 86 Q 150 106 100 108 L 52 106 Q 28 100 28 80 L 28 60 Z" +
-    " M 72 4 L 72 30 L 90 30 M 128 4 L 128 28 L 148 28",
+  // ZANDVOORT — compact, seaside, banked Hugenholtz corner
+  zandvoort: "M 62 102 L 50 78 L 46 52 L 58 30 L 82 18 L 115 12 L 148 14 L 175 28 L 190 52 L 188 80 L 175 105 L 155 122 L 128 130 L 98 130 L 72 122 Z",
 
-  // ── Baku City Circuit ────────────────────────────────────────────
-  // Very long main straight (2.2km). Tight, narrow castle/old city section
-  baku:
-    "M 18 58 L 16 22 Q 14 2 46 2 L 108 2 L 168 3 Q 184 8 186 36 L 184 58 L 170 86 Q 152 110 122 118 L 70 120 Q 26 112 18 88 L 18 58 Z",
+  // MONZA — high-speed, oval base, two chicanes cut in on main straight  
+  monza: "M 36 70 L 36 40 L 42 22 L 68 10 L 108 6 L 148 6 L 188 10 L 215 22 L 228 42 L 228 70 L 228 100 L 215 118 L 188 130 L 148 134 L 108 134 L 68 130 L 42 118 L 36 100 Z M 78 6 L 78 28 L 96 28 M 158 6 L 158 26 L 178 26",
 
-  // ── Marina Bay Street Circuit — Singapore ───────────────────────
-  // Night race. Long, bumpy. Crosses Anderson Bridge. Distinctive L-shape
-  singapore:
-    "M 44 110 L 30 72 Q 25 42 48 24 L 90 10 Q 128 3 156 22 L 174 50 Q 182 84 162 110 L 124 128 L 70 130 Q 34 118 44 110 Z",
+  // BAKU — ultra-long back straight, tight medieval castle sector
+  baku: "M 24 68 L 22 38 L 26 18 L 50 8 L 112 6 L 175 6 L 218 10 L 240 24 L 242 48 L 240 72 L 228 95 L 208 115 L 178 128 L 135 134 L 90 132 L 55 125 L 32 108 Z",
 
-  // ── Circuit of The Americas (COTA) ────────────────────────────────
-  // Inspired by classic circuits. Famous sweeping Turn 1 (uphill), 
-  // S-turns (Maggots/Becketts inspired), back hairpin
-  austin:
-    "M 34 80 L 26 50 Q 22 24 48 12 L 95 4 Q 134 0 160 18 L 176 48 Q 182 80 164 104 L 120 124 L 68 128 Q 26 116 34 80 Z",
+  // SINGAPORE — long, bumpy, night race, L-shaped with Marina Bay
+  singapore: "M 58 118 L 42 88 L 38 58 L 48 35 L 72 20 L 108 12 L 148 12 L 180 20 L 205 38 L 218 65 L 215 95 L 200 118 L 178 135 L 148 142 L 112 142 L 80 136 Z",
 
-  // ── Autodromo Hermanos Rodriguez — Mexico ────────────────────────
-  // Long straight, esses, unique stadium section (Foro Sol)
-  mexico:
-    "M 38 92 L 30 58 Q 26 26 54 14 L 96 6 Q 140 2 164 24 L 178 56 Q 184 88 164 110 L 116 126 L 66 130 Q 28 118 38 92 Z",
+  // AUSTIN (COTA) — signature uphill T1, S-curves, stadium, back hairpin
+  austin: "M 50 88 L 38 62 L 38 38 L 52 22 L 80 12 L 118 8 L 155 10 L 185 22 L 205 42 L 210 68 L 202 92 L 185 112 L 162 128 L 132 135 L 98 135 L 68 128 Z",
 
-  // ── Autodromo Jose Carlos Pace — Interlagos (Brazil) ─────────────
-  // Anti-clockwise, hilly. Compact, two loops within larger circuit
-  // Senna-S is the famous opening
-  brazil:
-    "M 30 76 L 24 46 Q 22 18 50 10 L 90 3 Q 134 0 160 20 L 176 50 Q 182 82 162 108 L 118 122 L 70 126 Q 24 114 30 76 Z",
+  // MEXICO — long straight, esses, unique Foro Sol stadium section
+  mexico: "M 55 98 L 42 72 L 40 48 L 52 28 L 78 16 L 118 10 L 158 10 L 192 18 L 215 38 L 222 65 L 218 92 L 205 115 L 180 130 L 148 138 L 112 138 L 78 130 Z",
 
-  // ── Las Vegas Street Circuit ─────────────────────────────────────
-  // Massive long straights on the Strip. Almost rectangular layout
-  lasvegas:
-    "M 18 66 L 16 28 Q 15 6 46 2 L 108 2 L 166 4 Q 184 10 186 38 L 186 66 L 180 92 Q 164 120 108 122 L 46 120 Q 18 110 18 88 L 18 66 Z",
+  // BRAZIL (Interlagos) — anti-clockwise, two loops, Senna-S
+  brazil: "M 42 85 L 35 60 L 38 38 L 55 22 L 85 12 L 122 8 L 158 12 L 188 28 L 205 52 L 208 80 L 198 108 L 178 128 L 148 138 L 112 140 L 78 132 L 55 115 Z",
 
-  // ── Lusail International Circuit — Qatar ─────────────────────────
-  // Long, sweeping corners. Very flowing, like a road course
-  qatar:
-    "M 34 94 L 26 58 Q 22 26 52 14 L 96 6 Q 138 2 164 24 L 180 58 Q 186 92 164 116 L 118 132 L 64 132 Q 26 118 34 94 Z",
+  // LAS VEGAS — three massive straights, roughly rectangular/trapezoidal
+  lasvegas: "M 25 78 L 22 42 L 28 20 L 58 8 L 118 6 L 178 6 L 228 10 L 250 28 L 252 55 L 250 82 L 245 108 L 228 125 L 178 130 L 118 130 L 58 128 L 30 115 Z",
 
-  // ── Yas Marina Circuit — Abu Dhabi ────────────────────────────────
-  // Iconic hotel tunnel section. Figure-of-eight influence on final sector
-  abudhabi:
-    "M 38 96 L 28 62 Q 24 32 54 18 L 95 8 Q 140 4 166 28 L 180 60 Q 184 94 162 118 L 116 132 L 64 132 Q 26 120 38 96 Z" +
-    " M 166 28 L 176 46 Q 182 64 170 80 L 158 92",
+  // QATAR (Lusail) — sweeping, flowing, motorcycle circuit layout
+  qatar: "M 48 100 L 38 72 L 36 48 L 48 28 L 75 15 L 112 8 L 150 8 L 185 15 L 210 32 L 222 58 L 220 88 L 208 115 L 185 132 L 152 142 L 112 142 L 75 135 Z",
+
+  // ABU DHABI (Yas Marina) — hotel tunnel, long straight, stadium section
+  abudhabi: "M 52 100 L 40 75 L 38 52 L 50 32 L 75 18 L 112 10 L 152 10 L 188 18 L 212 38 L 222 65 L 218 92 L 205 115 L 182 132 L 148 140 L 112 140 L 78 132 Z M 212 38 L 228 52 L 235 68 L 228 85 L 215 95 L 205 95",
 };
+
 
 
 
@@ -555,80 +497,80 @@ const CURRENT_DRIVERS = [
   // McLaren — 2025 WDC (Norris) & WCC (10th title)
   { num:1,  code:'NOR', ergastId:'norris',        first:'Lando',     last:'Norris',     nat:'🇬🇧', team:'McLaren',         dob:'1999-11-13', wikiTitle:'Lando_Norris',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LANNOR01_Lando_Norris/lannor01.png',
-    stats:{ wdc:1, wins:21, podiums:48, poles:16 } },
+    stats:{ wdc:1, wins:20, podiums:52, poles:18 } },
   { num:81, code:'PIA', ergastId:'piastri',        first:'Oscar',     last:'Piastri',    nat:'🇦🇺', team:'McLaren',         dob:'2001-04-06', wikiTitle:'Oscar_Piastri',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/O/OSCPIA01_Oscar_Piastri/oscpia01.png',
-    stats:{ wdc:0, wins:8,  podiums:32, poles:5  } },
+    stats:{ wdc:0, wins:8, podiums:28, poles:5 } },
   // Ferrari — Hamilton joins for 2025/2026
   { num:16, code:'LEC', ergastId:'leclerc',        first:'Charles',   last:'Leclerc',    nat:'🇲🇨', team:'Ferrari',         dob:'1997-10-16', wikiTitle:'Charles_Leclerc',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/C/CHALEC01_Charles_Leclerc/chalec01.png',
-    stats:{ wdc:0, wins:8,  podiums:45, poles:26 } },
+    stats:{ wdc:0, wins:8, podiums:43, poles:26 } },
   { num:44, code:'HAM', ergastId:'hamilton',       first:'Lewis',     last:'Hamilton',   nat:'🇬🇧', team:'Ferrari',         dob:'1985-01-07', wikiTitle:'Lewis_Hamilton',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LEWHAM01_Lewis_Hamilton/lewham01.png',
     stats:{ wdc:7, wins:103, podiums:197, poles:104 } },
   // Red Bull — Verstappen + Hadjar (Tsunoda moved to Racing Bulls)
   { num:33, code:'VER', ergastId:'max_verstappen', first:'Max',       last:'Verstappen', nat:'🇳🇱', team:'Red Bull Racing',  dob:'1997-09-30', wikiTitle:'Max_Verstappen',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/M/MAXVER01_Max_Verstappen/maxver01.png',
-    stats:{ wdc:4, wins:65, podiums:113, poles:40 } },
+    stats:{ wdc:4, wins:63, podiums:115, poles:42 } },
   { num:6,  code:'HAD', ergastId:'hadjar',         first:'Isack',     last:'Hadjar',     nat:'🇫🇷', team:'Red Bull Racing',  dob:'2004-09-28', wikiTitle:'Isack_Hadjar',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/I/ISAHAD01_Isack_Hadjar/isahad01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+    stats:{ wdc:0, wins:0, podiums:0, poles:0 } },
   // Mercedes
   { num:63, code:'RUS', ergastId:'russell',        first:'George',    last:'Russell',    nat:'🇬🇧', team:'Mercedes',        dob:'1998-02-15', wikiTitle:'George_Russell_(racing_driver)',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/G/GEORUS01_George_Russell/georus01.png',
-    stats:{ wdc:0, wins:3,  podiums:21, poles:8  } },
+    stats:{ wdc:0, wins:3, podiums:22, poles:8 } },
   { num:12, code:'ANT', ergastId:'antonelli',      first:'Kimi',      last:'Antonelli',  nat:'🇮🇹', team:'Mercedes',        dob:'2006-08-25', wikiTitle:'Andrea_Kimi_Antonelli',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ANDANT01_Andrea_Kimi_Antonelli/andant01.png',
-    stats:{ wdc:0, wins:0,  podiums:1,  poles:1  } },
+    stats:{ wdc:0, wins:0, podiums:2, poles:1 } },
   // Aston Martin
   { num:14, code:'ALO', ergastId:'alonso',         first:'Fernando',  last:'Alonso',     nat:'🇪🇸', team:'Aston Martin',    dob:'1981-07-29', wikiTitle:'Fernando_Alonso',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/F/FERALO01_Fernando_Alonso/feralo01.png',
     stats:{ wdc:2, wins:32, podiums:106, poles:22 } },
   { num:18, code:'STR', ergastId:'stroll',         first:'Lance',     last:'Stroll',     nat:'🇨🇦', team:'Aston Martin',    dob:'1998-10-29', wikiTitle:'Lance_Stroll',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/L/LANSTR01_Lance_Stroll/lanstr01.png',
-    stats:{ wdc:0, wins:0,  podiums:3,  poles:1  } },
+    stats:{ wdc:0, wins:0, podiums:3, poles:1 } },
   // Alpine
   { num:10, code:'GAS', ergastId:'gasly',          first:'Pierre',    last:'Gasly',      nat:'🇫🇷', team:'Alpine',          dob:'1996-02-07', wikiTitle:'Pierre_Gasly',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/P/PIEGAS01_Pierre_Gasly/piegas01.png',
-    stats:{ wdc:0, wins:1,  podiums:4,  poles:0  } },
+    stats:{ wdc:0, wins:1, podiums:4, poles:0 } },
   { num:43, code:'COL', ergastId:'colapinto',      first:'Franco',    last:'Colapinto',  nat:'🇦🇷', team:'Alpine',          dob:'2003-05-27', wikiTitle:'Franco_Colapinto',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/F/FRACOL01_Franco_Colapinto/fracol01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+    stats:{ wdc:0, wins:0, podiums:0, poles:0 } },
   // Haas
   { num:87, code:'BEA', ergastId:'bearman',        first:'Oliver',    last:'Bearman',    nat:'🇬🇧', team:'Haas',            dob:'2005-05-08', wikiTitle:'Oliver_Bearman',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/O/OLIBEA01_Oliver_Bearman/olibea01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+    stats:{ wdc:0, wins:0, podiums:0, poles:0 } },
   { num:31, code:'OCO', ergastId:'ocon',           first:'Esteban',   last:'Ocon',       nat:'🇫🇷', team:'Haas',            dob:'1996-09-17', wikiTitle:'Esteban_Ocon',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/E/ESTOCO01_Esteban_Ocon/estoco01.png',
-    stats:{ wdc:0, wins:1,  podiums:3,  poles:0  } },
+    stats:{ wdc:0, wins:1, podiums:4, poles:0 } },
   // Racing Bulls — Tsunoda + Lindblad
   { num:22, code:'TSU', ergastId:'tsunoda',        first:'Yuki',      last:'Tsunoda',    nat:'🇯🇵', team:'Racing Bulls',    dob:'2000-05-11', wikiTitle:'Yuki_Tsunoda',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/Y/YUKTSU01_Yuki_Tsunoda/yuktsu01.png',
-    stats:{ wdc:0, wins:0,  podiums:2,  poles:0  } },
+    stats:{ wdc:0, wins:0, podiums:2, poles:0 } },
   { num:7,  code:'LIN', ergastId:'lindblad',       first:'Arvid',     last:'Lindblad',   nat:'🇸🇪', team:'Racing Bulls',    dob:'2006-06-14', wikiTitle:'Arvid_Lindblad',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ARVLIN01_Arvid_Lindblad/arvlin01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+    stats:{ wdc:0, wins:0, podiums:0, poles:0 } },
   // Williams
   { num:23, code:'ALB', ergastId:'albon',          first:'Alexander', last:'Albon',      nat:'🇹🇭', team:'Williams',        dob:'1996-03-23', wikiTitle:'Alexander_Albon',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/A/ALEALB01_Alexander_Albon/alealb01.png',
-    stats:{ wdc:0, wins:0,  podiums:1,  poles:0  } },
+    stats:{ wdc:0, wins:0, podiums:2, poles:0 } },
   { num:55, code:'SAI', ergastId:'sainz',          first:'Carlos',    last:'Sainz',      nat:'🇪🇸', team:'Williams',        dob:'1994-09-01', wikiTitle:'Carlos_Sainz_Jr.',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/C/CARSAI01_Carlos_Sainz/carsai01.png',
-    stats:{ wdc:0, wins:4,  podiums:30, poles:6  } },
+    stats:{ wdc:0, wins:4, podiums:28, poles:6 } },
   // Audi (ex-Sauber)
   { num:27, code:'HUL', ergastId:'hulkenberg',     first:'Nico',      last:'Hulkenberg', nat:'🇩🇪', team:'Kick Sauber',     dob:'1987-08-19', wikiTitle:'Nico_Hülkenberg',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/N/NICHUL01_Nico_Hulkenberg/nichul01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:1  } },
+    stats:{ wdc:0, wins:0, podiums:0, poles:1 } },
   { num:5,  code:'BOR', ergastId:'bortoleto',      first:'Gabriel',   last:'Bortoleto',  nat:'🇧🇷', team:'Kick Sauber',     dob:'2004-10-14', wikiTitle:'Gabriel_Bortoleto',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/G/GABCOL01_Gabriel_Bortoleto/gabcol01.png',
-    stats:{ wdc:0, wins:0,  podiums:0,  poles:0  } },
+    stats:{ wdc:0, wins:0, podiums:0, poles:0 } },
   // Cadillac — Bottas + Perez
   { num:77, code:'BOT', ergastId:'bottas',         first:'Valtteri',  last:'Bottas',     nat:'🇫🇮', team:'Cadillac',        dob:'1989-08-28', wikiTitle:'Valtteri_Bottas',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/V/VALBOT01_Valtteri_Bottas/valbot01.png',
     stats:{ wdc:0, wins:10, podiums:67, poles:20 } },
   { num:11, code:'PER', ergastId:'perez',          first:'Sergio',    last:'Perez',      nat:'🇲🇽', team:'Cadillac',        dob:'1990-01-26', wikiTitle:'Sergio_Pérez',
     photo:'https://www.formula1.com/content/dam/fom-website/drivers/S/SERPER01_Sergio_Perez/serper01.png',
-    stats:{ wdc:0, wins:6,  podiums:42, poles:3  } },
+    stats:{ wdc:0, wins:6, podiums:42, poles:3 } },
 ]
 // ═══════════════════════════════════════════════════════════════
 // CONSTRUCTORS (current)
@@ -699,7 +641,7 @@ const CONSTRUCTORS = [
   },
   {
     id:'williams', name:'Williams', fullName:'Williams Racing',
-    base:'Grove, United Kingdom', firstYear:1977, titles:7,
+    base:'Grove, United Kingdom', firstYear:1977, titles:9,
     ergastId:'williams', color:'#64C4FF',
     chassis:'FW48', engine:'Mercedes-AMG M15 V6 Hybrid',
     principal:'James Vowles', wikiTitle:'Williams_Racing',
@@ -912,32 +854,36 @@ const F1_MILESTONES = [
 // ALL-TIME RECORDS
 // ═══════════════════════════════════════════════════════════════
 const ALL_TIME_RECORDS = {
-  // Verified figures — updated through end of 2025 F1 season
+  // ── Verified figures through end of 2025 F1 season ──────────
   wins: [
-    { driver:'Lewis Hamilton',    val:104, nat:'🇬🇧' },  // 103 by end 2023 + 1 win 2024
+    { driver:'Lewis Hamilton',    val:103, nat:'🇬🇧' },  // Official F1 record — 103 wins
     { driver:'Michael Schumacher',val:91,  nat:'🇩🇪' },
-    { driver:'Max Verstappen',    val:63,  nat:'🇳🇱' },  // 54 by end 2023 + 9 in 2024
+    { driver:'Max Verstappen',    val:63,  nat:'🇳🇱' },  // 54 to end 2023 + 9 in 2024
     { driver:'Sebastian Vettel',  val:53,  nat:'🇩🇪' },
     { driver:'Alain Prost',       val:51,  nat:'🇫🇷' },
     { driver:'Ayrton Senna',      val:41,  nat:'🇧🇷' },
-    { driver:'Lando Norris',      val:22,  nat:'🇬🇧' },  // 6 in 2024 + ~16 in 2025
+    { driver:'Nigel Mansell',     val:31,  nat:'🇬🇧' },
+    { driver:'Lando Norris',      val:20,  nat:'🇬🇧' },  // 2025 WDC — ~6 in 2024 + ~14 in 2025
   ],
   poles: [
-    { driver:'Lewis Hamilton',    val:104, nat:'🇬🇧' },
+    { driver:'Lewis Hamilton',    val:104, nat:'🇬🇧' },  // Official F1 record
     { driver:'Michael Schumacher',val:68,  nat:'🇩🇪' },
     { driver:'Ayrton Senna',      val:65,  nat:'🇧🇷' },
     { driver:'Sebastian Vettel',  val:57,  nat:'🇩🇪' },
-    { driver:'Max Verstappen',    val:41,  nat:'🇳🇱' },
-    { driver:'Mika Hakkinen',     val:26,  nat:'🇫🇮' },
+    { driver:'Max Verstappen',    val:42,  nat:'🇳🇱' },
+    { driver:'Jim Clark',         val:33,  nat:'🇬🇧' },
+    { driver:'Alain Prost',       val:33,  nat:'🇫🇷' },
+    { driver:'Nigel Mansell',     val:32,  nat:'🇬🇧' },
     { driver:'Lando Norris',      val:18,  nat:'🇬🇧' },
   ],
   podiums: [
-    { driver:'Lewis Hamilton',    val:198, nat:'🇬🇧' },
+    { driver:'Lewis Hamilton',    val:197, nat:'🇬🇧' },  // Official F1 record
     { driver:'Michael Schumacher',val:155, nat:'🇩🇪' },
     { driver:'Sebastian Vettel',  val:122, nat:'🇩🇪' },
-    { driver:'Max Verstappen',    val:114, nat:'🇳🇱' },
+    { driver:'Max Verstappen',    val:115, nat:'🇳🇱' },
     { driver:'Fernando Alonso',   val:106, nat:'🇪🇸' },
     { driver:'Valtteri Bottas',   val:67,  nat:'🇫🇮' },
+    { driver:'Kimi Räikkönen',    val:103, nat:'🇫🇮' },
     { driver:'Lando Norris',      val:52,  nat:'🇬🇧' },
   ],
   championships: [
@@ -946,22 +892,24 @@ const ALL_TIME_RECORDS = {
     { driver:'Juan Manuel Fangio',val:5, nat:'🇦🇷' },
     { driver:'Alain Prost',       val:4, nat:'🇫🇷' },
     { driver:'Sebastian Vettel',  val:4, nat:'🇩🇪' },
+    { driver:'Ayrton Senna',      val:3, nat:'🇧🇷' },
     { driver:'Jack Brabham',      val:3, nat:'🇦🇺' },
+    { driver:'Niki Lauda',        val:3, nat:'🇦🇹' },
     { driver:'Lando Norris',      val:1, nat:'🇬🇧' },
   ],
   constructorWins: [
-    { team:'Ferrari',   val:243 },
-    { team:'McLaren',   val:196 },  // ~4 wins 2024 + ~13 in 2025
-    { team:'Mercedes',  val:125 },
-    { team:'Red Bull',  val:122 },
-    { team:'Williams',  val:114 },
+    { team:'Ferrari',   val:243 },  // Most all-time
+    { team:'McLaren',   val:198 },  // 183 + 2024/2025 wins
+    { team:'Mercedes',  val:125 },  // 2014–2023 era
+    { team:'Red Bull',  val:117 },  // 2009–2024
+    { team:'Williams',  val:114 },  // 1977–2004 era
   ],
   constructorTitles: [
-    { team:'Ferrari',   val:16 },
+    { team:'Ferrari',   val:16 },  // 1961,64,75,76,77,79,82,83,99,00,01,02,03,04,07,08
     { team:'McLaren',   val:10 },  // 1974,84,85,88,89,90,91,98,2024,2025
-    { team:'Williams',  val:9  },
-    { team:'Mercedes',  val:8  },
-    { team:'Red Bull',  val:6  },
+    { team:'Williams',  val:9  },  // 1980,81,86,87,92,93,94,96,97
+    { team:'Mercedes',  val:8  },  // 2014,15,16,17,18,19,20,21
+    { team:'Red Bull',  val:6  },  // 2010,11,12,13,2022,2023
   ],
 };
 
