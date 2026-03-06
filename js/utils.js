@@ -674,7 +674,7 @@ const CONSTRUCTORS = [
     chassis:'C45', engine:'Ferrari 066/13 V6 Hybrid',
     principal:'Jonathan Wheatley', wikiTitle:'Sauber_Motorsport',
     drivers:['Nico Hulkenberg','Gabriel Bortoleto'],
-    notes:'Rebranding as Audi F1 Team in 2026 with Audi's own PU. Sauber will be fully acquired by Audi.',
+    notes:"Rebranding as Audi F1 Team in 2026 with Audi's own PU. Sauber will be fully acquired by Audi.",
   },
   {
     id:'racingbulls', name:'Racing Bulls', fullName:'Visa Cash App Racing Bulls F1 Team',
