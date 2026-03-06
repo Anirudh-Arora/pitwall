@@ -8,34 +8,35 @@
 // Each circuit has its own recognizable silhouette
 // ═══════════════════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════════════════════════
-// CIRCUIT SVGs — julesr0y/f1-circuits-svg via jsDelivr CDN (CORS-safe, public domain)
-// White-on-transparent SVGs. CSS filter in CircuitSVG converts to green on dark bg.
+// CIRCUIT SVGs — local files in /circuits/ folder (copied from julesr0y/f1-circuits-svg)
+// White-on-transparent SVGs. CircuitSVG fetches & inlines them, then overrides stroke to accent green.
 // ═══════════════════════════════════════════════════════════════════════
 const CIRCUIT_IMAGES = {
-  bahrain:    'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/bahrain-international-circuit-1.svg',
-  jeddah:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/jeddah-corniche-circuit-1.svg',
-  melbourne:  'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/albert-park-circuit-2.svg',
-  suzuka:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/suzuka-international-racing-course-1.svg',
-  shanghai:   'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/shanghai-international-circuit-1.svg',
-  miami:      'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/miami-international-autodrome-1.svg',
-  imola:      'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/autodromo-internazionale-enzo-e-dino-ferrari-5.svg',
-  monaco:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-de-monaco-7.svg',
-  barcelona:  'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-de-barcelona-catalunya-5.svg',
-  canada:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-gilles-villeneuve-1.svg',
-  silverstone:'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/silverstone-circuit-6.svg',
-  hungary:    'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/hungaroring-2.svg',
-  spa:        'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-de-spa-francorchamps-6.svg',
-  zandvoort:  'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-zandvoort-4.svg',
-  monza:      'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/autodromo-nazionale-monza-5.svg',
-  baku:       'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/baku-city-circuit-4.svg',
-  singapore:  'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/marina-bay-street-circuit-5.svg',
-  austin:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/circuit-of-the-americas-1.svg',
-  mexico:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/autodromo-hermanos-rodriguez-4.svg',
-  brazil:     'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/autodromo-jose-carlos-pace-3.svg',
-  lasvegas:   'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/las-vegas-street-circuit-1.svg',
-  qatar:      'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/losail-international-circuit-3.svg',
-  abudhabi:   'https://cdn.jsdelivr.net/gh/julesr0y/f1-circuits-svg@main/white/yas-marina-circuit-6.svg',
+  bahrain:    'circuits/bahrain.svg',
+  jeddah:     'circuits/jeddah.svg',
+  melbourne:  'circuits/melbourne.svg',
+  suzuka:     'circuits/suzuka.svg',
+  shanghai:   'circuits/shanghai.svg',
+  miami:      'circuits/miami.svg',
+  imola:      'circuits/imola.svg',
+  monaco:     'circuits/monaco.svg',
+  barcelona:  'circuits/barcelona.svg',
+  canada:     'circuits/canada.svg',
+  silverstone:'circuits/silverstone.svg',
+  hungary:    'circuits/hungary.svg',
+  spa:        'circuits/spa.svg',
+  zandvoort:  'circuits/zandvoort.svg',
+  monza:      'circuits/monza.svg',
+  baku:       'circuits/baku.svg',
+  singapore:  'circuits/singapore.svg',
+  austin:     'circuits/austin.svg',
+  mexico:     'circuits/mexico.svg',
+  brazil:     'circuits/brazil.svg',
+  lasvegas:   'circuits/lasvegas.svg',
+  qatar:      'circuits/qatar.svg',
+  abudhabi:   'circuits/abudhabi.svg',
 };
+
 
 
 
