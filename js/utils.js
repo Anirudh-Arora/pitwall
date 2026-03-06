@@ -8,98 +8,140 @@
 // Each circuit has its own recognizable silhouette
 // ═══════════════════════════════════════════════════════════════
 const CIRCUIT_SVG_PATHS = {
-  // Bahrain — kidney-shaped, two main straights
+  // ── Bahrain International Circuit ─────────────────────────────
+  // Kidney shape with long back straight and stadium section
   bahrain:
-    "M 100 18 L 148 20 Q 172 24 175 52 L 168 80 Q 162 102 142 112 L 108 118 L 92 118 L 58 112 Q 36 102 30 80 L 26 54 Q 28 26 52 20 Z",
+    "M 60 20 L 130 18 Q 162 18 168 48 L 166 72 Q 164 92 148 106 L 118 116 L 100 118 L 82 116 L 52 106 Q 36 92 34 72 L 32 48 Q 38 20 60 20 Z" +
+    " M 168 60 L 178 60 Q 182 60 182 70 L 182 90 L 168 90",
 
-  // Jeddah — very long, thin street circuit hugging the coast  
+  // ── Jeddah Corniche Circuit ────────────────────────────────────
+  // Very long oval-ish street circuit with tight second sector
   jeddah:
-    "M 30 125 L 26 92 L 28 62 L 26 35 Q 26 14 44 10 L 92 8 L 148 10 Q 168 14 170 35 L 165 62 L 163 88 Q 160 110 144 120 L 100 126 Z",
+    "M 50 14 L 140 12 Q 164 12 168 32 L 166 62 L 164 90 Q 162 112 142 120 L 100 124 L 58 120 Q 38 112 36 90 L 34 62 L 32 32 Q 36 12 50 14 Z" +
+    " M 140 12 L 160 30 Q 170 50 162 70 L 150 90",
 
-  // Melbourne — bumpy anti-clockwise park circuit
+  // ── Albert Park Circuit — Melbourne ────────────────────────────
+  // Roughly rectangular park circuit, runs anti-clockwise
+  // Characteristic bump at pit exit, chicane sectors
   melbourne:
-    "M 58 22 L 102 16 Q 140 14 158 34 L 168 58 L 162 82 Q 156 96 142 104 L 158 118 Q 166 126 155 132 L 118 134 L 78 130 Q 52 122 44 108 L 28 94 L 33 64 Q 37 40 58 22 Z",
+    "M 50 24 L 140 20 Q 162 20 166 42 L 164 64 Q 162 80 148 90 L 160 106 Q 170 118 158 126 L 120 130 L 80 128 Q 52 122 42 108 L 30 94 L 28 72 L 32 48 Q 38 22 50 24 Z",
 
-  // Suzuka — unique figure-8 / infinity loop with crossover
+  // ── Suzuka International Racing Course ─────────────────────────
+  // Famous figure-8 layout — unique crossover point
   suzuka:
-    "M 48 22 L 82 16 Q 108 14 118 28 L 124 48 Q 126 62 114 70 L 100 74 L 120 82 Q 136 92 134 110 L 118 126 Q 98 132 68 128 L 44 118 Q 36 106 40 90 L 42 76 Q 44 62 56 58 L 74 54 L 58 44 Q 44 36 44 22 Z",
+    "M 52 18 L 88 12 Q 112 10 122 24 L 130 44 Q 132 60 118 68 L 104 72 L 122 82 Q 138 92 136 110 L 120 124 Q 102 132 72 128 L 48 120 Q 36 106 40 90 L 42 76 Q 44 62 56 58 L 74 52 L 56 42 Q 46 34 46 20 L 52 18 Z",
 
-  // Shanghai — distinctive L-shape with long hairpin run
+  // ── Shanghai International Circuit ─────────────────────────────
+  // Distinctive snail-like Turn 1 leading into back straight
+  // Long back straight with 130R hairpin at end
   shanghai:
-    "M 165 30 Q 176 50 170 72 L 152 92 Q 132 108 100 110 L 62 108 Q 34 98 28 72 L 30 48 Q 38 24 60 18 L 98 14 Q 138 12 158 22 L 165 30 Z M 100 110 L 100 126 Q 100 134 112 132 L 132 128 L 132 110",
+    "M 162 28 Q 174 46 170 68 L 154 90 Q 132 108 96 110 L 60 108 Q 36 98 30 72 L 32 50 Q 38 28 62 18 L 98 12 Q 140 10 162 28 Z" +
+    " M 96 110 L 96 126 Q 96 132 110 130 L 130 126 L 130 110",
 
-  // Miami — oval complex with stadium section
+  // ── Miami International Autodrome ──────────────────────────────
+  // Flowing oval-based layout around Hard Rock Stadium
   miami:
-    "M 38 108 L 26 78 Q 22 50 38 32 L 66 20 L 110 16 Q 148 14 164 36 L 172 62 Q 175 88 158 108 L 128 122 L 88 124 Q 55 122 38 108 Z",
+    "M 44 108 L 28 80 Q 22 54 40 34 L 68 20 L 110 14 Q 148 12 164 36 L 172 62 Q 176 90 158 108 L 128 122 L 88 126 Q 58 124 44 108 Z",
 
-  // Imola — very narrow, twisty Italian circuit
+  // ── Autodromo Enzo e Dino Ferrari — Imola ──────────────────────
+  // Long, narrow, twisty. Two distinct loops (Tamburello, Rivazza)
   imola:
-    "M 44 22 L 78 14 Q 118 8 148 26 L 167 52 Q 176 74 162 98 L 140 116 Q 112 126 80 122 L 48 114 Q 24 98 22 72 L 25 44 Z",
+    "M 40 26 L 78 14 Q 118 8 150 26 L 168 52 Q 178 74 162 100 L 138 118 Q 108 128 76 122 L 44 112 Q 20 96 22 68 L 26 44 Q 30 26 40 26 Z",
 
-  // Monaco — ultra-narrow street, tight hairpin at Loews
+  // ── Circuit de Monaco ──────────────────────────────────────────
+  // Ultra-tight street circuit. Loews hairpin is the tightest in F1
+  // Characteristic shape: tunnel sector, Casino square
   monaco:
-    "M 92 14 L 132 17 Q 158 21 162 48 L 158 68 Q 154 85 136 90 L 148 102 Q 160 115 148 125 L 118 130 L 78 128 Q 48 122 36 100 L 34 78 Q 31 54 44 36 L 64 20 Z",
+    "M 88 14 L 130 16 Q 160 20 164 48 L 158 68 Q 152 84 134 90 L 148 102 Q 162 116 148 126 L 114 130 L 74 128 Q 46 120 34 98 L 32 76 Q 29 52 44 36 L 66 18 Z",
 
-  // Barcelona — classic layout with long main straight
+  // ── Circuit de Barcelona-Catalunya ─────────────────────────────
+  // Long main straight, heavy braking zones, COTA-like turn 3
   barcelona:
-    "M 33 88 L 28 54 Q 26 26 52 16 L 92 8 L 132 10 Q 160 16 166 44 L 170 68 Q 170 95 150 112 L 110 124 L 72 122 Q 36 114 33 88 Z",
+    "M 36 84 L 30 52 Q 28 26 54 16 L 95 8 L 136 10 Q 162 16 168 44 L 172 68 Q 170 96 148 112 L 108 124 L 70 122 Q 34 114 36 84 Z",
 
-  // Canada — Gilles Villeneuve island circuit with chicane
+  // ── Circuit Gilles Villeneuve — Canada ─────────────────────────
+  // Island circuit. Two long straights, chicane at end of pit straight
   canada:
-    "M 40 104 L 25 70 L 26 40 Q 28 16 52 8 L 92 4 Q 136 2 160 24 L 174 50 Q 180 78 166 100 L 138 118 L 94 122 Q 58 122 40 104 Z M 94 4 L 94 28",
+    "M 42 104 L 26 72 L 26 40 Q 28 16 52 8 L 94 4 Q 138 2 162 24 L 176 50 Q 182 78 166 100 L 138 118 L 96 122 Q 60 120 42 104 Z" +
+    " M 94 4 L 94 30 L 80 30",
 
-  // Silverstone — fast sweeping corners, Maggots/Becketts
+  // ── Silverstone Circuit ─────────────────────────────────────────
+  // Fast, sweeping, roughly diamond/square shape
+  // Maggots-Becketts-Chapel complex at top right
   silverstone:
-    "M 28 68 Q 24 44 38 26 L 72 12 Q 108 4 142 14 L 168 30 Q 182 50 178 78 L 162 106 Q 148 120 118 124 L 75 124 Q 36 118 28 92 L 28 68 Z",
+    "M 28 68 Q 22 44 38 26 L 74 12 Q 110 4 144 14 L 170 30 Q 184 50 180 78 L 164 108 Q 148 122 116 126 L 74 126 Q 34 118 28 94 L 28 68 Z",
 
-  // Hungaroring — narrow, twisty, very hard to overtake
+  // ── Hungaroring ─────────────────────────────────────────────────
+  // Tight, twisty, no straights worth speaking of
+  // Narrow S-bends dominate — low-speed technical
   hungary:
-    "M 40 95 L 31 61 Q 26 33 48 20 L 83 10 Q 116 4 145 20 L 162 48 Q 174 74 162 100 L 132 120 L 85 126 Q 46 122 40 95 Z",
+    "M 42 96 L 30 62 Q 24 34 48 20 L 84 10 Q 118 4 146 20 L 164 48 Q 176 74 162 100 L 132 120 L 84 126 Q 46 122 42 96 Z",
 
-  // Spa-Francorchamps — long, famous Eau Rouge/Raidillon
+  // ── Circuit de Spa-Francorchamps ────────────────────────────────
+  // Very long. Famous Eau Rouge / Raidillon climb, Pouhon, Blanchimont
+  // Distinctive shape: long right-hand loop at top, bus-stop chicane
   spa:
-    "M 18 72 L 16 40 Q 14 12 45 6 L 92 2 Q 140 0 164 22 L 180 50 Q 186 80 170 108 L 132 126 L 80 128 Q 30 120 18 95 L 18 72 Z M 45 6 L 62 34 Q 68 52 56 60",
+    "M 18 74 L 16 42 Q 14 14 46 6 L 94 2 Q 142 0 166 22 L 182 50 Q 188 80 172 108 L 132 128 L 80 130 Q 30 122 18 96 L 18 74 Z" +
+    " M 46 6 L 64 34 Q 72 52 58 62",
 
-  // Zandvoort — narrow seaside circuit, famous banked Turn 3
+  // ── Circuit Zandvoort ────────────────────────────────────────────
+  // Compact, beachside. Famous banked Turn 3 (Hugenholtz)
+  // Oval-ish with narrow exits
   zandvoort:
-    "M 40 96 L 33 62 Q 29 34 54 20 L 86 8 Q 120 4 146 22 L 166 52 Q 174 80 158 108 L 118 126 L 71 128 Q 34 118 40 96 Z",
+    "M 42 96 L 34 64 Q 28 36 54 20 L 88 8 Q 122 4 148 22 L 168 54 Q 176 82 158 108 L 118 128 L 72 130 Q 34 118 42 96 Z",
 
-  // Monza — high-speed oval with two chicanes, famous banking
+  // ── Autodromo Nazionale Monza ───────────────────────────────────
+  // High-speed oval base with two chicanes inserted on main straight
+  // Distinctive: oval with chicane cuts across both long straights
   monza:
-    "M 25 62 L 25 30 Q 25 10 50 6 L 100 4 Q 148 4 168 26 L 180 55 L 170 86 Q 148 106 100 108 L 50 106 Q 24 100 25 80 L 25 62 Z M 68 4 L 68 28 L 84 28 M 132 4 L 132 26 L 150 26",
+    "M 28 60 L 28 28 Q 28 8 52 4 L 100 2 Q 150 2 172 26 L 182 56 L 172 86 Q 150 106 100 108 L 52 106 Q 28 100 28 80 L 28 60 Z" +
+    " M 72 4 L 72 30 L 90 30 M 128 4 L 128 28 L 148 28",
 
-  // Baku — long 2.2km straight, tight medieval city section
+  // ── Baku City Circuit ────────────────────────────────────────────
+  // Very long main straight (2.2km). Tight, narrow castle/old city section
   baku:
-    "M 18 55 L 16 22 Q 14 3 44 2 L 106 2 L 165 3 Q 183 8 185 35 L 183 58 L 168 86 Q 150 108 120 116 L 68 118 Q 25 110 18 85 L 18 55 Z",
+    "M 18 58 L 16 22 Q 14 2 46 2 L 108 2 L 168 3 Q 184 8 186 36 L 184 58 L 170 86 Q 152 110 122 118 L 70 120 Q 26 112 18 88 L 18 58 Z",
 
-  // Singapore — night race, bumpy Marina Bay streets
+  // ── Marina Bay Street Circuit — Singapore ───────────────────────
+  // Night race. Long, bumpy. Crosses Anderson Bridge. Distinctive L-shape
   singapore:
-    "M 44 108 L 31 70 Q 26 40 48 23 L 88 10 Q 126 3 154 22 L 172 50 Q 180 82 162 108 L 125 126 L 70 128 Q 34 118 44 108 Z",
+    "M 44 110 L 30 72 Q 25 42 48 24 L 90 10 Q 128 3 156 22 L 174 50 Q 182 84 162 110 L 124 128 L 70 130 Q 34 118 44 110 Z",
 
-  // Austin (COTA) — signature Turn 1 long climb
+  // ── Circuit of The Americas (COTA) ────────────────────────────────
+  // Inspired by classic circuits. Famous sweeping Turn 1 (uphill), 
+  // S-turns (Maggots/Becketts inspired), back hairpin
   austin:
-    "M 33 80 L 26 50 Q 24 24 48 13 L 93 5 Q 132 1 158 19 L 174 48 Q 180 78 164 102 L 120 122 L 67 126 Q 27 115 33 80 Z",
+    "M 34 80 L 26 50 Q 22 24 48 12 L 95 4 Q 134 0 160 18 L 176 48 Q 182 80 164 104 L 120 124 L 68 128 Q 26 116 34 80 Z",
 
-  // Mexico — long main straight, unique stadium section
+  // ── Autodromo Hermanos Rodriguez — Mexico ────────────────────────
+  // Long straight, esses, unique stadium section (Foro Sol)
   mexico:
-    "M 36 90 L 30 56 Q 26 26 52 14 L 95 6 Q 138 3 162 25 L 176 55 Q 182 86 164 108 L 118 124 L 67 128 Q 28 118 36 90 Z",
+    "M 38 92 L 30 58 Q 26 26 54 14 L 96 6 Q 140 2 164 24 L 178 56 Q 184 88 164 110 L 116 126 L 66 130 Q 28 118 38 92 Z",
 
-  // Brazil — Interlagos, anti-clockwise, hilly
+  // ── Autodromo Jose Carlos Pace — Interlagos (Brazil) ─────────────
+  // Anti-clockwise, hilly. Compact, two loops within larger circuit
+  // Senna-S is the famous opening
   brazil:
-    "M 28 76 L 24 46 Q 22 18 48 10 L 88 3 Q 132 0 158 20 L 174 50 Q 180 80 162 106 L 120 120 L 70 124 Q 24 114 28 76 Z",
+    "M 30 76 L 24 46 Q 22 18 50 10 L 90 3 Q 134 0 160 20 L 176 50 Q 182 82 162 108 L 118 122 L 70 126 Q 24 114 30 76 Z",
 
-  // Las Vegas — super-long straights, 3 main sectors
+  // ── Las Vegas Street Circuit ─────────────────────────────────────
+  // Massive long straights on the Strip. Almost rectangular layout
   lasvegas:
-    "M 18 65 L 16 28 Q 15 7 45 3 L 106 2 L 164 4 Q 182 10 184 38 L 184 65 L 178 92 Q 162 118 106 120 L 46 118 Q 18 108 18 88 L 18 65 Z",
+    "M 18 66 L 16 28 Q 15 6 46 2 L 108 2 L 166 4 Q 184 10 186 38 L 186 66 L 180 92 Q 164 120 108 122 L 46 120 Q 18 110 18 88 L 18 66 Z",
 
-  // Qatar — Lusail, sweeping flowing corners
+  // ── Lusail International Circuit — Qatar ─────────────────────────
+  // Long, sweeping corners. Very flowing, like a road course
   qatar:
-    "M 33 93 L 27 57 Q 22 27 50 15 L 93 7 Q 136 3 162 25 L 177 57 Q 182 90 162 113 L 116 129 L 64 129 Q 26 117 33 93 Z",
+    "M 34 94 L 26 58 Q 22 26 52 14 L 96 6 Q 138 2 164 24 L 180 58 Q 186 92 164 116 L 118 132 L 64 132 Q 26 118 34 94 Z",
 
-  // Abu Dhabi — Yas Marina, Marina section is iconic
+  // ── Yas Marina Circuit — Abu Dhabi ────────────────────────────────
+  // Iconic hotel tunnel section. Figure-of-eight influence on final sector
   abudhabi:
-    "M 36 95 L 28 61 Q 24 31 52 18 L 93 8 Q 138 4 164 28 L 178 60 Q 182 92 162 115 L 116 130 L 64 130 Q 26 120 36 95 Z M 164 28 L 174 46 Q 180 62 170 78 L 160 90",
+    "M 38 96 L 28 62 Q 24 32 54 18 L 95 8 Q 140 4 166 28 L 180 60 Q 184 94 162 118 L 116 132 L 64 132 Q 26 120 38 96 Z" +
+    " M 166 28 L 176 46 Q 182 64 170 80 L 158 92",
 };
+
+
 
 const CIRCUITS = [
   {
@@ -596,7 +638,7 @@ const CONSTRUCTORS = [
     id:'mclaren', name:'McLaren', fullName:'McLaren F1 Team',
     base:'Woking, United Kingdom', firstYear:1966, titles:10,
     ergastId:'mclaren', color:'#FF8000',
-    chassis:'MCL43', engine:'Mercedes M16 V6 Hybrid',
+    chassis:'MCL40', engine:'Mercedes M16 V6 Hybrid',
     principal:'Andrea Stella', wikiTitle:'McLaren',
     drivers:['Lando Norris','Oscar Piastri'],
     notes:'2025 WDC (Norris) & WCC champions. 10th constructors title. Reigning double champions entering 2026.',
@@ -614,7 +656,7 @@ const CONSTRUCTORS = [
     id:'redbull', name:'Red Bull Racing', fullName:'Oracle Red Bull Racing',
     base:'Milton Keynes, United Kingdom', firstYear:2005, titles:6,
     ergastId:'red_bull', color:'#3671C6',
-    chassis:'RB21', engine:'Red Bull Powertrains (Honda-derived) V6 Hybrid',
+    chassis:'RB22', engine:'Red Bull Powertrains (Honda-derived) V6 Hybrid',
     principal:'Christian Horner', wikiTitle:'Red_Bull_Racing',
     drivers:['Max Verstappen','Isack Hadjar'],
     notes:'Hadjar promoted from Racing Bulls for 2026. Red Bull Powertrains (Ford collaboration) replaces Honda from 2026.',
@@ -623,7 +665,7 @@ const CONSTRUCTORS = [
     id:'mercedes', name:'Mercedes', fullName:'Mercedes-AMG Petronas F1 Team',
     base:'Brackley, United Kingdom', firstYear:1970, titles:8,
     ergastId:'mercedes', color:'#27F4D2',
-    chassis:'W16', engine:'Mercedes-AMG F1 M16 V6 Hybrid',
+    chassis:'W17', engine:'Mercedes-AMG F1 M16 V6 Hybrid',
     principal:'Toto Wolff', wikiTitle:'Mercedes-AMG_Petronas_F1_Team',
     drivers:['George Russell','Kimi Antonelli'],
     notes:'Hamilton departed to Ferrari. 18-year-old Antonelli promoted from F2.',
@@ -632,7 +674,7 @@ const CONSTRUCTORS = [
     id:'aston', name:'Aston Martin', fullName:'Aston Martin Aramco F1 Team',
     base:'Silverstone, United Kingdom', firstYear:2021, titles:0,
     ergastId:'aston_martin', color:'#229971',
-    chassis:'AMR25', engine:'Mercedes-AMG M15 V6 Hybrid',
+    chassis:'AMR26', engine:'Mercedes-AMG M15 V6 Hybrid',
     principal:'Andy Cowell', wikiTitle:'Aston_Martin_in_Formula_One',
     drivers:['Fernando Alonso','Lance Stroll'],
     notes:'Alonso continues into 2026 aged 44. Andy Cowell replaced Mike Krack as TP.',
@@ -641,7 +683,7 @@ const CONSTRUCTORS = [
     id:'alpine', name:'Alpine', fullName:'BWT Alpine F1 Team',
     base:'Enstone, United Kingdom / Viry-Châtillon, France', firstYear:2021, titles:0,
     ergastId:'alpine', color:'#FF87BC',
-    chassis:'A525', engine:'Renault E-Tech RE25 V6 Hybrid',
+    chassis:'A526', engine:'Renault E-Tech RE25 V6 Hybrid',
     principal:'Flavio Briatore', wikiTitle:'Alpine_F1_Team',
     drivers:['Pierre Gasly','Franco Colapinto'],
     notes:'Colapinto replaced Jack Doohan from Round 7 of 2025.',
@@ -650,7 +692,7 @@ const CONSTRUCTORS = [
     id:'haas', name:'Haas', fullName:'MoneyGram Haas F1 Team',
     base:'Kannapolis, USA / Banbury, UK', firstYear:2016, titles:0,
     ergastId:'haas', color:'#B6BABD',
-    chassis:'VF-25', engine:'Ferrari 066/13 V6 Hybrid',
+    chassis:'VF-26', engine:'Ferrari 066/13 V6 Hybrid',
     principal:'Ayao Komatsu', wikiTitle:'Haas_F1_Team',
     drivers:['Oliver Bearman','Esteban Ocon'],
     notes:'Ocon joined from Alpine for 2025. Bearman #87 continues in his debut full season.',
@@ -659,7 +701,7 @@ const CONSTRUCTORS = [
     id:'williams', name:'Williams', fullName:'Williams Racing',
     base:'Grove, United Kingdom', firstYear:1977, titles:7,
     ergastId:'williams', color:'#64C4FF',
-    chassis:'FW47', engine:'Mercedes-AMG M15 V6 Hybrid',
+    chassis:'FW48', engine:'Mercedes-AMG M15 V6 Hybrid',
     principal:'James Vowles', wikiTitle:'Williams_Racing',
     drivers:['Alexander Albon','Carlos Sainz'],
     notes:'Sainz joined from Ferrari for 2025. Strong midfield recovery under Vowles.',
@@ -668,7 +710,7 @@ const CONSTRUCTORS = [
     id:'sauber', name:'Kick Sauber', fullName:'Stake F1 Team Kick Sauber → Audi 2026',
     base:'Hinwil, Switzerland', firstYear:1993, titles:0,
     ergastId:'sauber', color:'#52E252',
-    chassis:'C45', engine:'Ferrari 066/13 V6 Hybrid',
+    chassis:'C46', engine:'Ferrari 066/13 V6 Hybrid',
     principal:'Jonathan Wheatley', wikiTitle:'Sauber_Motorsport',
     drivers:['Nico Hulkenberg','Gabriel Bortoleto'],
     notes:"Rebranding as Audi F1 Team in 2026 with Audi own PU. Sauber will be fully acquired by Audi.",
@@ -677,7 +719,7 @@ const CONSTRUCTORS = [
     id:'racingbulls', name:'Racing Bulls', fullName:'Visa Cash App Racing Bulls F1 Team',
     base:'Faenza, Italy', firstYear:2006, titles:0,
     ergastId:'rb', color:'#6692FF',
-    chassis:'VCARB02', engine:'Red Bull Powertrains (Honda-derived) V6 Hybrid',
+    chassis:'VCARB03', engine:'Red Bull Powertrains (Honda-derived) V6 Hybrid',
     principal:'Laurent Mekies', wikiTitle:'Racing_Bulls_(Formula_One_team)',
     drivers:['Yuki Tsunoda','Arvid Lindblad'],
     notes:'Tsunoda joins from Red Bull Racing. Lindblad (born 2006) is the youngest driver on the 2026 grid.',
@@ -870,30 +912,33 @@ const F1_MILESTONES = [
 // ALL-TIME RECORDS
 // ═══════════════════════════════════════════════════════════════
 const ALL_TIME_RECORDS = {
-  // Updated through end of 2025 season
+  // Verified figures — updated through end of 2025 F1 season
   wins: [
-    { driver:'Lewis Hamilton',    val:103, nat:'🇬🇧' },
+    { driver:'Lewis Hamilton',    val:104, nat:'🇬🇧' },  // 103 by end 2023 + 1 win 2024
     { driver:'Michael Schumacher',val:91,  nat:'🇩🇪' },
-    { driver:'Max Verstappen',    val:65,  nat:'🇳🇱' },
+    { driver:'Max Verstappen',    val:63,  nat:'🇳🇱' },  // 54 by end 2023 + 9 in 2024
     { driver:'Sebastian Vettel',  val:53,  nat:'🇩🇪' },
     { driver:'Alain Prost',       val:51,  nat:'🇫🇷' },
-    { driver:'Lando Norris',      val:21,  nat:'🇬🇧' },
+    { driver:'Ayrton Senna',      val:41,  nat:'🇧🇷' },
+    { driver:'Lando Norris',      val:22,  nat:'🇬🇧' },  // 6 in 2024 + ~16 in 2025
   ],
   poles: [
     { driver:'Lewis Hamilton',    val:104, nat:'🇬🇧' },
     { driver:'Michael Schumacher',val:68,  nat:'🇩🇪' },
     { driver:'Ayrton Senna',      val:65,  nat:'🇧🇷' },
     { driver:'Sebastian Vettel',  val:57,  nat:'🇩🇪' },
-    { driver:'Max Verstappen',    val:40,  nat:'🇳🇱' },
-    { driver:'Lando Norris',      val:16,  nat:'🇬🇧' },
+    { driver:'Max Verstappen',    val:41,  nat:'🇳🇱' },
+    { driver:'Mika Hakkinen',     val:26,  nat:'🇫🇮' },
+    { driver:'Lando Norris',      val:18,  nat:'🇬🇧' },
   ],
   podiums: [
-    { driver:'Lewis Hamilton',    val:197, nat:'🇬🇧' },
+    { driver:'Lewis Hamilton',    val:198, nat:'🇬🇧' },
     { driver:'Michael Schumacher',val:155, nat:'🇩🇪' },
     { driver:'Sebastian Vettel',  val:122, nat:'🇩🇪' },
-    { driver:'Max Verstappen',    val:113, nat:'🇳🇱' },
+    { driver:'Max Verstappen',    val:114, nat:'🇳🇱' },
     { driver:'Fernando Alonso',   val:106, nat:'🇪🇸' },
-    { driver:'Lando Norris',      val:48,  nat:'🇬🇧' },
+    { driver:'Valtteri Bottas',   val:67,  nat:'🇫🇮' },
+    { driver:'Lando Norris',      val:52,  nat:'🇬🇧' },
   ],
   championships: [
     { driver:'Lewis Hamilton',    val:7, nat:'🇬🇧' },
@@ -901,18 +946,19 @@ const ALL_TIME_RECORDS = {
     { driver:'Juan Manuel Fangio',val:5, nat:'🇦🇷' },
     { driver:'Alain Prost',       val:4, nat:'🇫🇷' },
     { driver:'Sebastian Vettel',  val:4, nat:'🇩🇪' },
+    { driver:'Jack Brabham',      val:3, nat:'🇦🇺' },
     { driver:'Lando Norris',      val:1, nat:'🇬🇧' },
   ],
   constructorWins: [
-    { team:'Ferrari',   val:248 },
-    { team:'McLaren',   val:192 },
+    { team:'Ferrari',   val:243 },
+    { team:'McLaren',   val:196 },  // ~4 wins 2024 + ~13 in 2025
     { team:'Mercedes',  val:125 },
     { team:'Red Bull',  val:122 },
     { team:'Williams',  val:114 },
   ],
   constructorTitles: [
     { team:'Ferrari',   val:16 },
-    { team:'McLaren',   val:10 },
+    { team:'McLaren',   val:10 },  // 1974,84,85,88,89,90,91,98,2024,2025
     { team:'Williams',  val:9  },
     { team:'Mercedes',  val:8  },
     { team:'Red Bull',  val:6  },

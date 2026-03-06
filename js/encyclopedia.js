@@ -375,16 +375,23 @@ function DriverDetail({ driver: d, onBack }) {
   const color = teamColor(d.team);
 
   React.useEffect(() => {
-    // Try to load driver stats from Ergast via Jolpica
-    fetchErgast(`/drivers/${d.ergastId || d.code.toLowerCase()}/results`)
+    // Use ergastId (e.g. 'norris', 'max_verstappen') — falls back to pre-loaded stats
+    const ergastId = d.ergastId || d.code.toLowerCase();
+    fetchErgast(`/drivers/${ergastId}/results`)
       .then(data => {
         const races = data.RaceTable?.Races || [];
-        const wins = races.filter(r => r.Results?.[0]?.position === '1').length;
-        const podiums = races.filter(r => ['1','2','3'].includes(r.Results?.[0]?.position)).length;
-        const poles = races.filter(r => r.Results?.[0]?.grid === '1').length;
+        // Count across all races (driver appears in Results[0] only if we filtered by driver)
+        const wins = races.filter(r => r.Results?.some(res => res.position === '1')).length;
+        const podiums = races.filter(r => r.Results?.some(res => ['1','2','3'].includes(res.position))).length;
+        const poles = races.filter(r => r.Results?.some(res => res.grid === '1')).length;
         setErgastData({ wins, podiums, poles, races: races.length, recentRaces: races.slice(-10).reverse() });
       })
-      .catch(() => {});
+      .catch(() => {
+        // Fallback: use pre-loaded stats from CURRENT_DRIVERS if available
+        if (d.stats) {
+          setErgastData({ wins: d.stats.wins, podiums: d.stats.podiums, poles: d.stats.poles, races: '—', recentRaces: [] });
+        }
+      });
     fetchWiki(d.wikiTitle).then(setWikiData).catch(() => {});
   }, [d.code, d.ergastId]);
 
@@ -450,25 +457,39 @@ function DriverDetail({ driver: d, onBack }) {
       )
     ),
 
-    tab === 'stats' && (ergastData
-      ? React.createElement('div', null,
-          React.createElement('div', { className: 'stat-grid', style: { marginBottom: '16px' } },
-            [
-              ['RACES', ergastData.races, ''],
-              ['WINS', ergastData.wins, 'accent'],
-              ['PODIUMS', ergastData.podiums, ''],
-              ['POLES', ergastData.poles, ''],
-            ].map(([label, val, cls]) =>
-              React.createElement('div', { key: label, className: 'scel' },
-                React.createElement('div', { className: `stat-value lg ${cls}` }, val),
-                React.createElement('div', { className: 'sl' }, label)
-              )
+    tab === 'stats' && React.createElement('div', null,
+      // Show pre-loaded stats immediately while ergast loads
+      d.stats && !ergastData && React.createElement('div', { className: 'card', style: { marginBottom: '12px', background: 'rgba(255,215,0,.04)', border: '1px solid rgba(255,215,0,.15)' } },
+        React.createElement('div', { style: { fontSize:'11px', color:'var(--text-muted)', fontFamily:'var(--font-display)', letterSpacing:'1px', marginBottom:'8px' } }, 'CAREER STATS (pre-season data)'),
+        React.createElement('div', { className: 'stat-grid' },
+          [['WDC TITLES', d.stats.wdc||0, 'accent'], ['WINS', d.stats.wins||0, ''], ['PODIUMS', d.stats.podiums||0, ''], ['POLES', d.stats.poles||0, '']].map(([label, val, cls]) =>
+            React.createElement('div', { key: label, className: 'scel' },
+              React.createElement('div', { className: `stat-value ${cls}` }, val),
+              React.createElement('div', { className: 'sl' }, label)
             )
           )
         )
-      : React.createElement('div', { className: 'loading' },
-          React.createElement('div', { className: 'spin' }), 'Loading career data…'
-        )
+      ),
+      ergastData
+        ? React.createElement('div', null,
+            React.createElement('div', { className: 'card-title', style: { marginBottom:'12px' } }, 'Historical Stats (from Ergast)'),
+            React.createElement('div', { className: 'stat-grid', style: { marginBottom: '16px' } },
+              [
+                ['RACE ENTRIES', ergastData.races, ''],
+                ['WINS', ergastData.wins, 'accent'],
+                ['PODIUMS', ergastData.podiums, ''],
+                ['POLES', ergastData.poles, ''],
+              ].map(([label, val, cls]) =>
+                React.createElement('div', { key: label, className: 'scel' },
+                  React.createElement('div', { className: `stat-value lg ${cls}` }, val),
+                  React.createElement('div', { className: 'sl' }, label)
+                )
+              )
+            )
+          )
+        : React.createElement('div', { className: 'loading' },
+            React.createElement('div', { className: 'spin' }), 'Loading full career data from Ergast…'
+          )
     ),
 
     tab === 'results' && (ergastData?.recentRaces?.length

@@ -51,8 +51,11 @@ function getTeamColor(t) {
 }
 
 function fmt(s) {
-  if (!s || isNaN(s)) return '—';
-  const m = Math.floor(s/60), sec = (s%60).toFixed(3).padStart(6,'0');
+  if (!s || isNaN(s) || s <= 0) return '—';
+  // OpenF1 returns seconds as float (e.g. 90.234)
+  // Guard against accidental milliseconds (values > 3600 are impossible lap times)
+  const val = s > 3600 ? s / 1000 : s;
+  const m = Math.floor(val/60), sec = (val%60).toFixed(3).padStart(6,'0');
   return `${m}:${sec}`;
 }
 
@@ -65,10 +68,11 @@ function fmtGap(s) {
 
 function cleanLaps(laps, best) {
   if (!laps?.length) return [];
-  const thr = best * 1.07;
+  // Use best * 1.10 for practice sessions which have more outlap variation
+  const thr = best > 0 ? best * 1.10 : 999;
   return laps.filter(l =>
-    l.lap_duration > 0 && !l.is_pit_out_lap && l.lap_duration <= thr &&
-    l.duration_sector_1 != null && l.duration_sector_2 != null && l.duration_sector_3 != null
+    l.lap_duration > 0 && !l.is_pit_out_lap && l.lap_duration < thr
+    // Note: removed sector null check — practice laps may lack sector times
   );
 }
 
@@ -1160,7 +1164,9 @@ function TimingTower({ positions, intervals, drivers, stints, pits }) {
     if (!positions?.length) return [];
     const latest={};
     positions.forEach(p=>{if(!latest[p.driver_number]||p.date>latest[p.driver_number].date)latest[p.driver_number]=p;});
-    return Object.values(latest).sort((a,b)=>a.position-b.position);
+    return Object.values(latest)
+      .filter(p => p.position != null)
+      .sort((a,b)=>Number(a.position)-Number(b.position));
   }, [positions]);
 
   return (
@@ -1247,11 +1253,14 @@ function LapTimeChart({ allDriverLaps, drivers }) {
   // Y axis domain from visible data only
   const { yMin, yMax } = useMemo(() => {
     const allT = [];
-    chartData.forEach(row => activeNums.forEach(num => { if (row[num]) allT.push(row[num]); }));
-    if (!allT.length) return { yMin: 0, yMax: 120 };
+    chartData.forEach(row => activeNums.forEach(num => { if (row[num] && row[num] > 10) allT.push(row[num]); }));
+    if (!allT.length) return { yMin: 60, yMax: 120 };
     const s = [...allT].sort((a,b)=>a-b);
-    const pad = Math.max((s[s.length-1]-s[0])*0.15, 1.0);
-    return { yMin: s[0]-pad, yMax: s[s.length-1]+pad };
+    // Trim top 5% outliers (outlaps, slow laps) for cleaner chart
+    const trimTop = Math.floor(s.length * 0.95);
+    const trimmed = s.slice(0, Math.max(trimTop, 1));
+    const pad = Math.max((trimmed[trimmed.length-1]-trimmed[0])*0.15, 1.5);
+    return { yMin: Math.max(0, trimmed[0]-pad), yMax: trimmed[trimmed.length-1]+pad };
   }, [chartData, activeNums]);
 
   if (!allNums.length) return <div className="empty">No lap data available</div>;
@@ -1434,10 +1443,16 @@ function SectorAnalysis({ allDriverLaps, drivers }) {
 // ─── TYRE STRATEGY ─────────────────────────────────────────────
 function TyreStrategy({ stints, drivers }) {
   const driverMap = useMemo(() => { const m={}; drivers?.forEach(d=>{m[d.driver_number]=d;}); return m; }, [drivers]);
-  if (!stints?.length) return <div className="empty">No stint data</div>;
+  if (!stints?.length) return <div className="empty">No stint / tyre data available for this session</div>;
   const byDriver={};
-  stints.forEach(s=>{if(!byDriver[s.driver_number])byDriver[s.driver_number]=[];byDriver[s.driver_number].push(s);});
-  const maxLap=Math.max(...stints.map(s=>(s.lap_start||0)+(s.lap_end||0)-s.lap_start||0), 70);
+  stints.forEach(s=>{
+    if (!s.driver_number) return;
+    if(!byDriver[s.driver_number])byDriver[s.driver_number]=[];
+    byDriver[s.driver_number].push(s);
+  });
+  // Compute maxLap safely — use lap_end if present, else lap_start + estimated stint length
+  const allLapEnds = stints.map(s => s.lap_end || s.lap_start || 0);
+  const maxLap = Math.max(...allLapEnds, 58);
   return (
     <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
       {Object.entries(byDriver).slice(0,18).map(([num,s]) => {
@@ -1448,13 +1463,15 @@ function TyreStrategy({ stints, drivers }) {
             <div className="strategy-name">{d?.last_name||`#${num}`}</div>
             <div className="strategy-bar">
               {sorted.map((st,i) => {
-                const len=Math.max(1,(st.lap_end||maxLap)-(st.lap_start||0));
+                const end = st.lap_end || (sorted[i+1]?.lap_start ? sorted[i+1].lap_start - 1 : null) || maxLap;
+                const len=Math.max(2, end-(st.lap_start||1));
                 const pct=(len/maxLap*100).toFixed(1);
                 const c=st.compound?.charAt(0)||'?';
+                const cmpLabel = st.compound||'UNKNOWN';
                 return (
-                  <div key={i} className={`stint-block stint-${c}`} style={{flexBasis:`${pct}%`,flexGrow:0,flexShrink:0}}
-                    title={`${st.compound} laps ${st.lap_start}-${st.lap_end||'?'}`}>
-                    {pct>6?c:''}
+                  <div key={i} className={`stint-block stint-${c}`} style={{flexBasis:`${pct}%`,flexGrow:0,flexShrink:0,minWidth:'8px'}}
+                    title={`${cmpLabel} — laps ${st.lap_start}–${st.lap_end||'ongoing'} (${len} laps)`}>
+                    {pct>5?c:''}
                   </div>
                 );
               })}
@@ -1876,6 +1893,8 @@ function WeekendPage() {
 
   const meeting = meetings.find(m => m.meeting_key === selMeetingKey);
   const session = sessions.find(s => s.session_key === selSessionKey);
+  // Debug: log state when data changes
+  // console.log('[WeekendPage] loadingLaps:', loadingLaps, 'laps:', Object.keys(allDriverLaps).length, 'session:', session?.session_name);
 
   const snap = useMemo(() => {
     if (!Object.keys(allDriverLaps).length) return null;
@@ -1929,8 +1948,14 @@ function WeekendPage() {
         ))}
       </div>
       <div className="card">
-        {activeTab==='laptimes' && <LapTimeChart allDriverLaps={allDriverLaps} drivers={drivers} />}
-        {activeTab==='sectors'  && <SectorAnalysis allDriverLaps={allDriverLaps} drivers={drivers} />}
+        {activeTab==='laptimes' && (loadingLaps
+          ? <div className="loading"><div className="spin"/><span>Loading lap data from OpenF1…</span></div>
+          : <LapTimeChart allDriverLaps={allDriverLaps} drivers={drivers} />
+        )}
+        {activeTab==='sectors'  && (loadingLaps
+          ? <div className="loading"><div className="spin"/><span>Loading sector data…</span></div>
+          : <SectorAnalysis allDriverLaps={allDriverLaps} drivers={drivers} />
+        )}
         {activeTab==='tyres'    && <TyreStrategy stints={weekendStints} drivers={drivers} />}
         {activeTab==='h2h'      && <HeadToHead allDriverLaps={allDriverLaps} drivers={drivers} weekendSessionsLaps={[{sessionName:session?.session_name||'Session',lapsByDriver:allDriverLaps}]} />}
         {activeTab==='pace'     && <PaceProgression weekendSessionsLaps={[{sessionName:session?.session_name||'Session',lapsByDriver:allDriverLaps}]} drivers={drivers} />}
