@@ -26,7 +26,6 @@ const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsiv
         AreaChart, Area, BarChart, Bar, ReferenceLine, Cell } = window.Recharts || {};
 
 // ─── CONSTANTS ────────────────────────────────────────────────
-const BASE = 'https://api.openf1.org/v1';
 const OWM_BASE = 'https://api.openweathermap.org/data/2.5';
 
 const TEAM_COLORS = {
@@ -74,12 +73,6 @@ function cleanLaps(laps, best) {
 }
 
 // ─── FETCH HELPERS ─────────────────────────────────────────────
-async function fetchF1(ep, params) {
-  const qs = params ? '?'+new URLSearchParams(params).toString() : '';
-  const r = await fetch(`${BASE}${ep}${qs}`);
-  if (!r.ok) throw new Error(`API ${r.status}: ${ep}`);
-  return r.json();
-}
 
 // ─── WEEKEND SNAPSHOT (for AI) ─────────────────────────────────
 function buildWeekendSnapshot(allSessionsLaps, qualiLaps, weekendStints, driversList) {

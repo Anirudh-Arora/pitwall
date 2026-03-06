@@ -966,3 +966,13 @@ function fmtDate(iso) {
   const d = new Date(iso);
   return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
+
+// OpenF1 API base (also used by companion_components.js)
+const BASE = 'https://api.openf1.org/v1';
+
+async function fetchF1(ep, params) {
+  const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+  const r = await fetch(`${BASE}${ep}${qs}`);
+  if (!r.ok) throw new Error(`API ${r.status}: ${ep}`);
+  return r.json();
+}
