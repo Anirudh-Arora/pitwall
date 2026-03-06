@@ -38,11 +38,9 @@ function CircuitsPage() {
   );
 }
 
-function CircuitSVG({ circuitId, size }) {
+function CircuitSVG({ circuitId }) {
   const [svgContent, setSvgContent] = React.useState(null);
   const [error, setError] = React.useState(false);
-  const w = size || 140;
-  const h = Math.round(w * 0.75);
 
   React.useEffect(() => {
     const url = (typeof CIRCUIT_IMAGES !== 'undefined') ? CIRCUIT_IMAGES[circuitId] : null;
@@ -51,48 +49,49 @@ function CircuitSVG({ circuitId, size }) {
     fetch(url)
       .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
       .then(text => {
-        // Inject CSS to recolor strokes to our accent green
-        const styled = text.replace(
-          /<svg /,
-          `<svg style="width:100%;height:100%;" `
-        ).replace(
-          '</svg>',
-          `<style>path,polyline,line,circle,rect,ellipse{stroke:#00e8a8!important;fill:none!important;}text{display:none;}</style></svg>`
-        );
+        // Strip any hardcoded width/height attrs, add preserveAspectRatio, inject colour override
+        const styled = text
+          .replace(/<svg([^>]*)>/, (_, attrs) => {
+            // Remove width/height attrs that fight CSS scaling
+            const clean = attrs.replace(/\s*(width|height)="[^"]*"/gi, '');
+            return `<svg${clean} style="width:100%;height:100%;display:block;" preserveAspectRatio="xMidYMid meet">`;
+          })
+          .replace('</svg>',
+            `<style>path,polyline,line,circle,rect,ellipse{stroke:#00e8a8!important;fill:none!important;}text{display:none;}</style></svg>`
+          );
         setSvgContent(styled);
       })
       .catch(() => setError(true));
   }, [circuitId]);
 
+  const wrapper = { width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center' };
+
   if (error) {
-    return React.createElement('div', {
-      style: {
-        width: w+'px', height: h+'px',
-        display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'4px',
-        border:'1px solid rgba(0,232,168,.18)', borderRadius:'4px',
-        background:'linear-gradient(135deg,rgba(0,232,168,.05) 0%,transparent 100%)'
-      }
-    },
-      React.createElement('div', { style:{fontSize:'20px',opacity:.35} }, '🏁'),
-      React.createElement('div', { style:{fontFamily:'var(--font-head)',fontSize:'7px',letterSpacing:'2px',color:'var(--text-dim)',textTransform:'uppercase'} }, circuitId)
+    return React.createElement('div', { style: wrapper },
+      React.createElement('div', {
+        style: {
+          width:'80%', height:'80%', display:'flex', alignItems:'center', justifyContent:'center',
+          flexDirection:'column', gap:'4px',
+          border:'1px solid rgba(0,232,168,.18)', borderRadius:'4px',
+          background:'linear-gradient(135deg,rgba(0,232,168,.05) 0%,transparent 100%)'
+        }
+      },
+        React.createElement('div', { style:{fontSize:'18px',opacity:.35} }, '🏁'),
+        React.createElement('div', { style:{fontFamily:'var(--font-head)',fontSize:'7px',letterSpacing:'2px',color:'var(--text-dim)',textTransform:'uppercase'} }, circuitId)
+      )
     );
   }
 
   if (!svgContent) {
-    // Loading skeleton
-    return React.createElement('div', {
-      style: {
-        width: w+'px', height: h+'px',
-        display:'flex', alignItems:'center', justifyContent:'center',
-        opacity: 0.3
-      }
-    }, React.createElement('div', {
-      style: { width:'60%', height:'60%', border:'1px solid var(--accent-green)', borderRadius:'50%', animation:'spin 2s linear infinite' }
-    }));
+    return React.createElement('div', { style: { ...wrapper, opacity:0.3 } },
+      React.createElement('div', {
+        style: { width:'50%', height:'50%', border:'1px solid var(--accent-green)', borderRadius:'50%', animation:'spin 2s linear infinite' }
+      })
+    );
   }
 
   return React.createElement('div', {
-    style: { width: w+'px', height: h+'px', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' },
+    style: { width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' },
     dangerouslySetInnerHTML: { __html: svgContent }
   });
 }
@@ -100,7 +99,7 @@ function CircuitSVG({ circuitId, size }) {
 function CircuitCard({ circuit: c, onClick }) {
   return React.createElement('div', { className: 'circuit-card', onClick },
     React.createElement('div', { className: 'cc-map' },
-      React.createElement(CircuitSVG, { circuitId: c.id, size: 130 })
+      React.createElement(CircuitSVG, { circuitId: c.id })
     ),
     React.createElement('div', { className: 'cc-head' },
       React.createElement('div', { className: 'cc-country' }, `${c.country} · ${c.city}`),
@@ -190,7 +189,7 @@ function CircuitDetail({ circuit: c, onBack }) {
           ),
           React.createElement('div', { style: { display:'flex', gap:0, alignItems:'stretch' } },
             React.createElement('div', { style: { flex:1, padding:'16px', display:'flex', alignItems:'center', justifyContent:'center', background:'var(--s2)', minHeight:'160px' } },
-              React.createElement(CircuitSVG, { circuitId: c.id, size: 180 })
+              React.createElement(CircuitSVG, { circuitId: c.id })
             ),
             c.sectors && React.createElement('div', { style: { width:'150px', borderLeft:'1px solid var(--b0)', padding:'12px' } },
               React.createElement('div', { style: { fontFamily:'var(--fh)', fontSize:'9px', fontWeight:700, letterSpacing:'2px', color:'var(--t3)', textTransform:'uppercase', marginBottom:'8px' } }, 'Sector Bests'),
